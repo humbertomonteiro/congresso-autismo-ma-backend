@@ -1,0 +1,304 @@
+<!-- D:\humberto\projetos_react\landing-pages\cuidar-mais\backend\templates\boletoTemplate.html -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Boleto Bancário</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        font-size: 12px;
+        color: #333;
+      }
+      .boleto-container {
+        width: 750px;
+        /* border: 2px solid #000; */
+        padding: 15px;
+        margin: auto;
+        background-color: #fff;
+      }
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #333;
+        margin: 10px 0;
+      }
+      .header-logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        width: 150px;
+      }
+      .header-logo img {
+        width: 140%;
+        height: 50px;
+        object-fit: cover;
+        object-position: left;
+      }
+
+      .header .bank-info {
+        text-align: right;
+        font-size: 14px;
+      }
+      .header .bank-info .linha-digitavel {
+        font-size: 16px;
+        font-weight: bold;
+      }
+      .promo {
+        text-align: center;
+        font-size: 10px;
+        margin-bottom: 10px;
+        background-color: #f5f5f5;
+        padding: 5px;
+        border: 1px dashed #000;
+      }
+      .section {
+        margin: 8px 0;
+      }
+      .section-item {
+        border-left: 4px solid #fff038;
+        border-bottom: 1px solid #333;
+        padding: 0 0 4px 4px;
+        margin-bottom: 4px;
+        height: fit-content;
+      }
+      .section-item p {
+        margin: 4px 0 0 0;
+      }
+      .section-title {
+        font-weight: bold;
+        font-size: 11px;
+        text-align: start;
+      }
+      .flex-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+      }
+      .flex-row div {
+        flex: 1;
+      }
+      .info {
+        max-width: 200px;
+        margin-top: 4px;
+      }
+      .pix {
+        display: flex;
+        align-items: center;
+        border-top: 1px dashed #333;
+        border-bottom: 1px dashed #333;
+        padding: 8px;
+      }
+
+      .pix img {
+        width: 150px;
+        height: 150px;
+      }
+      .info-pix {
+        padding: 0 16px;
+        text-align: center;
+      }
+      .info-pix h2 {
+        font-size: 1.7rem;
+        color: #003da4;
+        margin: 0;
+      }
+      .info-pix p {
+        margin: 8px 0;
+      }
+      .info-pix h3 {
+        margin: 0;
+      }
+      .barcode {
+        text-align: center;
+        margin: 15px 0;
+        width: 700px;
+        max-width: 100%;
+      }
+      .barcode img {
+        width: 80%;
+      }
+      .qrcode {
+        text-align: center;
+        margin: 15px 0;
+      }
+      .qrcode img {
+        width: 150px;
+        height: 150px;
+      }
+      .instructions {
+        margin-top: 10px;
+        font-size: 10px;
+        border-top: 1px dashed #000;
+        padding-top: 5px;
+      }
+      .bg-destaque {
+        background-color: #dce1e3;
+      }
+      .discriminacao {
+        margin: 15px 0;
+      }
+      .discriminacao .section-item {
+        padding: 8px;
+      }
+      .discriminacao .section-title {
+        font-size: 13px;
+      }
+      .discriminacao p {
+        margin: 6px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="boleto-container">
+      <!-- Cabeçalho -->
+      <div class="header">
+        <div class="header-logo">
+          <img
+            src="https://images.seeklogo.com/logo-png/1/2/banco-do-brasil-logo-png_seeklogo-16044.png"
+            alt="Logo Banco do Brasil"
+          />
+        </div>
+        <div class="bank-info">
+          <strong>BANCO DO BRASIL | 001-9</strong><br />
+          <span class="linha-digitavel">{{LINHA_DIGITAVEL}}</span>
+        </div>
+      </div>
+
+      <!-- Recibo de Entrega -->
+      <div class="flex-row">
+        <div>
+          <div class="section flex-row">
+            <div class="section-item">
+              <div class="section-title">Pagador</div>
+              <p>{{PAGADOR_NOME}}</p>
+            </div>
+            <div class="section-item">
+              <div class="section-title">CPF/CNPJ</div>
+              <p>{{PAGADOR_CPF}}</p>
+            </div>
+          </div>
+          <div class="section flex-row">
+            <div class="section-item">
+              <div class="section-title">Pagador</div>
+              <p>{{BENEFICIARIO_NOME}}</p>
+            </div>
+            <div class="section-item">
+              <div class="section-title">CPF/CNPJ</div>
+              <p>{{BENEFICIARIO_CNPJ}}</p>
+            </div>
+          </div>
+        </div>
+        <div class="info">
+          <div class="section-item">
+            <div class="section-title">Data de vencimento</div>
+            <p>{{DATA_VENCIMENTO}}</p>
+          </div>
+          <div class="section-item">
+            <div class="section-title">Valor do Documento</div>
+            <p>{{VALOR}}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pix -->
+      <div class="pix">
+        <img
+          src="https://w7.pngwing.com/pngs/4/38/png-transparent-banco-do-brasil-hd-logo-thumbnail.png"
+          alt="Logo Banco do Brasil"
+        />
+        <div class="info-pix">
+          <h2>Efetue seu pagamento via PIX</h2>
+          <p>
+            Para pagar via Pix, abra o app do seu banco, selecione Pix e
+            escaneie o QR code ao lado ou use o código Pix Copia e Cola
+          </p>
+          <div class="info-pix-code">
+            <h3>Pix Copia e Cola</h3>
+            <p>{{QRCODE_EMV}}</p>
+          </div>
+        </div>
+        <div class="qrcode">
+          <img src="{{QRCODE_URL}}" alt="QR Code Pix" />
+        </div>
+      </div>
+
+      <div class="header">
+        <div class="header-logo">
+          <img
+            src="https://images.seeklogo.com/logo-png/1/2/banco-do-brasil-logo-png_seeklogo-16044.png"
+            alt="Logo Banco do Brasil"
+          />
+        </div>
+        <div class="bank-info">
+          <strong>BANCO DO BRASIL | 001-9</strong><br />
+          <span class="linha-digitavel">{{LINHA_DIGITAVEL}}</span>
+        </div>
+      </div>
+
+      <!-- Beneficiário -->
+      <div class="section section-item">
+        <div class="section-title">Beneficiário</div>
+        <p>{{BENEFICIARIO_NOME}} | CNPJ: {{BENEFICIARIO_CNPJ}}</p>
+        <p>{{BENEFICIARIO_ENDERECO}}</p>
+      </div>
+
+      <!-- Pagador -->
+      <div class="section section-item">
+        <div class="section-title">Pagador</div>
+        <p>{{PAGADOR_NOME}} | CPF: {{PAGADOR_CPF}}</p>
+        <p>{{PAGADOR_ENDERECO}}</p>
+      </div>
+
+      <!-- Dados do Boleto -->
+      <div class="section flex-row">
+        <div class="section-item">
+          <div class="section-title">Número do Documento</div>
+          <p>{{NUMERO_BOLETO}}</p>
+        </div>
+        <div class="section-item bg-destaque">
+          <div class="section-title">Vencimento</div>
+          <p>{{DATA_VENCIMENTO}}</p>
+        </div>
+        <div class="section-item bg-destaque">
+          <div class="section-title">Valor do Documento</div>
+          <p>R$ {{VALOR}}</p>
+        </div>
+      </div>
+
+      <!-- Discriminação -->
+      <div class="discriminacao">
+        <div class="section-item">
+          <div class="section-title">Discriminação do Pagamento</div>
+          <p>
+            <strong>Ingressos Inteiros:</strong> {{TICKET_QUANTITY_FULL}} x R$
+            {{VALUE_TICKETS_ALL}} = R$ {{VALUE_TICKETS_ALL}}
+          </p>
+          <p>
+            <strong>Ingressos Meia:</strong> {{TICKET_QUANTITY_HALF}} x R$
+            {{VALUE_TICKETS_HALF}} = R$ {{VALUE_TICKETS_HALF}}
+          </p>
+          <p><strong>Desconto de Grupo:</strong> R$ {{DISCOUNT}}</p>
+          <p><strong>Total a Pagar:</strong> R$ {{TOTAL}}</p>
+        </div>
+      </div>
+
+      <!-- Código de Barras -->
+      <div class="barcode">
+        <img src="{{CODIGO_BARRAS_URL}}" alt="Código de Barras" />
+      </div>
+
+      <!-- Instruções -->
+      <div class="instructions">
+        <p><strong>Instruções:</strong></p>
+        <p>- Não pague após o vencimento.</p>
+        <p>- Este boleto pode ser pago via Pix utilizando o QR Code acima.</p>
+        <p>- Autenticação mecânica: {{NUMERO_BOLETO}}</p>
+      </div>
+    </div>
+  </body>
+</html>
