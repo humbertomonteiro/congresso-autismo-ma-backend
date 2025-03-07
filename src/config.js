@@ -38,14 +38,6 @@ const cieloConfig = {
     : "https://apiquerysandbox.cieloecommerce.cielo.com.br",
 };
 
-console.log("Cielo Config carregado:", {
-  merchantId: cieloConfig.merchantId,
-  merchantKey: cieloConfig.merchantKey,
-  baseUrl: cieloConfig.baseUrl,
-  baseQueryUrl: cieloConfig.baseQueryUrl,
-  NODE_ENV: process.env.NODE_ENV,
-});
-
 // Configuração do Banco do Brasil (já está OK, mas mantido para referência)
 const bancoDoBrasilConfig = {
   clientId: process.env.BB_CLIENT_ID,
