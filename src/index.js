@@ -1,4 +1,3 @@
-// backend/src/index.js
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
@@ -11,12 +10,15 @@ dotenv.config();
 const app = express();
 
 const corsOptions = {
-  origin: ["http://localhost:5173", "https://congressoautismoma.com.br/"],
+  origin: ["http://localhost:5173", "https://congressoautismoma.com.br"],
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
 };
+
 app.use(cors(corsOptions));
+
+app.options("*", cors(corsOptions));
 
 app.use(express.json());
 
