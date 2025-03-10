@@ -126,35 +126,35 @@ class EmailService {
 
       for (const template of templates) {
         const recipients = [];
-        if (template.sendType === "single" && template.singleEmail) {
-          recipients.push({ email: template.singleEmail });
-        } else if (template.sendType === "status") {
-          checkouts
-            .filter(
-              (c) =>
-                c.status.toLowerCase() === template.statusFilter.toLowerCase()
-            )
-            .forEach((c) => {
-              if (!c.sentEmails?.includes(template.id)) {
-                if (template.statusFilter.toLowerCase() === "approved") {
-                  c.participants.forEach((p, index) => {
-                    recipients.push({
-                      email: p.email,
-                      checkoutId: c.id,
-                      participantName: p.name,
-                      participantIndex: index,
-                    });
-                  });
-                } else {
+
+        // Filtra os checkouts com base no status do template
+        checkouts
+          .filter(
+            (c) =>
+              c.status.toLowerCase() === template.statusFilter.toLowerCase()
+          )
+          .forEach((c) => {
+            if (!c.sentEmails?.includes(template.id)) {
+              if (template.statusFilter.toLowerCase() === "approved") {
+                // Para status "approved", adiciona todos os participantes
+                c.participants.forEach((p, index) => {
                   recipients.push({
-                    email: c.participants[0].email,
+                    email: p.email,
                     checkoutId: c.id,
-                    participantName: c.participants[0].name,
+                    participantName: p.name,
+                    participantIndex: index,
                   });
-                }
+                });
+              } else {
+                // Para outros status, adiciona apenas o primeiro participante
+                recipients.push({
+                  email: c.participants[0].email,
+                  checkoutId: c.id,
+                  participantName: c.participants[0].name,
+                });
               }
-            });
-        }
+            }
+          });
 
         if (recipients.length === 0) {
           console.log(
@@ -186,22 +186,21 @@ class EmailService {
               `Processando recipient ${recipient.email} com template ${template.id}`
             );
 
+            // Substitui os placeholders
             html = html
               .replace("{{nome}}", recipient.participantName || "Participante")
-              .replace(
-                "{{body}}",
-                "Chegou seu passaporte para o evento mais aguardado do ano! Estamos animados para recebê-lo no Congresso Autismo MA 2025. Seus ingressos estão anexados neste email em formato PDF. Apresente-os na entrada do evento!"
-              )
-              .replace("{{subject}}", template.subject);
-
-            html = html
-              .replace(/{{#if qrCodes}}[\s\S]*?{{\/if}}/g, "")
-              .replace(/{{#if alternativePayment}}[\s\S]*?{{\/if}}/g, "");
+              .replace("{{title}}", template.title) // Título dinâmico
+              .replace("{{body}}", template.body) // Corpo dinâmico
+              .replace("{{subject}}", template.subject); // Assunto dinâmico
 
             console.log(`HTML final para ${recipient.email}:`, html);
 
             let attachments = [];
-            if (template.statusFilter.toLowerCase() === "approved") {
+            // Anexa QR codes apenas se o template for configurado para isso
+            if (
+              template.includeQRCodes &&
+              template.statusFilter.toLowerCase() === "approved"
+            ) {
               const qrCodes =
                 await CredentialService.generateQRCodesForParticipant(
                   recipient.checkoutId,
@@ -227,6 +226,7 @@ class EmailService {
               });
               console.log(`Email automático enviado para ${recipient.email}`);
 
+              // Marca o template como enviado no checkout
               const checkoutRef = doc(db, "checkouts", recipient.checkoutId);
               const checkout = checkouts.find(
                 (c) => c.id === recipient.checkoutId
@@ -242,9 +242,10 @@ class EmailService {
                 `Template ${template.id} marcado como enviado para checkout ${recipient.checkoutId}`
               );
 
-              // Atualizar o checkout localmente para evitar reprocessamento
+              // Atualiza o checkout localmente para evitar reprocessamento
               checkout.sentEmails = updatedSentEmails;
 
+              // Remove arquivos temporários após o envio
               if (attachments.length > 0) {
                 try {
                   await fs.unlink(attachments[0].path);
@@ -253,7 +254,7 @@ class EmailService {
                   );
                 } catch (unlinkError) {
                   if (unlinkError.code !== "ENOENT") {
-                    throw unlinkError; // Propagar erros diferentes de "arquivo não encontrado"
+                    throw unlinkError; // Propaga erros diferentes de "arquivo não encontrado"
                   }
                   console.log(
                     `Arquivo ${attachments[0].path} já foi removido anteriormente`
@@ -274,7 +275,7 @@ class EmailService {
     } catch (error) {
       console.error("Erro ao processar emails automáticos:", error.message);
     } finally {
-      this.isProcessing = false; // Liberar para próxima execução
+      this.isProcessing = false; // Libera para próxima execução
     }
   }
 
