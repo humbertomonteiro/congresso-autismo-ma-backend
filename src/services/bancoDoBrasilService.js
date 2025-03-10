@@ -11,22 +11,17 @@ const CheckoutService = require("./checkoutService");
 
 class BancoDoBrasilService {
   constructor() {
-    this.authBaseUrl =
-      process.env.BB_ENV === "sandbox"
-        ? "https://oauth.sandbox.bb.com.br"
-        : "https://oauth.bb.com.br";
-
-    this.apiBaseUrl =
-      process.env.BB_ENV === "sandbox"
-        ? "https://api.hm.bb.com.br/cobrancas/v2"
-        : "https://api.bb.com.br/cobrancas/v2";
-
+    this.authBaseUrl = bancoDoBrasilConfig.authBaseUrl;
+    this.apiBaseUrl = bancoDoBrasilConfig.baseUrl;
     this.agent = new https.Agent({
-      rejectUnauthorized: false,
+      rejectUnauthorized: false, // Desabilitar verificação de certificado (apenas para testes)
+      // Descomente se precisar usar o certificado
+      // pfx: fs.readFileSync(bancoDoBrasilConfig.certificadoPfx),
+      // passphrase: bancoDoBrasilConfig.certificadoSenha,
     });
   }
 
-  // Função auxiliar para formatar data no formato dd.mm.aaaa
+  // Função auxiliar para formatar data
   formatDate(date) {
     const day = String(date.getDate()).padStart(2, "0");
     const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -36,77 +31,72 @@ class BancoDoBrasilService {
 
   // Função genérica para requisições com retentativas
   async requestWithRetries(url, payload, headers, retries = 3, delayMs = 1000) {
-    try {
-      console.log("Enviando requisição para:", url);
-      console.log("Payload:", JSON.stringify(payload, null, 2));
-      console.log("Headers:", headers);
+    for (let attempt = 1; attempt <= retries; attempt++) {
+      try {
+        console.log(`Tentativa ${attempt} - Enviando requisição para: ${url}`);
+        console.log("Payload:", JSON.stringify(payload, null, 2));
+        console.log("Headers:", headers);
 
-      const response = await axios.post(url, payload, {
-        headers,
-        httpsAgent: this.agent,
-        timeout: 10000, // 10 segundos
-      });
-
-      console.log("Resposta recebida:", response.data);
-      return response.data;
-    } catch (error) {
-      if (retries > 0) {
-        console.log(
-          `Tentativa ${
-            4 - retries
-          } falhou. Tentando novamente em ${delayMs}ms...`
-        );
-        await new Promise((resolve) => setTimeout(resolve, delayMs));
-        return this.requestWithRetries(
-          url,
-          payload,
+        const response = await axios.post(url, payload, {
           headers,
-          retries - 1,
-          delayMs * 2
-        );
+          httpsAgent: this.agent,
+          timeout: 10000,
+        });
+
+        console.log("Resposta recebida:", response.data);
+        return response.data;
+      } catch (error) {
+        console.error(`Tentativa ${attempt} falhou:`, {
+          status: error.response?.status,
+          data: error.response?.data,
+          headers: error.response?.headers,
+          message: error.message,
+        });
+        if (attempt === retries) throw error;
+        await new Promise((resolve) => setTimeout(resolve, delayMs * attempt));
       }
-      throw error;
     }
   }
 
   async getAccessToken(retries = 3, delayMs = 1000) {
     console.log("Tentando obter token em:", `${this.authBaseUrl}/oauth/token`);
-    try {
-      const response = await axios.post(
-        `${this.authBaseUrl}/oauth/token`,
-        new URLSearchParams({
-          grant_type: "client_credentials",
-          scope: "cobrancas.boletos-info cobrancas.boletos-requisicao",
-        }),
-        {
-          headers: {
-            Authorization: `Basic ${Buffer.from(
-              `${bancoDoBrasilConfig.clientId}:${bancoDoBrasilConfig.clientSecret}`
-            ).toString("base64")}`,
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          httpsAgent: this.agent,
-          timeout: 10000,
-        }
-      );
-      console.log("Resposta completa do token:", response.data);
-      return response.data.access_token;
-    } catch (error) {
-      console.error("Erro ao obter token:", {
-        status: error.response?.status,
-        data: error.response?.data,
-        headers: error.response?.headers,
-      });
-      if (retries > 0) {
-        console.log(
-          `Tentativa ${
-            4 - retries
-          } falhou. Tentando novamente em ${delayMs}ms...`
+    console.log("Usando Client ID:", bancoDoBrasilConfig.clientId);
+    console.log("Usando Client Secret:", bancoDoBrasilConfig.clientSecret);
+
+    for (let attempt = 1; attempt <= retries; attempt++) {
+      try {
+        const auth = Buffer.from(
+          `${bancoDoBrasilConfig.clientId}:${bancoDoBrasilConfig.clientSecret}`
+        ).toString("base64");
+        console.log("Authorization Header:", `Basic ${auth}`);
+
+        const response = await axios.post(
+          `${this.authBaseUrl}/oauth/token`,
+          new URLSearchParams({
+            grant_type: "client_credentials",
+            scope: "cobrancas.boletos-info cobrancas.boletos-requisicao",
+          }),
+          {
+            headers: {
+              Authorization: `Basic ${auth}`,
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            httpsAgent: this.agent,
+            timeout: 10000,
+          }
         );
-        await new Promise((resolve) => setTimeout(resolve, delayMs));
-        return this.getAccessToken(retries - 1, delayMs * 2);
+        console.log("Token obtido:", response.data.access_token);
+        return response.data.access_token;
+      } catch (error) {
+        console.error(`Tentativa ${attempt} falhou:`, {
+          status: error.response?.status,
+          data: error.response?.data,
+          headers: error.response?.headers,
+          message: error.message,
+        });
+        if (attempt === retries) throw error;
+        await new Promise((resolve) => setTimeout(resolve, delayMs * attempt));
       }
-      throw error;
     }
   }
 
@@ -121,22 +111,18 @@ class BancoDoBrasilService {
     const token = await this.getAccessToken();
     const boletoEndpoint = `${this.apiBaseUrl}/boletos?gw-dev-app-key=${bancoDoBrasilConfig.developerApiKey}`;
     console.log("Enviando requisição Boleto para:", boletoEndpoint);
-    console.log(
-      "Dados recebidos em boletoData:",
-      JSON.stringify(boletoData, null, 2)
-    );
 
     const numeroControle = Date.now().toString().slice(-10).padStart(10, "0");
     const numeroTituloCliente = `000${"3128557"}${numeroControle}`;
 
     const cepSemHifen = boletoData.zipCode.replace(/[^0-9]/g, "");
-    console.log("CEP original recebido:", boletoData.zipCode);
-    console.log("CEP após ajuste:", cepSemHifen);
 
     const payload = {
-      numeroConvenio: 3128557,
+      numeroConvenio: 3741230,
+      agencia: bancoDoBrasilConfig.agencia,
+      conta: bancoDoBrasilConfig.conta,
       numeroCarteira: 17,
-      numeroVariacaoCarteira: 35,
+      numeroVariacaoCarteira: 19,
       codigoModalidade: 1,
       dataEmissao: this.formatDate(new Date()),
       dataVencimento: this.formatDate(
@@ -177,11 +163,6 @@ class BancoDoBrasilService {
       textoEnderecoEmail: boletoData.email || "teste@teste.com.br",
     };
 
-    console.log(
-      "Payload enviado para Boleto:",
-      JSON.stringify(payload, null, 2)
-    );
-
     try {
       const response = await this.requestWithRetries(boletoEndpoint, payload, {
         Authorization: `Bearer ${token}`,
@@ -190,16 +171,14 @@ class BancoDoBrasilService {
         "Accept-Encoding": "gzip, deflate",
         Connection: "keep-alive",
       });
-      console.log("Resposta do Boleto:", response);
 
-      // Gera o boleto em PDF
       const boletoFilePath = await this.generateBoletoPDF(
         response,
         boletoData,
         customer,
-        ticketQuantity, // Repassar
-        halfTickets, // Repassar
-        coupon // Repassar
+        ticketQuantity,
+        halfTickets,
+        coupon
       );
 
       return {
@@ -228,12 +207,6 @@ class BancoDoBrasilService {
     halfTickets,
     coupon
   ) {
-    console.log(
-      "Iniciando geração do PDF com layout HTML para boleto:",
-      response.numero
-    );
-
-    // Calcular os valores com CheckoutService
     const calculation = CheckoutService.calculateTotal(
       ticketQuantity,
       halfTickets,
@@ -241,7 +214,6 @@ class BancoDoBrasilService {
     );
     const fullTickets = ticketQuantity - halfTickets;
 
-    // Gerar imagem do código de barras
     const barcodeBuffer = await new Promise((resolve, reject) => {
       bwipjs.toBuffer(
         {
@@ -255,23 +227,18 @@ class BancoDoBrasilService {
       );
     });
 
-    // Gerar imagem do QR Code
     const qrCodeBuffer = await QRCode.toBuffer(response.qrCode.emv, {
       scale: 5,
     });
-
-    // Converter buffers para base64
     const barcodeBase64 = barcodeBuffer.toString("base64");
     const qrCodeBase64 = qrCodeBuffer.toString("base64");
 
-    // Carregar o template HTML
     const templatePath = path.join(
       __dirname,
       "../templates/boletoTemplate.html"
     );
     const htmlTemplate = fs.readFileSync(templatePath, "utf8");
 
-    // Substituir os placeholders com os dados
     const htmlContent = htmlTemplate
       .replace(
         /{{LOGO_URL}}/g,
@@ -282,21 +249,20 @@ class BancoDoBrasilService {
         response.linhaDigitavel || "Não disponível"
       )
       .replace(/{{BENEFICIARIO_NOME}}/g, "CONGRESSO AUTISMO MA LTDA")
-      .replace(/{{BENEFICIARIO_CNPJ}}/g, "25.186.880/001-21")
+      .replace(/{{BENEFICIARIO_CNPJ}}/g, "27.943.639/0001-67")
       .replace(
         /{{BENEFICIARIO_ENDERECO}}/g,
-        `${response.beneficiario.logradouro}, ${
-          response.beneficiario.bairro
-        }, ${response.beneficiario.cidade} - ${
-          response.beneficiario.uf
-        }, CEP: ${response.beneficiario.cep
-          .toString()
-          .padStart(8, "0")
-          .replace(/(\d{5})(\d{3})/, "$1-$2")}`
+        `${response.beneficiario?.logradouro || ""}, ${
+          response.beneficiario?.bairro || ""
+        }, ${response.beneficiario?.cidade || ""} - ${
+          response.beneficiario?.uf || ""
+        }, CEP: ${response.beneficiario?.cep || ""}`
       )
       .replace(
         /{{AGENCIA_CONTA}}/g,
-        `${response.beneficiario.agencia}-${response.beneficiario.indicadorComprovacao} / ${response.beneficiario.contaCorrente}`
+        `${response.beneficiario?.agencia || ""}-${
+          response.beneficiario?.indicadorComprovacao || ""
+        } / ${response.beneficiario?.contaCorrente || ""}`
       )
       .replace(/{{NOSSO_NUMERO}}/g, response.numero || "Não disponível")
       .replace(
@@ -317,24 +283,27 @@ class BancoDoBrasilService {
       .replace(
         /{{PAGADOR_ENDERECO}}/g,
         `${boletoData.street.toUpperCase()}, ${
-          boletoData.number
+          boletoData.number || ""
         }, ${boletoData.district.toUpperCase()}, ${boletoData.city.toUpperCase()} - ${boletoData.state.toUpperCase()}, CEP: ${boletoData.zipCode.replace(
           /(\d{5})(\d{3})/,
           "$1-$2"
         )}`
       )
       .replace(/{{NUMERO_BOLETO}}/g, response.numero || "Não disponível")
-      .replace(/{{DATA_VENCIMENTO}}/g, "14.03.2025")
-      .replace(/{{DATA_EMISSAO}}/g, "07.03.2025")
+      .replace(
+        /{{DATA_VENCIMENTO}}/g,
+        this.formatDate(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000))
+      )
+      .replace(/{{DATA_EMISSAO}}/g, this.formatDate(new Date()))
       .replace(
         /{{DATA_PROCESSAMENTO}}/g,
         new Date().toLocaleDateString("pt-BR")
       )
-      .replace(/{{VALOR}}/g, calculation.total) // Usar o total calculado
-      .replace(/{{CARTEIRA}}/g, response.numeroCarteira.toString() || "17")
+      .replace(/{{VALOR}}/g, calculation.total)
+      .replace(/{{CARTEIRA}}/g, response.numeroCarteira?.toString() || "17")
       .replace(
         /{{DEMONSTRATIVO}}/g,
-        "APÓS O VENCIMENTO, MULTA DE 3,00% E MORA DIÁRIA DE R$ 1,00<br>CNPJ DO BENEFICIÁRIO: 25.186.880/001-21"
+        "APÓS O VENCIMENTO, MULTA DE 3,00% E MORA DIÁRIA DE R$ 1,00<br>CNPJ DO BENEFICIÁRIO: 27.943.639/0001-67"
       )
       .replace(
         /{{CODIGO_BARRAS_URL}}/g,
@@ -349,15 +318,16 @@ class BancoDoBrasilService {
       .replace(/{{DISCOUNT}}/g, calculation.discount)
       .replace(/{{TOTAL}}/g, calculation.total);
 
-    // Gerar o PDF com Puppeteer
-    const browser = await puppeteer.launch({ headless: true });
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    });
     const page = await browser.newPage();
     await page.setContent(htmlContent, { waitUntil: "networkidle0" });
     const filePath = path.join(__dirname, `boleto_${response.numero}.pdf`);
     await page.pdf({ path: filePath, format: "A4", printBackground: true });
     await browser.close();
 
-    console.log("PDF gerado com sucesso em:", filePath);
     return filePath;
   }
 }

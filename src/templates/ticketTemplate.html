@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Ingressos - {{EVENT_NAME}}</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        padding: 0;
+        background-color: #f4f4f4;
+      }
+      .container {
+        max-width: 750px;
+        background-color: #ffffff;
+        border: 1px solid #ddd;
+        padding: 15px;
+        margin: auto;
+      }
+      .header {
+        text-align: center;
+        background-color: #2c3e50;
+        color: white;
+        padding: 10px;
+      }
+      .header img {
+        width: 120px;
+      }
+      .header h1 {
+        font-size: 24px;
+        margin: 5px 0;
+      }
+      .ticket {
+        margin-top: 20px;
+        padding: 15px;
+        border: 1px solid #b0d1ce;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: linear-gradient(to right, #ffffffaf, #ffffffa8),
+          url("https://congressoautismoma.com.br/assets/bg-bootm1-DSaeEaPG.jpg");
+        background-size: cover;
+      }
+      .ticket-logo {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+      }
+      .ticket img {
+        width: 150px;
+      }
+      .ticket-details h2 {
+        margin: 0;
+        font-size: 1.1rem;
+      }
+      .ticket-details p {
+        margin: 5px 0;
+        font-size: 14px;
+      }
+      .footer {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 12px;
+        color: #555;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <img
+          src="https://congressoautismoma.com.br/assets/logo-no-text-77g-YwKu.png"
+          alt="Logo"
+        />
+        <h1>{{EVENT_NAME}}</h1>
+        <!-- <p>INGRESSOS - {{PARTICIPANT_NAME}}</p> -->
+      </div>
+      <div class="ticket">
+        <div class="ticket-logo">
+          <img
+            src="https://congressoautismoma.com.br/assets/logo-no-text-77g-YwKu.png"
+            alt="Logo"
+          />
+          <div class="ticket-details">
+            <h2>{{EVENT_NAME}}</h2>
+            <p><strong>DATA:</strong> {{DATE_DAY1}}</p>
+            <p><strong>LOCAL:</strong> {{LOCATION}}</p>
+            <p><strong>HORÁRIO:</strong> {{TIME}}</p>
+          </div>
+        </div>
+        <img src="data:image/png;base64,{{QRCODE_DAY1}}" alt="QR Code Day 1" />
+      </div>
+      <div class="ticket">
+        <div class="ticket-logo">
+          <img
+            src="https://congressoautismoma.com.br/assets/logo-no-text-77g-YwKu.png"
+            alt="Logo"
+          />
+          <div class="ticket-details">
+            <h2>{{EVENT_NAME}}</h2>
+            <p><strong>DATA:</strong> {{DATE_DAY2}}</p>
+            <p><strong>LOCAL:</strong> {{LOCATION}}</p>
+            <p><strong>HORÁRIO:</strong> {{TIME}}</p>
+          </div>
+        </div>
+        <img src="data:image/png;base64,{{QRCODE_DAY2}}" alt="QR Code Day 2" />
+      </div>
+      <div class="footer">
+        <p>CONGRESSO AUTISMO MA LTDA - {{SUPPORT_EMAIL}}</p>
+      </div>
+    </div>
+  </body>
+</html>
