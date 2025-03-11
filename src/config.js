@@ -62,6 +62,9 @@ const bancoDoBrasilConfig = {
   numeroCarteira: isProduction
     ? process.env.BB_NUMERO_CARTEIRA_PRODUCTION || 17
     : process.env.BB_NUMERO_CARTEIRA_SANDBOX || 17,
+  cnpj: isProduction
+    ? process.env.BB_CNPJ_PRODUCTION
+    : process.env.BB_CNPJ_SANDBOX,
   numeroVariacaoCarteira: isProduction
     ? process.env.BB_NUMERO_VARIACAO_CARTEIRA_PRODUCTION || 35
     : process.env.BB_NUMERO_VARIACAO_CARTEIRA_SANDBOX || 35,

@@ -113,25 +113,26 @@ class BancoDoBrasilService {
     console.log("Enviando requisição Boleto para:", boletoEndpoint);
 
     const numeroControle = Date.now().toString().slice(-10).padStart(10, "0");
-    const numeroTituloCliente = `000${"3128557"}${numeroControle}`;
+    const numeroTituloCliente = `000${bancoDoBrasilConfig.numeroConvenio}${numeroControle}`;
 
     const cepSemHifen = boletoData.zipCode.replace(/[^0-9]/g, "");
 
     const payload = {
-      numeroConvenio: 3741230,
-      agencia: bancoDoBrasilConfig.agencia,
-      conta: bancoDoBrasilConfig.conta,
-      numeroCarteira: 17,
-      numeroVariacaoCarteira: 19,
+      numeroConvenio: parseInt(bancoDoBrasilConfig.numeroConvenio),
+      numeroCarteira: parseInt(bancoDoBrasilConfig.numeroCarteira),
+      numeroVariacaoCarteira: parseInt(
+        bancoDoBrasilConfig.numeroVariacaoCarteira
+      ),
       codigoModalidade: 1,
-      dataEmissao: this.formatDate(new Date()),
+      dataEmissao: this.formatDate(new Date()).replace(/\//g, "."),
       dataVencimento: this.formatDate(
         new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-      ),
+      ).replace(/\//g, "."),
       valorOriginal: (amount / 100).toFixed(2),
       valorAbatimento: 0,
       quantidadeDiasProtesto: 15,
       indicadorAceiteTituloVencido: "S",
+      numeroDiasLimiteRecebimento: "",
       codigoAceite: "A",
       codigoTipoTitulo: "02",
       descricaoTipoTitulo: "DM",
@@ -141,13 +142,15 @@ class BancoDoBrasilService {
       numeroTituloCliente: numeroTituloCliente,
       mensagemBloquetoOcorrencia: "",
       desconto: { tipo: 0 },
-      jurosMora: { tipo: 1, valor: "1.00", porcentagem: 0 },
-      multa: { tipo: 0, porcentagem: 0, valor: 0 },
+      jurosMora: { tipo: 1, valor: 1.0, porcentagem: 0 },
+      multa: { tipo: 0, dados: "", porcentagem: 0, valor: 0 },
       pagador: {
         tipoInscricao: customer.Identity.length === 11 ? 1 : 2,
-        numeroInscricao: customer.Identity,
+        numeroInscricao: customer.Identity.replace(/[^0-9]/g, ""),
         nome: customer.Name.toUpperCase(),
-        endereco: boletoData.street.toUpperCase(),
+        endereco: `${boletoData.street.toUpperCase()} N ${
+          boletoData.number || ""
+        }`,
         cep: cepSemHifen,
         cidade: boletoData.city.toUpperCase(),
         bairro: boletoData.district.toUpperCase(),
@@ -156,11 +159,11 @@ class BancoDoBrasilService {
       },
       beneficiarioFinal: {
         tipoInscricao: 2,
-        numeroInscricao: "2518688000121",
+        numeroInscricao: parseInt(bancoDoBrasilConfig.cnpj),
         nome: "CONGRESSO AUTISMO MA LTDA",
       },
       indicadorPix: "S",
-      textoEnderecoEmail: boletoData.email || "teste@teste.com.br",
+      textoEnderecoEmail: "saludcuidarmais@gmail.com",
     };
 
     try {
