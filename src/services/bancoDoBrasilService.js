@@ -321,11 +321,18 @@ class BancoDoBrasilService {
       .replace(/{{DISCOUNT}}/g, calculation.discount)
       .replace(/{{TOTAL}}/g, calculation.total);
 
-    // Tente usar o Puppeteer sem especificar o executablePath para que ele localize o Chrome automaticamente
     const browser = await puppeteer.launch({
       headless: true,
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      executablePath:
+        "/opt/render/.cache/puppeteer/chrome/linux-134.0.6998.35/chrome-linux64/chrome",
+      args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-dev-shm-usage",
+        "--disable-gpu",
+      ],
     });
+
     const page = await browser.newPage();
     await page.setContent(htmlContent, { waitUntil: "networkidle0" });
     const filePath = path.join(__dirname, `boleto_${response.numero}.pdf`);
