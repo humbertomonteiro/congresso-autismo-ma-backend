@@ -323,8 +323,7 @@ class BancoDoBrasilService {
 
     const browser = await puppeteer.launch({
       headless: true,
-      executablePath:
-        "/opt/render/.cache/puppeteer/chrome/linux-134.0.6998.35/chrome-linux64/chrome",
+      executablePath: "/usr/lib64/chromium-browser/chromium-browser",
       args: [
         "--no-sandbox",
         "--disable-setuid-sandbox",

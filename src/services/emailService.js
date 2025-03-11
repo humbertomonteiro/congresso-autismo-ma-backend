@@ -89,7 +89,17 @@ class EmailService {
       .replace(/{{TIME}}/g, "08:00 - 18:00")
       .replace(/{{SUPPORT_EMAIL}}/g, "suporte@congressoautismoma.com.br");
 
-    const browser = await puppeteer.launch({ headless: true });
+    const browser = await puppeteer.launch({
+      headless: true,
+      executablePath: "/usr/lib64/chromium-browser/chromium-browser",
+      args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-dev-shm-usage",
+        "--disable-gpu",
+      ],
+    });
+
     const page = await browser.newPage();
     await page.setContent(htmlContent, { waitUntil: "networkidle0" });
     await page.pdf({ path: pdfPath, format: "A4", printBackground: true });
