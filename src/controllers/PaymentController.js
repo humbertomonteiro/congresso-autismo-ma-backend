@@ -72,9 +72,17 @@ const processCreditPayment = async (req, res) => {
         creditResponse.paymentId,
         paymentData.MerchantOrderId
       );
+      console.log(
+        `Tentativa ${attempts + 1}/${maxAttempts}: Status ${
+          statusResponse.Status
+        }`
+      );
       if (finalStatuses.includes(statusResponse.Status)) break;
       attempts++;
-      if (attempts < maxAttempts) await delay(5000);
+      if (attempts < maxAttempts) {
+        console.log(`Aguardando 5 segundos antes da próxima tentativa...`);
+        await delay(5000);
+      }
     } while (attempts < maxAttempts);
 
     const customStatus = mapCieloStatusToCustom(statusResponse.Status);
@@ -112,7 +120,6 @@ const processCreditPayment = async (req, res) => {
 
     await CheckoutRepository.saveCheckout(checkoutData);
 
-    // Enviar email de confirmação se o status for "approved"
     if (customStatus === "approved") {
       const participantEmails = participants.map((p) => p.email);
       try {
@@ -122,7 +129,6 @@ const processCreditPayment = async (req, res) => {
         );
         let htmlTemplate = await fs.readFile(templatePath, "utf-8");
 
-        // Substituir placeholders no template
         htmlTemplate = htmlTemplate
           .replace(/{{PAYMENT_ID}}/g, creditResponse.paymentId)
           .replace(/{{TOTAL_AMOUNT}}/g, totals.total)
@@ -133,21 +139,20 @@ const processCreditPayment = async (req, res) => {
           .replace(/{{STATUS}}/g, "Aprovado");
 
         await EmailService.sendEmail({
-          from: process.env.EMAIL_USER_1, // Usa a primeira conta configurada
+          from: process.env.EMAIL_USER_1,
           to: participantEmails,
           subject: "Confirmação de Pagamento - Congresso Autismo MA 2025",
           html: htmlTemplate,
-          attachments: [], // Sem anexos por enquanto, mas pode adicionar QR codes depois
+          attachments: [],
         });
 
-        checkoutData.sentEmails = participantEmails; // Registra os emails enviados
-        await CheckoutRepository.saveCheckout(checkoutData); // Atualiza o Firestore
+        checkoutData.sentEmails = participantEmails;
+        await CheckoutRepository.saveCheckout(checkoutData);
       } catch (emailError) {
         console.error(
-          "Falha ao enviar email de confirmação, mas pagamento foi processado:",
+          "Falha ao enviar email, mas pagamento foi processado:",
           emailError.message
         );
-        // Não interrompe o fluxo do pagamento
       }
     }
 
