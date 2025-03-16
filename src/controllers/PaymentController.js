@@ -1,17 +1,14 @@
-const checkoutService = require("../services/checkoutService");
-const checkoutRepository = require("../repositories/checkoutRepository");
-const cieloRepository = require("../repositories/cieloRepository");
-const bancoDoBrasilService = require("../services/bancoDoBrasilService");
-const { sendResponse } = require("../utils/response");
-require("dotenv").config();
+// src/controllers/PaymentController.js
+const CheckoutService = require("../services/CheckoutService");
+const CieloService = require("../services/CieloService");
+const BancoDoBrasilService = require("../services/BancoDoBrasilService");
+const CheckoutRepository = require("../repositories/CheckoutRepository");
 const fs = require("fs");
 
 const EVENT_NAME = "Congresso Autismo MA 2025";
 
-// Função auxiliar para aguardar alguns segundos
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-// Função para mapear status da Cielo para os seus status
 const mapCieloStatusToCustom = (cieloStatus) => {
   switch (cieloStatus) {
     case 1:
@@ -33,30 +30,17 @@ const processCreditPayment = async (req, res) => {
   const { ticketQuantity, halfTickets, coupon, participants, creditCardData } =
     req.body;
   let creditResponse;
-  let paymentData = null;
-  let totals = null;
+  let paymentData;
+  let totals;
 
   try {
-    console.log("Iniciando processCreditPayment com dados:", {
-      ticketQuantity,
-      halfTickets,
-      coupon,
-      participants,
-      creditCardData,
-    });
-
-    if (!/^\d{2}\/\d{4}$/.test(creditCardData.maturity)) {
-      throw new Error("Data de validade deve estar no formato MM/AAAA");
-    }
-
-    checkoutService.validateParticipants(participants, ticketQuantity);
-    checkoutService.validateCreditCard(creditCardData);
-    totals = checkoutService.calculateTotal(
+    CheckoutService.validateParticipants(participants, ticketQuantity);
+    CheckoutService.validateCreditCard(creditCardData);
+    totals = CheckoutService.calculateTotal(
       ticketQuantity,
       halfTickets,
       coupon
     );
-    console.log("Totais calculados:", totals);
 
     paymentData = {
       MerchantOrderId: `ORDER_${Date.now()}`,
@@ -76,9 +60,7 @@ const processCreditPayment = async (req, res) => {
       },
     };
 
-    console.log("Enviando pagamento para Cielo:", paymentData);
-    creditResponse = await cieloRepository.createCreditPayment(paymentData);
-    console.log("Resposta inicial da Cielo:", creditResponse);
+    creditResponse = await CieloService.createCreditPayment(paymentData);
 
     let statusResponse;
     const maxAttempts = 5;
@@ -86,32 +68,19 @@ const processCreditPayment = async (req, res) => {
     const finalStatuses = [1, 2, 3, 9, 11];
 
     do {
-      console.log(
-        `Consulta ${attempts + 1} ao status do pagamento: ${
-          creditResponse.paymentId
-        }`
+      statusResponse = await CieloService.getPaymentStatus(
+        creditResponse.paymentId,
+        paymentData.MerchantOrderId
       );
-      statusResponse = await cieloRepository.getPaymentStatus(
-        creditResponse.paymentId
-      );
-      console.log("Status retornado:", statusResponse);
-
-      if (finalStatuses.includes(statusResponse.Status)) {
-        break;
-      }
-
+      if (finalStatuses.includes(statusResponse.Status)) break;
       attempts++;
-      if (attempts < maxAttempts) {
-        await delay(5000);
-      }
+      if (attempts < maxAttempts) await delay(5000);
     } while (attempts < maxAttempts);
 
     const customStatus = mapCieloStatusToCustom(statusResponse.Status);
-    console.log(`Status mapeado: ${customStatus}`);
-
     if (customStatus === "error") {
       throw new Error(
-        `Transação não aprovada. Status: ${statusResponse.ReturnMessage}`
+        `Transação não aprovada: ${statusResponse.ReturnMessage}`
       );
     }
 
@@ -141,48 +110,75 @@ const processCreditPayment = async (req, res) => {
       sentEmails: [],
     };
 
-    console.log("Salvando checkout no Firebase:", checkoutData);
-    await checkoutRepository.saveCheckout(checkoutData);
+    await CheckoutRepository.saveCheckout(checkoutData);
 
-    let message = "Pagamento processado com sucesso";
-    if (customStatus === "pending") {
-      message = "Pagamento em processamento, aguarde a confirmação.";
+    // Enviar email de confirmação se o status for "approved"
+    if (customStatus === "approved") {
+      const participantEmails = participants.map((p) => p.email);
+      try {
+        const templatePath = path.join(
+          __dirname,
+          "../templates/emailTemplate.html"
+        );
+        let htmlTemplate = await fs.readFile(templatePath, "utf-8");
+
+        // Substituir placeholders no template
+        htmlTemplate = htmlTemplate
+          .replace(/{{PAYMENT_ID}}/g, creditResponse.paymentId)
+          .replace(/{{TOTAL_AMOUNT}}/g, totals.total)
+          .replace(
+            /{{PARTICIPANTS}}/g,
+            participants.map((p) => p.name).join(", ")
+          )
+          .replace(/{{STATUS}}/g, "Aprovado");
+
+        await EmailService.sendEmail({
+          from: process.env.EMAIL_USER_1, // Usa a primeira conta configurada
+          to: participantEmails,
+          subject: "Confirmação de Pagamento - Congresso Autismo MA 2025",
+          html: htmlTemplate,
+          attachments: [], // Sem anexos por enquanto, mas pode adicionar QR codes depois
+        });
+
+        checkoutData.sentEmails = participantEmails; // Registra os emails enviados
+        await CheckoutRepository.saveCheckout(checkoutData); // Atualiza o Firestore
+      } catch (emailError) {
+        console.error(
+          "Falha ao enviar email de confirmação, mas pagamento foi processado:",
+          emailError.message
+        );
+        // Não interrompe o fluxo do pagamento
+      }
     }
-    sendResponse(res, 200, true, message, {
+
+    const message =
+      customStatus === "pending"
+        ? "Pagamento em processamento, aguarde a confirmação."
+        : "Pagamento processado com sucesso";
+    res.sendResponse(200, true, message, {
       paymentId: creditResponse.paymentId,
       status: customStatus,
       totalAmount: totals.total,
     });
   } catch (error) {
-    console.error("Erro ao processar crédito:", error.message, error.stack);
+    console.error("Erro ao processar crédito:", error.message);
 
-    if (creditResponse && creditResponse.paymentId) {
-      const status = await cieloRepository.getPaymentStatus(
-        creditResponse.paymentId
+    if (creditResponse?.paymentId) {
+      const status = await CieloService.getPaymentStatus(
+        creditResponse.paymentId,
+        paymentData?.MerchantOrderId || `ORDER_${Date.now()}`
       );
       if ([1, 2].includes(status.Status)) {
-        await cieloRepository.voidPayment(creditResponse.paymentId);
-        console.log("Transação estornada com sucesso.");
+        await CieloService.voidPayment(creditResponse.paymentId);
       }
     }
 
-    let userMessage = "Erro ao processar pagamento com cartão";
-    if (
-      error.message.includes("rejeitado") ||
-      error.message.includes("Status") ||
-      error.message.includes("Blocked")
-    ) {
-      userMessage = error.message;
-    }
-
     const errorCheckoutData = {
-      transactionId: paymentData
-        ? paymentData.MerchantOrderId
-        : `ORDER_${Date.now()}`,
+      transactionId: paymentData?.MerchantOrderId || `ORDER_${Date.now()}`,
       timestamp: new Date().toISOString(),
       status: "error",
       paymentMethod: "creditCard",
-      totalAmount: totals ? totals.total : "0.00",
+      totalAmount: totals?.total || "0.00",
       eventName: EVENT_NAME,
       participants: participants || [],
       paymentId: creditResponse?.paymentId || null,
@@ -213,32 +209,29 @@ const processCreditPayment = async (req, res) => {
       errorLog: error.message,
     };
 
-    try {
-      await checkoutRepository.saveCheckout(errorCheckoutData);
-      console.log("Erro salvo no Firebase com status 'error'");
-    } catch (saveError) {
-      console.error("Erro ao salvar erro no Firebase:", saveError.message);
-    }
-
-    sendResponse(res, 500, false, userMessage, null, error.message);
+    await CheckoutRepository.saveCheckout(errorCheckoutData);
+    res.sendResponse(
+      500,
+      false,
+      "Erro ao processar pagamento com cartão",
+      null,
+      error.message
+    );
   }
 };
 
 const processPixPayment = async (req, res) => {
   const { ticketQuantity, halfTickets, coupon, participants } = req.body;
 
-  let totals;
-  let paymentData;
-
   try {
-    checkoutService.validateParticipants(participants, ticketQuantity);
-    totals = checkoutService.calculateTotal(
+    CheckoutService.validateParticipants(participants, ticketQuantity);
+    const totals = CheckoutService.calculateTotal(
       ticketQuantity,
       halfTickets,
       coupon
     );
 
-    paymentData = {
+    const paymentData = {
       MerchantOrderId: `ORDER_${Date.now()}`,
       Customer: {
         Name: participants[0].name,
@@ -247,12 +240,10 @@ const processPixPayment = async (req, res) => {
       Amount: totals.totalInCents,
     };
 
-    console.log("Enviando requisição de Pix ao Banco do Brasil:", paymentData);
-    const pixResponse = await bancoDoBrasilService.createPixPayment(
+    const pixResponse = await BancoDoBrasilService.createPixPayment(
       paymentData.Amount,
       paymentData.Customer
     );
-    console.log("Resposta do Banco do Brasil para Pix:", pixResponse);
 
     const checkoutData = {
       transactionId: paymentData.MerchantOrderId,
@@ -280,11 +271,9 @@ const processPixPayment = async (req, res) => {
       sentEmails: [],
     };
 
-    console.log("Salvando checkout no Firebase:", checkoutData);
-    await checkoutRepository.saveCheckout(checkoutData);
+    await CheckoutRepository.saveCheckout(checkoutData);
 
-    sendResponse(
-      res,
+    res.sendResponse(
       200,
       true,
       "Pix gerado com sucesso, aguardando pagamento",
@@ -296,10 +285,15 @@ const processPixPayment = async (req, res) => {
       }
     );
   } catch (error) {
-    console.error("Erro ao processar Pix:", error.message, error.stack);
+    console.error("Erro ao processar Pix:", error.message);
 
+    const totals = CheckoutService.calculateTotal(
+      ticketQuantity,
+      halfTickets,
+      coupon
+    );
     const errorCheckoutData = {
-      transactionId: paymentData?.MerchantOrderId || `ORDER_${Date.now()}`,
+      transactionId: `ORDER_${Date.now()}`,
       timestamp: new Date().toISOString(),
       status: "error",
       paymentMethod: "pix",
@@ -317,28 +311,13 @@ const processPixPayment = async (req, res) => {
         discount: totals?.discount || "0.00",
         total: totals?.total || "0.00",
       },
-      paymentDetails: {
-        pix: null,
-      },
-      metadata: { errorLog: error.message },
+      paymentDetails: { pix: null },
       sentEmails: [],
+      errorLog: error.message,
     };
 
-    try {
-      console.log("Salvando checkout de erro no Firebase:", errorCheckoutData);
-      await checkoutRepository.saveCheckout(errorCheckoutData);
-    } catch (saveError) {
-      console.error("Erro ao salvar o erro no Firebase:", saveError.message);
-    }
-
-    sendResponse(
-      res,
-      500,
-      false,
-      error.message || "Erro ao gerar Pix",
-      null,
-      error.message
-    );
+    await CheckoutRepository.saveCheckout(errorCheckoutData);
+    res.sendResponse(500, false, "Erro ao gerar Pix", null, error.message);
   }
 };
 
@@ -346,19 +325,16 @@ const processBoletoPayment = async (req, res) => {
   const { ticketQuantity, halfTickets, coupon, participants, boletoData } =
     req.body;
 
-  let totals;
-  let paymentData;
-
   try {
-    checkoutService.validateParticipants(participants, ticketQuantity);
-    checkoutService.validateBoleto(boletoData);
-    totals = checkoutService.calculateTotal(
+    CheckoutService.validateParticipants(participants, ticketQuantity);
+    CheckoutService.validateBoleto(boletoData);
+    const totals = CheckoutService.calculateTotal(
       ticketQuantity,
       halfTickets,
       coupon
     );
 
-    paymentData = {
+    const paymentData = {
       MerchantOrderId: `ORDER_${Date.now()}`,
       Customer: {
         Name: participants[0].name,
@@ -367,20 +343,15 @@ const processBoletoPayment = async (req, res) => {
       Amount: totals.totalInCents,
     };
 
-    console.log(
-      "Enviando requisição de Boleto ao Banco do Brasil:",
-      paymentData
-    );
-    const boletoResponse = await bancoDoBrasilService.createBoletoPayment(
+    const boletoResponse = await BancoDoBrasilService.createBoletoPayment(
       paymentData.Amount,
       paymentData.Customer,
       boletoData,
       ticketQuantity,
       halfTickets,
-      coupon || null,
+      coupon,
       participants
     );
-    console.log("Resposta do Banco do Brasil para Boleto:", boletoResponse);
 
     const checkoutData = {
       transactionId: paymentData.MerchantOrderId,
@@ -409,17 +380,14 @@ const processBoletoPayment = async (req, res) => {
       sentEmails: [],
     };
 
-    console.log("Salvando checkout no Firebase:", checkoutData);
-    await checkoutRepository.saveCheckout(checkoutData);
+    await CheckoutRepository.saveCheckout(checkoutData);
 
-    // Verificar se o arquivo PDF existe antes de enviar
     if (!fs.existsSync(boletoResponse.boletoFile)) {
       throw new Error(
         `Arquivo PDF não encontrado: ${boletoResponse.boletoFile}`
       );
     }
 
-    console.log("Enviando PDF para o cliente:", boletoResponse.boletoFile);
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader(
       "Content-Disposition",
@@ -429,76 +397,48 @@ const processBoletoPayment = async (req, res) => {
     fileStream.pipe(res);
 
     fileStream.on("end", () => {
-      console.log("PDF enviado com sucesso");
       fs.unlink(boletoResponse.boletoFile, (err) => {
         if (err) console.error("Erro ao remover o PDF:", err);
-        else
-          console.log("PDF removido com sucesso:", boletoResponse.boletoFile);
       });
     });
 
     fileStream.on("error", (err) => {
-      console.error("Erro ao enviar o PDF:", err);
-      throw err; // Propaga o erro para o catch
+      throw err;
     });
   } catch (error) {
-    console.error("Erro ao processar boleto:", error.message, error.stack);
+    console.error("Erro ao processar boleto:", error.message);
 
-    if (error.response?.status === 503) {
-      sendResponse(
-        res,
-        503,
-        false,
-        "Serviço temporariamente indisponível. Tente novamente mais tarde.",
-        null,
-        error.message
-      );
-    } else {
-      const errorCheckoutData = {
-        transactionId: paymentData?.MerchantOrderId || `ORDER_${Date.now()}`,
-        timestamp: new Date().toISOString(),
-        status: "error",
-        paymentMethod: "boleto",
-        totalAmount: totals?.total || "0.00",
-        eventName: EVENT_NAME,
-        participants: participants || [],
-        paymentId: null,
-        orderDetails: {
-          ticketQuantity,
-          fullTickets: ticketQuantity - halfTickets,
-          halfTickets,
-          coupon: coupon || null,
-          valueTicketsAll: totals?.valueTicketsAll || "0.00",
-          valueTicketsHalf: totals?.valueTicketsHalf || "0.00",
-          discount: totals?.discount || "0.00",
-          total: totals?.total || "0.00",
-        },
-        paymentDetails: {
-          boleto: boletoData || null,
-        },
-        metadata: { errorLog: error.message },
-        sentEmails: [],
-      };
+    const totals = CheckoutService.calculateTotal(
+      ticketQuantity,
+      halfTickets,
+      coupon
+    );
+    const errorCheckoutData = {
+      transactionId: `ORDER_${Date.now()}`,
+      timestamp: new Date().toISOString(),
+      status: "error",
+      paymentMethod: "boleto",
+      totalAmount: totals?.total || "0.00",
+      eventName: EVENT_NAME,
+      participants: participants || [],
+      paymentId: null,
+      orderDetails: {
+        ticketQuantity,
+        fullTickets: ticketQuantity - halfTickets,
+        halfTickets,
+        coupon: coupon || null,
+        valueTicketsAll: totals?.valueTicketsAll || "0.00",
+        valueTicketsHalf: totals?.valueTicketsHalf || "0.00",
+        discount: totals?.discount || "0.00",
+        total: totals?.total || "0.00",
+      },
+      paymentDetails: { boleto: boletoData || null },
+      sentEmails: [],
+      errorLog: error.message,
+    };
 
-      try {
-        console.log(
-          "Salvando checkout de erro no Firebase:",
-          errorCheckoutData
-        );
-        await checkoutRepository.saveCheckout(errorCheckoutData);
-      } catch (saveError) {
-        console.error("Erro ao salvar o erro no Firebase:", saveError.message);
-      }
-
-      sendResponse(
-        res,
-        500,
-        false,
-        error.message || "Erro ao gerar boleto",
-        null,
-        error.message
-      );
-    }
+    await CheckoutRepository.saveCheckout(errorCheckoutData);
+    res.sendResponse(500, false, "Erro ao gerar boleto", null, error.message);
   }
 };
 
@@ -506,11 +446,10 @@ const validateCoupon = async (req, res) => {
   const { coupon, ticketQuantity } = req.body;
 
   try {
-    checkoutService.calculateTotal(ticketQuantity, 0, coupon);
-    sendResponse(res, 200, true, "Cupom válido", { valid: true });
+    CheckoutService.calculateTotal(ticketQuantity, 0, coupon);
+    res.sendResponse(200, true, "Cupom válido", { valid: true });
   } catch (error) {
-    console.error("Erro ao validar cupom:", error.message);
-    sendResponse(res, 400, false, error.message, { valid: false });
+    res.sendResponse(400, false, error.message, { valid: false });
   }
 };
 
@@ -518,19 +457,34 @@ const calculateTotals = async (req, res) => {
   const { ticketQuantity, halfTickets, coupon } = req.body;
 
   try {
-    const totals = checkoutService.calculateTotal(
+    const totals = CheckoutService.calculateTotal(
       ticketQuantity,
       halfTickets,
       coupon
     );
-    sendResponse(res, 200, true, "Totais calculados com sucesso", totals);
+    res.sendResponse(200, true, "Totais calculados com sucesso", totals);
   } catch (error) {
-    console.error("Erro ao calcular totais:", error.message);
-    sendResponse(
-      res,
+    res.sendResponse(
       400,
       false,
-      error.message || "Erro ao calcular totais",
+      "Erro ao calcular totais",
+      null,
+      error.message
+    );
+  }
+};
+
+const fetchCieloSales = async (req, res) => {
+  try {
+    const sales = await CieloService.fetchCieloSales();
+    await CheckoutRepository.saveCieloSales(sales);
+    res.sendResponse(200, true, "Vendas da Cielo importadas com sucesso");
+  } catch (error) {
+    console.error("Erro ao buscar vendas da Cielo:", error.message);
+    res.sendResponse(
+      500,
+      false,
+      "Erro ao importar vendas da Cielo",
       null,
       error.message
     );
@@ -543,4 +497,5 @@ module.exports = {
   processBoletoPayment,
   validateCoupon,
   calculateTotals,
+  fetchCieloSales,
 };

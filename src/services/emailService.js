@@ -1,5 +1,6 @@
+// src/services/emailService.js
 const nodemailer = require("nodemailer");
-const { db } = require("../config");
+const config = require("../config"); // Ajustado para nova estrutura
 const {
   collection,
   getDocs,
@@ -12,6 +13,7 @@ const path = require("path");
 const puppeteer = require("puppeteer");
 require("dotenv").config();
 const CredentialService = require("./CredentialService");
+const { generateTicketPDF } = require("../utils/templateUtils");
 
 const emailAccounts = [
   { user: process.env.EMAIL_USER_1, pass: process.env.EMAIL_PASS_1 },
@@ -27,12 +29,14 @@ class EmailService {
   }
 
   async fetchEmailTemplates() {
-    const snapshot = await getDocs(collection(db, "emailTemplates"));
+    const snapshot = await getDocs(
+      collection(config.firebase.db, "emailTemplates")
+    );
     return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
   }
 
   async fetchCheckouts() {
-    const snapshot = await getDocs(collection(db, "checkouts"));
+    const snapshot = await getDocs(collection(config.firebase.db, "checkouts"));
     return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
   }
 
@@ -59,68 +63,6 @@ class EmailService {
     console.log(`Email enviado de ${from} para ${to}`);
   }
 
-  async generateTicketPDF(recipient, qrCodes) {
-    const tempDir = path.join(__dirname, "../temp");
-    const pdfPath = path.join(
-      tempDir,
-      `tickets_${recipient.checkoutId}_${recipient.participantIndex}.pdf`
-    );
-
-    try {
-      await fs.mkdir(tempDir, { recursive: true });
-
-      const qrCodeDay1 = qrCodes["2025-05-31"].toString("base64");
-      const qrCodeDay2 = qrCodes["2025-06-01"].toString("base64");
-
-      const templatePath = path.join(
-        __dirname,
-        "../templates/ticketTemplate.html"
-      );
-      const htmlTemplate = await fs.readFile(templatePath, "utf8");
-
-      const htmlContent = htmlTemplate
-        .replace(
-          /{{PARTICIPANT_NAME}}/g,
-          recipient.participantName.toUpperCase()
-        )
-        .replace(/{{QRCODE_DAY1}}/g, qrCodeDay1)
-        .replace(/{{QRCODE_DAY2}}/g, qrCodeDay2)
-        .replace(/{{EVENT_NAME}}/g, "CONGRESSO AUTISMO MA 2025")
-        .replace(/{{DATE_DAY1}}/g, "31.05.2025")
-        .replace(/{{DATE_DAY2}}/g, "01.06.2025")
-        .replace(/{{LOCATION}}/g, "CENTRO DE CONVENÇÕES MA")
-        .replace(/{{TIME}}/g, "08:00 - 18:00")
-        .replace(/{{SUPPORT_EMAIL}}/g, "suporte@congressoautismoma.com.br");
-
-      const executablePath =
-        process.env.NODE_ENV === "production"
-          ? "/usr/local/chromium/chrome" // Caminho para AWS
-          : undefined; // Chromium padrão localmente
-
-      const browser = await puppeteer.launch({
-        headless: true,
-        executablePath,
-        args: [
-          "--no-sandbox",
-          "--disable-setuid-sandbox",
-          "--disable-dev-shm-usage",
-          "--disable-gpu",
-        ],
-      });
-
-      const page = await browser.newPage();
-      await page.setContent(htmlContent, { waitUntil: "networkidle0" });
-      await page.pdf({ path: pdfPath, format: "A4", printBackground: true });
-      await browser.close();
-
-      console.log("PDF gerado com sucesso em:", pdfPath);
-      return pdfPath;
-    } catch (error) {
-      console.error("Erro ao gerar PDF:", error.message);
-      throw error;
-    }
-  }
-
   async sendQRCodesForApprovedCheckouts() {
     if (this.isProcessing) {
       console.log("Processamento já em andamento, ignorando nova execução.");
@@ -142,18 +84,16 @@ class EmailService {
       }
 
       for (const checkout of approvedCheckouts) {
-        const qrCodeSentFlag = `qrCodesSent_${checkout.id}`;
-        const checkoutRef = doc(db, "checkouts", checkout.id);
+        const checkoutRef = doc(config.firebase.db, "checkouts", checkout.id);
         const checkoutSnap = await getDoc(checkoutRef);
         const checkoutData = checkoutSnap.data();
 
-        // Verifica se os QR codes já foram enviados para este checkout
         if (checkoutData.qrCodesSent) {
           console.log(`QR codes já enviados para checkout ${checkout.id}`);
           continue;
         }
 
-        const emailSet = new Set(); // Verifica e-mails duplicados
+        const emailSet = new Set();
         const recipients = checkout.participants
           .map((p, index) => {
             if (emailSet.has(p.email)) {
@@ -190,7 +130,7 @@ class EmailService {
                 recipient.participantName
               );
 
-            const pdfPath = await this.generateTicketPDF(recipient, qrCodes);
+            const pdfPath = await generateTicketPDF(recipient, qrCodes);
             attachments.push({
               filename: `ingressos_${recipient.participantName}.pdf`,
               path: pdfPath,
@@ -212,19 +152,18 @@ class EmailService {
               `Erro ao gerar PDF para ${recipient.email}:`,
               pdfError.message
             );
-            continue; // Pula este participante se o PDF falhar
+            continue;
           }
 
           try {
             await this.sendEmail({
-              from: emailAccounts[0].user, // Usa o primeiro e-mail disponível
+              from: emailAccounts[0].user,
               to: recipient.email,
               subject: "Seus QR Codes - Congresso Autismo MA 2025",
               html,
               attachments,
             });
 
-            // Marca como enviado no Firebase
             await updateDoc(checkoutRef, { qrCodesSent: true });
             console.log(
               `QR codes enviados para ${recipient.email} (checkout ${checkout.id})`
@@ -260,9 +199,43 @@ class EmailService {
     }
   }
 
-  startQRCodeService() {
-    console.log("Iniciando serviço de envio de QR codes...");
-    setInterval(() => this.sendQRCodesForApprovedCheckouts(), 900000);
+  async sendTemplateImmediately(templateId) {
+    const templateSnap = await getDoc(
+      doc(config.firebase.db, "emailTemplates", templateId)
+    );
+    if (!templateSnap.exists()) throw new Error("Template não encontrado");
+
+    const template = templateSnap.data();
+    const checkouts = await this.fetchCheckouts();
+    const recipients = checkouts
+      .filter(
+        (c) => c.status.toLowerCase() === template.statusFilter.toLowerCase()
+      )
+      .map((c) => ({
+        email: c.participants[0].email,
+        checkoutId: c.id,
+        participantName: c.participants[0].name,
+      }));
+
+    const htmlTemplate = await fs.readFile(
+      path.join(__dirname, "../templates/emailTemplateSimple.html"),
+      "utf-8"
+    );
+
+    for (const recipient of recipients) {
+      const html = htmlTemplate
+        .replace("{{nome}}", recipient.participantName || "Participante")
+        .replace("{{title}}", template.title)
+        .replace("{{body}}", template.body)
+        .replace("{{subject}}", template.subject);
+
+      await this.sendEmail({
+        from: emailAccounts[0].user,
+        to: recipient.email,
+        subject: template.subject,
+        html,
+      });
+    }
   }
 
   async processAutomaticEmails() {
@@ -291,7 +264,6 @@ class EmailService {
 
       for (const template of templates) {
         const recipients = [];
-
         checkouts
           .filter(
             (c) =>
@@ -299,30 +271,22 @@ class EmailService {
           )
           .forEach((c) => {
             if (!c.sentEmails?.includes(template.id)) {
-              if (template.statusFilter.toLowerCase() === "approved") {
-                const emailSet = new Set(); // Verifica e-mails duplicados
-                c.participants.forEach((p, index) => {
-                  if (emailSet.has(p.email)) {
-                    console.warn(
-                      `E-mail duplicado detectado: ${p.email} no checkout ${c.id}`
-                    );
-                    return;
-                  }
-                  emailSet.add(p.email);
-                  recipients.push({
-                    email: p.email,
-                    checkoutId: c.id,
-                    participantName: p.name,
-                    participantIndex: index,
-                  });
-                });
-              } else {
+              const emailSet = new Set();
+              c.participants.forEach((p, index) => {
+                if (emailSet.has(p.email)) {
+                  console.warn(
+                    `E-mail duplicado detectado: ${p.email} no checkout ${c.id}`
+                  );
+                  return;
+                }
+                emailSet.add(p.email);
                 recipients.push({
-                  email: c.participants[0].email,
+                  email: p.email,
                   checkoutId: c.id,
-                  participantName: c.participants[0].name,
+                  participantName: p.name,
+                  participantIndex: index,
                 });
-              }
+              });
             }
           });
 
@@ -351,8 +315,7 @@ class EmailService {
           });
 
           for (const recipient of batch) {
-            let html = htmlTemplate;
-            html = html
+            let html = htmlTemplate
               .replace("{{nome}}", recipient.participantName || "Participante")
               .replace("{{title}}", template.title)
               .replace("{{body}}", template.body)
@@ -377,7 +340,11 @@ class EmailService {
                 contentType: "application/pdf",
               });
 
-              const checkoutRef = doc(db, "checkouts", recipient.checkoutId);
+              const checkoutRef = doc(
+                config.firebase.db,
+                "checkouts",
+                recipient.checkoutId
+              );
               const checkoutSnap = await getDoc(checkoutRef);
               const checkout = checkoutSnap.data();
               const participant =
@@ -401,7 +368,11 @@ class EmailService {
             });
             console.log(`Email automático enviado para ${recipient.email}`);
 
-            const checkoutRef = doc(db, "checkouts", recipient.checkoutId);
+            const checkoutRef = doc(
+              config.firebase.db,
+              "checkouts",
+              recipient.checkoutId
+            );
             const checkout = checkouts.find(
               (c) => c.id === recipient.checkoutId
             );
@@ -435,9 +406,14 @@ class EmailService {
     }
   }
 
+  startQRCodeService() {
+    console.log("Iniciando serviço de envio de QR codes...");
+    setInterval(() => this.sendQRCodesForApprovedCheckouts(), 900000); // 15 minutos
+  }
+
   startEmailService() {
     console.log("Iniciando serviço de emails automáticos...");
-    setInterval(() => this.processAutomaticEmails(), 900000);
+    setInterval(() => this.processAutomaticEmails(), 900000); // 15 minutos
   }
 }
 

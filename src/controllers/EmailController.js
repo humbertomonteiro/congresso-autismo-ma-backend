@@ -1,17 +1,8 @@
-// backend/src/controllers/EmailController.js
+// src/controllers/EmailController.js
 const emailService = require("../services/emailService");
-const { sendResponse } = require("../utils/response");
 const axios = require("axios");
-const {
-  collection,
-  addDoc,
-  doc,
-  getDoc,
-  updateDoc,
-} = require("firebase/firestore");
-const { db } = require("../config");
+const config = require("../config"); // Ajustado para nova estrutura
 require("dotenv").config();
-
 const fs = require("fs").promises;
 const path = require("path");
 
@@ -78,14 +69,14 @@ const sendEmail = async (req, res) => {
     await emailService.sendEmail({ from, to, subject, html: htmlTemplate });
     console.log("Email enviado com sucesso.");
 
-    sendResponse(res, 200, true, "Email enviado com sucesso");
+    res.sendResponse(200, true, "Email enviado com sucesso");
   } catch (error) {
     console.error(
       "Erro ao processar envio de email:",
       error.message,
       error.stack
     );
-    sendResponse(res, 500, false, "Erro ao enviar email", null, error.message);
+    res.sendResponse(500, false, "Erro ao enviar email", null, error.message);
   }
 };
 
@@ -133,7 +124,7 @@ const generateEmailTemplate = async (req, res) => {
     const subject = subjectLine.replace("Subject: ", "").trim();
     const body = bodyLines.join("\n").replace("Body: ", "").trim();
 
-    sendResponse(res, 200, true, "Template gerado com sucesso", {
+    res.sendResponse(200, true, "Template gerado com sucesso", {
       subject,
       body,
     });
@@ -142,8 +133,7 @@ const generateEmailTemplate = async (req, res) => {
     if (error.response) {
       console.error("Detalhes do erro da API:", error.response.data);
     }
-    sendResponse(
-      res,
+    res.sendResponse(
       error.response?.status || 500,
       false,
       "Erro ao gerar o template com IA",
@@ -162,78 +152,17 @@ const sendTemplateImmediately = async (req, res) => {
     }
 
     await emailService.sendTemplateImmediately(templateId);
-    sendResponse(res, 200, true, "Template enviado imediatamente com sucesso");
+    res.sendResponse(200, true, "Template enviado imediatamente com sucesso");
   } catch (error) {
     console.error(
       "Erro ao enviar template imediatamente:",
       error.message,
       error.stack
     );
-    sendResponse(
-      res,
+    res.sendResponse(
       500,
       false,
       "Erro ao enviar template imediatamente",
-      null,
-      error.message
-    );
-  }
-};
-
-const createContactList = async (req, res) => {
-  const { name, description } = req.body;
-
-  try {
-    if (!name) throw new Error("Nome da lista é obrigatório.");
-
-    const listData = {
-      name,
-      description: description || "",
-      contacts: [],
-      createdAt: new Date().toISOString(),
-    };
-
-    const docRef = await addDoc(collection(db, "contactLists"), listData);
-    sendResponse(res, 200, true, "Lista criada com sucesso", {
-      id: docRef.id,
-      ...listData,
-    });
-  } catch (error) {
-    console.error("Erro ao criar lista de contatos:", error.message);
-    sendResponse(
-      res,
-      500,
-      false,
-      "Erro ao criar lista de contatos",
-      null,
-      error.message
-    );
-  }
-};
-
-const addContactToList = async (req, res) => {
-  const { listId, email } = req.body;
-
-  try {
-    if (!listId || !email)
-      throw new Error("ID da lista e email são obrigatórios.");
-
-    const listRef = doc(db, "contactLists", listId);
-    const listDoc = await getDoc(listRef);
-    if (!listDoc.exists()) throw new Error("Lista não encontrada.");
-
-    const listData = listDoc.data();
-    const updatedContacts = [...(listData.contacts || []), email];
-    await updateDoc(listRef, { contacts: updatedContacts });
-
-    sendResponse(res, 200, true, "Contato adicionado com sucesso");
-  } catch (error) {
-    console.error("Erro ao adicionar contato à lista:", error.message);
-    sendResponse(
-      res,
-      500,
-      false,
-      "Erro ao adicionar contato à lista",
       null,
       error.message
     );
@@ -244,6 +173,4 @@ module.exports = {
   sendEmail,
   generateEmailTemplate,
   sendTemplateImmediately,
-  createContactList,
-  addContactToList,
 };
