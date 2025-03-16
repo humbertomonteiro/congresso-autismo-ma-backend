@@ -20,7 +20,7 @@ class CieloRepository {
       console.log("Resposta da Cielo para crédito:", response.data);
 
       const payment = response.data.Payment;
-      const successCodes = ["4", "6"]; // Códigos de sucesso para crédito
+      const successCodes = ["4", "6"];
       if (!successCodes.includes(payment.ReturnCode)) {
         throw new Error(
           payment.ReturnMessage ||
@@ -38,7 +38,7 @@ class CieloRepository {
       };
     } catch (error) {
       const errorMessage =
-        error.response?.data?.[0]?.Message || // Ajuste para erros em array
+        error.response?.data?.[0]?.Message ||
         error.response?.data?.Message ||
         error.message ||
         "Erro ao processar o pagamento na Cielo";
@@ -131,7 +131,7 @@ class CieloRepository {
       };
     } catch (error) {
       const errorMessage =
-        error.response?.data?.[0]?.Message || // Ajuste para erros em array
+        error.response?.data?.[0]?.Message ||
         error.response?.data?.Message ||
         error.message ||
         "Erro ao processar o boleto na Cielo";

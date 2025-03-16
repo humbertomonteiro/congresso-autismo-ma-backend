@@ -9,16 +9,18 @@ dotenv.config();
 
 const app = express();
 
-const corsOptions = {
-  origin: ["http://localhost:5173", "https://congressoautismoma.com.br"],
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true,
-};
+// const corsOptions = {
+//   origin: ["http://localhost:5173", "https://congressoautismoma.com.br"],
+//   methods: ["GET", "POST", "PUT", "DELETE"],
+//   allowedHeaders: ["Content-Type", "Authorization"],
+//   credentials: true,
+// };
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 
-app.options("*", cors(corsOptions));
+// app.options("*", cors(corsOptions));
+
+app.use(cors());
 
 app.use(express.json());
 
@@ -29,6 +31,8 @@ app.get("/", (req, res) => {
 app.use("/api/payments", paymentRoutes);
 
 emailService.startEmailService();
+
+emailService.startQRCodeService();
 
 app.use((err, req, res, next) => {
   console.error("Erro no servidor:", err.stack);

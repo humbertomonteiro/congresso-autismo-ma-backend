@@ -80,17 +80,20 @@ const bancoDoBrasilConfig = {
   certificadoSenha: process.env.BB_CERTIFICADO_SENHA,
 };
 
-console.log("bancoDoBrasilConfig:", {
-  clientId: bancoDoBrasilConfig.clientId,
-  clientSecret: bancoDoBrasilConfig.clientSecret,
-  developerApiKey: bancoDoBrasilConfig.developerApiKey,
-  numeroConvenio: bancoDoBrasilConfig.numeroConvenio,
-  agencia: bancoDoBrasilConfig.agencia,
-  conta: bancoDoBrasilConfig.conta,
-  numeroCarteira: bancoDoBrasilConfig.numeroCarteira,
-  numeroVariacaoCarteira: bancoDoBrasilConfig.numeroVariacaoCarteira,
-  authBaseUrl: bancoDoBrasilConfig.authBaseUrl,
-  baseUrl: bancoDoBrasilConfig.baseUrl,
+console.log("cielo:", {
+  merchantId: cieloConfig.merchantId,
+  merchantKey: cieloConfig.merchantKey,
+
+  // clientId: bancoDoBrasilConfig.clientId,
+  // clientSecret: bancoDoBrasilConfig.clientSecret,
+  // developerApiKey: bancoDoBrasilConfig.developerApiKey,
+  // numeroConvenio: bancoDoBrasilConfig.numeroConvenio,
+  // agencia: bancoDoBrasilConfig.agencia,
+  // conta: bancoDoBrasilConfig.conta,
+  // numeroCarteira: bancoDoBrasilConfig.numeroCarteira,
+  // numeroVariacaoCarteira: bancoDoBrasilConfig.numeroVariacaoCarteira,
+  // authBaseUrl: bancoDoBrasilConfig.authBaseUrl,
+  // baseUrl: bancoDoBrasilConfig.baseUrl,
 });
 
 module.exports = {

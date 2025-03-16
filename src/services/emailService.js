@@ -1,12 +1,11 @@
-// backend/src/services/emailService.js
 const nodemailer = require("nodemailer");
 const { db } = require("../config");
 const {
   collection,
   getDocs,
   doc,
-  updateDoc,
   getDoc,
+  updateDoc,
 } = require("firebase/firestore");
 const fs = require("fs").promises;
 const path = require("path");
@@ -24,7 +23,7 @@ const emailAccounts = [
 
 class EmailService {
   constructor() {
-    this.isProcessing = false; // Flag para evitar execuções concorrentes
+    this.isProcessing = false;
   }
 
   async fetchEmailTemplates() {
@@ -67,46 +66,203 @@ class EmailService {
       `tickets_${recipient.checkoutId}_${recipient.participantIndex}.pdf`
     );
 
-    await fs.mkdir(tempDir, { recursive: true });
+    try {
+      await fs.mkdir(tempDir, { recursive: true });
 
-    const qrCodeDay1 = qrCodes["2025-05-31"].toString("base64");
-    const qrCodeDay2 = qrCodes["2025-06-01"].toString("base64");
+      const qrCodeDay1 = qrCodes["2025-05-31"].toString("base64");
+      const qrCodeDay2 = qrCodes["2025-06-01"].toString("base64");
 
-    const templatePath = path.join(
-      __dirname,
-      "../templates/ticketTemplate.html"
-    );
-    const htmlTemplate = await fs.readFile(templatePath, "utf8");
+      const templatePath = path.join(
+        __dirname,
+        "../templates/ticketTemplate.html"
+      );
+      const htmlTemplate = await fs.readFile(templatePath, "utf8");
 
-    const htmlContent = htmlTemplate
-      .replace(/{{PARTICIPANT_NAME}}/g, recipient.participantName.toUpperCase())
-      .replace(/{{QRCODE_DAY1}}/g, qrCodeDay1)
-      .replace(/{{QRCODE_DAY2}}/g, qrCodeDay2)
-      .replace(/{{EVENT_NAME}}/g, "CONGRESSO AUTISMO MA 2025")
-      .replace(/{{DATE_DAY1}}/g, "31.05.2025")
-      .replace(/{{DATE_DAY2}}/g, "01.06.2025")
-      .replace(/{{LOCATION}}/g, "CENTRO DE CONVENÇÕES MA")
-      .replace(/{{TIME}}/g, "08:00 - 18:00")
-      .replace(/{{SUPPORT_EMAIL}}/g, "suporte@congressoautismoma.com.br");
+      const htmlContent = htmlTemplate
+        .replace(
+          /{{PARTICIPANT_NAME}}/g,
+          recipient.participantName.toUpperCase()
+        )
+        .replace(/{{QRCODE_DAY1}}/g, qrCodeDay1)
+        .replace(/{{QRCODE_DAY2}}/g, qrCodeDay2)
+        .replace(/{{EVENT_NAME}}/g, "CONGRESSO AUTISMO MA 2025")
+        .replace(/{{DATE_DAY1}}/g, "31.05.2025")
+        .replace(/{{DATE_DAY2}}/g, "01.06.2025")
+        .replace(/{{LOCATION}}/g, "CENTRO DE CONVENÇÕES MA")
+        .replace(/{{TIME}}/g, "08:00 - 18:00")
+        .replace(/{{SUPPORT_EMAIL}}/g, "suporte@congressoautismoma.com.br");
 
-    const browser = await puppeteer.launch({
-      headless: true,
-      executablePath: "/usr/local/chromium/chrome",
-      args: [
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-        "--disable-dev-shm-usage",
-        "--disable-gpu",
-      ],
-    });
+      const executablePath =
+        process.env.NODE_ENV === "production"
+          ? "/usr/local/chromium/chrome" // Caminho para AWS
+          : undefined; // Chromium padrão localmente
 
-    const page = await browser.newPage();
-    await page.setContent(htmlContent, { waitUntil: "networkidle0" });
-    await page.pdf({ path: pdfPath, format: "A4", printBackground: true });
-    await browser.close();
+      const browser = await puppeteer.launch({
+        headless: true,
+        executablePath,
+        args: [
+          "--no-sandbox",
+          "--disable-setuid-sandbox",
+          "--disable-dev-shm-usage",
+          "--disable-gpu",
+        ],
+      });
 
-    console.log("PDF gerado com sucesso em:", pdfPath);
-    return pdfPath;
+      const page = await browser.newPage();
+      await page.setContent(htmlContent, { waitUntil: "networkidle0" });
+      await page.pdf({ path: pdfPath, format: "A4", printBackground: true });
+      await browser.close();
+
+      console.log("PDF gerado com sucesso em:", pdfPath);
+      return pdfPath;
+    } catch (error) {
+      console.error("Erro ao gerar PDF:", error.message);
+      throw error;
+    }
+  }
+
+  async sendQRCodesForApprovedCheckouts() {
+    if (this.isProcessing) {
+      console.log("Processamento já em andamento, ignorando nova execução.");
+      return;
+    }
+
+    this.isProcessing = true;
+    console.log("Enviando QR codes para checkouts aprovados...");
+
+    try {
+      const checkouts = await this.fetchCheckouts();
+      const approvedCheckouts = checkouts.filter(
+        (c) => c.status.toLowerCase() === "approved"
+      );
+
+      if (!approvedCheckouts.length) {
+        console.log("Nenhum checkout aprovado encontrado.");
+        return;
+      }
+
+      for (const checkout of approvedCheckouts) {
+        const qrCodeSentFlag = `qrCodesSent_${checkout.id}`;
+        const checkoutRef = doc(db, "checkouts", checkout.id);
+        const checkoutSnap = await getDoc(checkoutRef);
+        const checkoutData = checkoutSnap.data();
+
+        // Verifica se os QR codes já foram enviados para este checkout
+        if (checkoutData.qrCodesSent) {
+          console.log(`QR codes já enviados para checkout ${checkout.id}`);
+          continue;
+        }
+
+        const emailSet = new Set(); // Verifica e-mails duplicados
+        const recipients = checkout.participants
+          .map((p, index) => {
+            if (emailSet.has(p.email)) {
+              console.warn(
+                `E-mail duplicado detectado: ${p.email} no checkout ${checkout.id}`
+              );
+              return null;
+            }
+            emailSet.add(p.email);
+            return {
+              email: p.email,
+              checkoutId: checkout.id,
+              participantName: p.name,
+              participantIndex: index,
+            };
+          })
+          .filter((r) => r !== null);
+
+        for (const recipient of recipients) {
+          const html = `
+            <h2>Olá ${recipient.participantName},</h2>
+            <p>Seu pagamento foi aprovado! Aqui estão seus QR codes para o Congresso Autismo MA 2025.</p>
+            <p>Apresente o PDF anexo na entrada do evento em cada dia.</p>
+            <p>Atenciosamente,<br>Equipe Congresso Autismo MA</p>
+            <p><small>Suporte: suporte@congressoautismoma.com.br</small></p>
+          `;
+
+          let attachments = [];
+          try {
+            const { qrCodes, qrRawData } =
+              await CredentialService.generateQRCodesForParticipant(
+                recipient.checkoutId,
+                recipient.participantIndex,
+                recipient.participantName
+              );
+
+            const pdfPath = await this.generateTicketPDF(recipient, qrCodes);
+            attachments.push({
+              filename: `ingressos_${recipient.participantName}.pdf`,
+              path: pdfPath,
+              contentType: "application/pdf",
+            });
+
+            const participant =
+              checkoutData.participants[recipient.participantIndex];
+            participant.qrRawData = qrRawData;
+            participant.validated = {
+              "2025-05-31": false,
+              "2025-06-01": false,
+            };
+            await updateDoc(checkoutRef, {
+              participants: checkoutData.participants,
+            });
+          } catch (pdfError) {
+            console.error(
+              `Erro ao gerar PDF para ${recipient.email}:`,
+              pdfError.message
+            );
+            continue; // Pula este participante se o PDF falhar
+          }
+
+          try {
+            await this.sendEmail({
+              from: emailAccounts[0].user, // Usa o primeiro e-mail disponível
+              to: recipient.email,
+              subject: "Seus QR Codes - Congresso Autismo MA 2025",
+              html,
+              attachments,
+            });
+
+            // Marca como enviado no Firebase
+            await updateDoc(checkoutRef, { qrCodesSent: true });
+            console.log(
+              `QR codes enviados para ${recipient.email} (checkout ${checkout.id})`
+            );
+          } catch (emailError) {
+            console.error(
+              `Erro ao enviar email para ${recipient.email}:`,
+              emailError.message
+            );
+          } finally {
+            if (attachments.length > 0) {
+              try {
+                await fs.unlink(attachments[0].path);
+                console.log(
+                  `Arquivo temporário ${attachments[0].path} removido`
+                );
+              } catch (unlinkError) {
+                if (unlinkError.code !== "ENOENT") {
+                  console.error(
+                    "Erro ao remover arquivo temporário:",
+                    unlinkError.message
+                  );
+                }
+              }
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Erro ao enviar QR codes:", error.message);
+    } finally {
+      this.isProcessing = false;
+    }
+  }
+
+  startQRCodeService() {
+    console.log("Iniciando serviço de envio de QR codes...");
+    setInterval(() => this.sendQRCodesForApprovedCheckouts(), 900000);
   }
 
   async processAutomaticEmails() {
@@ -132,12 +288,10 @@ class EmailService {
         "../templates/emailTemplateSimple.html"
       );
       const htmlTemplate = await fs.readFile(templatePath, "utf-8");
-      console.log("Template base carregado:", htmlTemplate.substring(0, 200));
 
       for (const template of templates) {
         const recipients = [];
 
-        // Filtra os checkouts com base no status do template
         checkouts
           .filter(
             (c) =>
@@ -146,8 +300,15 @@ class EmailService {
           .forEach((c) => {
             if (!c.sentEmails?.includes(template.id)) {
               if (template.statusFilter.toLowerCase() === "approved") {
-                // Para status "approved", adiciona todos os participantes
+                const emailSet = new Set(); // Verifica e-mails duplicados
                 c.participants.forEach((p, index) => {
+                  if (emailSet.has(p.email)) {
+                    console.warn(
+                      `E-mail duplicado detectado: ${p.email} no checkout ${c.id}`
+                    );
+                    return;
+                  }
+                  emailSet.add(p.email);
                   recipients.push({
                     email: p.email,
                     checkoutId: c.id,
@@ -156,7 +317,6 @@ class EmailService {
                   });
                 });
               } else {
-                // Para outros status, adiciona apenas o primeiro participante
                 recipients.push({
                   email: c.participants[0].email,
                   checkoutId: c.id,
@@ -192,31 +352,23 @@ class EmailService {
 
           for (const recipient of batch) {
             let html = htmlTemplate;
-            console.log(
-              `Processando recipient ${recipient.email} com template ${template.id}`
-            );
-
-            // Substitui os placeholders
             html = html
               .replace("{{nome}}", recipient.participantName || "Participante")
-              .replace("{{title}}", template.title) // Título dinâmico
-              .replace("{{body}}", template.body) // Corpo dinâmico
-              .replace("{{subject}}", template.subject); // Assunto dinâmico
-
-            console.log(`HTML final para ${recipient.email}:`, html);
+              .replace("{{title}}", template.title)
+              .replace("{{body}}", template.body)
+              .replace("{{subject}}", template.subject);
 
             let attachments = [];
-            // Anexa QR codes apenas se o template for configurado para isso
             if (
               template.includeQRCodes &&
               template.statusFilter.toLowerCase() === "approved"
             ) {
-              const qrCodes =
+              const { qrCodes, qrRawData } =
                 await CredentialService.generateQRCodesForParticipant(
                   recipient.checkoutId,
-                  recipient.participantIndex
+                  recipient.participantIndex,
+                  recipient.participantName
                 );
-              console.log(`QR Codes gerados para ${recipient.email}:`, qrCodes);
 
               const pdfPath = await this.generateTicketPDF(recipient, qrCodes);
               attachments.push({
@@ -224,68 +376,62 @@ class EmailService {
                 path: pdfPath,
                 contentType: "application/pdf",
               });
-            }
 
-            try {
-              await transporter.sendMail({
-                from: account.user,
-                to: recipient.email,
-                subject: template.subject,
-                html,
-                attachments,
-              });
-              console.log(`Email automático enviado para ${recipient.email}`);
-
-              // Marca o template como enviado no checkout
               const checkoutRef = doc(db, "checkouts", recipient.checkoutId);
-              const checkout = checkouts.find(
-                (c) => c.id === recipient.checkoutId
-              );
-              const updatedSentEmails = [
-                ...(checkout.sentEmails || []),
-                template.id,
-              ];
+              const checkoutSnap = await getDoc(checkoutRef);
+              const checkout = checkoutSnap.data();
+              const participant =
+                checkout.participants[recipient.participantIndex];
+              participant.qrRawData = qrRawData;
+              participant.validated = {
+                "2025-05-31": false,
+                "2025-06-01": false,
+              };
               await updateDoc(checkoutRef, {
-                sentEmails: updatedSentEmails,
+                participants: checkout.participants,
               });
-              console.log(
-                `Template ${template.id} marcado como enviado para checkout ${recipient.checkoutId}`
-              );
-
-              // Atualiza o checkout localmente para evitar reprocessamento
-              checkout.sentEmails = updatedSentEmails;
-
-              // Remove arquivos temporários após o envio
-              if (attachments.length > 0) {
-                try {
-                  await fs.unlink(attachments[0].path);
-                  console.log(
-                    `Arquivo temporário ${attachments[0].path} removido`
-                  );
-                } catch (unlinkError) {
-                  if (unlinkError.code !== "ENOENT") {
-                    throw unlinkError; // Propaga erros diferentes de "arquivo não encontrado"
-                  }
-                  console.log(
-                    `Arquivo ${attachments[0].path} já foi removido anteriormente`
-                  );
-                }
-              }
-
-              sentCount++;
-            } catch (error) {
-              console.error(
-                `Erro ao enviar email automático para ${recipient.email}:`,
-                error.message
-              );
             }
+
+            await transporter.sendMail({
+              from: account.user,
+              to: recipient.email,
+              subject: template.subject,
+              html,
+              attachments,
+            });
+            console.log(`Email automático enviado para ${recipient.email}`);
+
+            const checkoutRef = doc(db, "checkouts", recipient.checkoutId);
+            const checkout = checkouts.find(
+              (c) => c.id === recipient.checkoutId
+            );
+            const updatedSentEmails = [
+              ...(checkout.sentEmails || []),
+              template.id,
+            ];
+            await updateDoc(checkoutRef, { sentEmails: updatedSentEmails });
+            checkout.sentEmails = updatedSentEmails;
+
+            if (attachments.length > 0) {
+              try {
+                await fs.unlink(attachments[0].path);
+                console.log(
+                  `Arquivo temporário ${attachments[0].path} removido`
+                );
+              } catch (unlinkError) {
+                if (unlinkError.code !== "ENOENT") throw unlinkError;
+                console.log(`Arquivo ${attachments[0].path} já foi removido`);
+              }
+            }
+
+            sentCount++;
           }
         }
       }
     } catch (error) {
       console.error("Erro ao processar emails automáticos:", error.message);
     } finally {
-      this.isProcessing = false; // Libera para próxima execução
+      this.isProcessing = false;
     }
   }
 

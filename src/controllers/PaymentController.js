@@ -14,18 +14,18 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 // Função para mapear status da Cielo para os seus status
 const mapCieloStatusToCustom = (cieloStatus) => {
   switch (cieloStatus) {
-    case 1: // Autorizado
-    case 2: // Pago
+    case 1:
+    case 2:
       return "approved";
-    case 0: // Não Finalizado
-    case 10: // Em Análise Antifraude
+    case 0:
+    case 10:
       return "pending";
-    case 3: // Negado
-    case 9: // Cancelado
-    case 11: // Erro
+    case 3:
+    case 9:
+    case 11:
       return "error";
     default:
-      return "pending"; // Default para status desconhecido ou em processamento
+      return "pending";
   }
 };
 
@@ -44,6 +44,10 @@ const processCreditPayment = async (req, res) => {
       participants,
       creditCardData,
     });
+
+    if (!/^\d{2}\/\d{4}$/.test(creditCardData.maturity)) {
+      throw new Error("Data de validade deve estar no formato MM/AAAA");
+    }
 
     checkoutService.validateParticipants(participants, ticketQuantity);
     checkoutService.validateCreditCard(creditCardData);
@@ -67,7 +71,7 @@ const processCreditPayment = async (req, res) => {
           Holder: creditCardData.cardName,
           ExpirationDate: creditCardData.maturity,
           SecurityCode: creditCardData.cardCode,
-          Brand: creditCardData.brand || "Visa",
+          Brand: creditCardData.brand,
         },
       },
     };
@@ -153,12 +157,12 @@ const processCreditPayment = async (req, res) => {
     console.error("Erro ao processar crédito:", error.message, error.stack);
 
     if (creditResponse && creditResponse.paymentId) {
-      try {
-        console.log("Tentando estornar transação:", creditResponse.paymentId);
+      const status = await cieloRepository.getPaymentStatus(
+        creditResponse.paymentId
+      );
+      if ([1, 2].includes(status.Status)) {
         await cieloRepository.voidPayment(creditResponse.paymentId);
         console.log("Transação estornada com sucesso.");
-      } catch (voidError) {
-        console.error("Erro ao estornar transação:", voidError.message);
       }
     }
 
@@ -168,7 +172,7 @@ const processCreditPayment = async (req, res) => {
       error.message.includes("Status") ||
       error.message.includes("Blocked")
     ) {
-      userMessage = error.message; // Mostra "Blocked Card" para o usuário
+      userMessage = error.message;
     }
 
     const errorCheckoutData = {
@@ -371,9 +375,10 @@ const processBoletoPayment = async (req, res) => {
       paymentData.Amount,
       paymentData.Customer,
       boletoData,
-      ticketQuantity, // Adicionando ticketQuantity
-      halfTickets, // Adicionando halfTickets
-      coupon || null // Adicionando coupon
+      ticketQuantity,
+      halfTickets,
+      coupon || null,
+      participants
     );
     console.log("Resposta do Banco do Brasil para Boleto:", boletoResponse);
 

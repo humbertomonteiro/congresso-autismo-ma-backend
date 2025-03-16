@@ -149,6 +149,9 @@
       .discriminacao p {
         margin: 6px 0;
       }
+      .discriminacao p.participants {
+        white-space: pre-line;
+      }
     </style>
   </head>
   <body>
@@ -206,7 +209,7 @@
       <!-- Pix -->
       <div class="pix">
         <img
-          src="https://w7.pngwing.com/pngs/4/38/png-transparent-banco-do-brasil-hd-logo-thumbnail.png"
+          src="https://cdn.worldvectorlogo.com/logos/banco-do-brasil-3.svg"
           alt="Logo Banco do Brasil"
         />
         <div class="info-pix">
@@ -282,6 +285,8 @@
           </p>
           <p><strong>Desconto de Grupo:</strong> R$ {{DISCOUNT}}</p>
           <p><strong>Total a Pagar:</strong> R$ {{TOTAL}}</p>
+          <p><strong>Participantes:</strong></p>
+          <p>{{PARTICIPANTS}}</p>
         </div>
       </div>
 

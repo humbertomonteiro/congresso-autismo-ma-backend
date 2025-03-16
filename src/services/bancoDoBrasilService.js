@@ -106,7 +106,8 @@ class BancoDoBrasilService {
     boletoData,
     ticketQuantity,
     halfTickets,
-    coupon
+    coupon,
+    participants
   ) {
     const token = await this.getAccessToken();
     const boletoEndpoint = `${this.apiBaseUrl}/boletos?gw-dev-app-key=${bancoDoBrasilConfig.developerApiKey}`;
@@ -181,7 +182,8 @@ class BancoDoBrasilService {
         customer,
         ticketQuantity,
         halfTickets,
-        coupon
+        coupon,
+        participants
       );
 
       return {
@@ -208,7 +210,8 @@ class BancoDoBrasilService {
     customer,
     ticketQuantity,
     halfTickets,
-    coupon
+    coupon,
+    participants
   ) {
     const calculation = CheckoutService.calculateTotal(
       ticketQuantity,
@@ -241,6 +244,18 @@ class BancoDoBrasilService {
       "../templates/boletoTemplate.html"
     );
     const htmlTemplate = fs.readFileSync(templatePath, "utf8");
+
+    let participantsFormatted = "Não informado";
+    if (Array.isArray(participants) && participants.length > 0) {
+      // Verifica se os elementos são strings ou objetos
+      participantsFormatted = participants
+        .map((participant) =>
+          typeof participant === "string"
+            ? participant
+            : participant.name || "Nome não disponível"
+        )
+        .join("<br>");
+    }
 
     const htmlContent = htmlTemplate
       .replace(
@@ -319,11 +334,17 @@ class BancoDoBrasilService {
       .replace(/{{VALUE_TICKETS_ALL}}/g, calculation.valueTicketsAll)
       .replace(/{{VALUE_TICKETS_HALF}}/g, calculation.valueTicketsHalf)
       .replace(/{{DISCOUNT}}/g, calculation.discount)
-      .replace(/{{TOTAL}}/g, calculation.total);
+      .replace(/{{TOTAL}}/g, calculation.total)
+      .replace(/{{PARTICIPANTS}}/g, participantsFormatted);
+
+    const isProduction = process.env.NODE_ENV === "production";
+    const executablePath = isProduction
+      ? "/usr/local/chromium/chrome"
+      : undefined;
 
     const browser = await puppeteer.launch({
       headless: true,
-      executablePath: "/usr/local/chromium/chrome",
+      executablePath,
       args: [
         "--no-sandbox",
         "--disable-setuid-sandbox",

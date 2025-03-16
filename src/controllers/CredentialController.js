@@ -1,14 +1,16 @@
-// backend/src/controllers/CredentialController.js
 const { db } = require("../config");
 const { doc, getDoc, updateDoc } = require("firebase/firestore");
 const QRCode = require("qrcode");
 const { sendResponse } = require("../utils/response");
-const emailService = require("../services/emailService");
+// const emailService = require("../services/emailService");
+const crypto = require("crypto");
+require("dotenv").config();
+
+const secret = process.env.QR_SECRET || "sua-chave-secreta";
 
 const EVENT_NAME = "Congresso Autismo MA 2025";
-const EVENT_DATES = ["2025-05-31", "2025-06-01"]; // 31/05 e 01/06
+const EVENT_DATES = ["2025-05-31", "2025-06-01"];
 
-// backend/src/controllers/CredentialController.js
 const generateQRCodesForParticipant = async (req, res) => {
   const { checkoutId, participantIndex } = req.body;
 
@@ -26,40 +28,46 @@ const generateQRCodesForParticipant = async (req, res) => {
     }
 
     const qrCodes = {};
-    const qrRawData = {}; // Armazena o JSON puro
-    for (const date of ["2025-05-31", "2025-06-01"]) {
-      const qrData = JSON.stringify({
+    const qrRawData = {};
+    for (const date of EVENT_DATES) {
+      const baseData = {
         checkoutId,
         participantId: `${checkoutId}-${participantIndex}`,
         participantName: participant.name,
-        eventName: "Congresso Autismo MA 2025",
+        eventName: EVENT_NAME,
         date,
-      });
-      qrRawData[date] = qrData; // JSON puro
-      qrCodes[date] = await QRCode.toDataURL(qrData); // Base64 para exibição
+      };
+      const signature = crypto
+        .createHmac("sha256", secret)
+        .update(`${checkoutId}-${participantIndex}-${date}`)
+        .digest("hex");
+      const qrData = JSON.stringify({ ...baseData, signature });
+
+      qrRawData[date] = qrData;
+      qrCodes[date] = await QRCode.toDataURL(qrData);
     }
 
     participant.qrCodes = qrCodes;
-    participant.qrRawData = qrRawData; // Salva o JSON puro no Firebase
+    participant.qrRawData = qrRawData;
     participant.validated = { "2025-05-31": false, "2025-06-01": false };
     await updateDoc(checkoutRef, { participants: checkout.participants });
 
-    const emailData = {
-      from: process.env.EMAIL_USER_1,
-      to: participant.email,
-      subject: "Seus QR Codes - Congresso Autismo MA 2025",
-      html: `
-          <h2>Olá ${participant.name},</h2>
-          <p>Aqui estão seus QR Codes para o Congresso Autismo MA 2025:</p>
-          <h3>31 de maio de 2025</h3>
-          <img src="${qrCodes["2025-05-31"]}" alt="QR Code 31/05" style="width: 200px;" />
-          <h3>1º de junho de 2025</h3>
-          <img src="${qrCodes["2025-06-01"]}" alt="QR Code 01/06" style="width: 200px;" />
-          <p>Apresente esses QR Codes na entrada do evento em cada dia.</p>
-          <p>Atenciosamente,<br>Equipe Congresso Autismo MA</p>
-        `,
-    };
-    await emailService.sendEmail(emailData);
+    // const emailData = {
+    //   from: process.env.EMAIL_USER_1,
+    //   to: participant.email,
+    //   subject: "Seus QR Codes - Congresso Autismo MA 2025",
+    //   html: `
+    //     <h2>Olá ${participant.name},</h2>
+    //     <p>Aqui estão seus QR Codes para o Congresso Autismo MA 2025:</p>
+    //     <h3>31 de maio de 2025</h3>
+    //     <img src="${qrCodes["2025-05-31"]}" alt="QR Code 31/05" style="width: 200px;" />
+    //     <h3>1º de junho de 2025</h3>
+    //     <img src="${qrCodes["2025-06-01"]}" alt="QR Code 01/06" style="width: 200px;" />
+    //     <p>Apresente esses QR Codes na entrada do evento em cada dia.</p>
+    //     <p>Atenciosamente,<br>Equipe Congresso Autismo MA</p>
+    //   `,
+    // };
+    // await emailService.sendEmail(emailData);
 
     sendResponse(
       res,
@@ -67,7 +75,7 @@ const generateQRCodesForParticipant = async (req, res) => {
       true,
       "QR Codes gerados e enviados com sucesso",
       qrRawData
-    ); // Retorna JSON puro
+    );
   } catch (error) {
     console.error("Erro ao gerar QR Codes:", error.message);
     sendResponse(
@@ -84,9 +92,32 @@ const generateQRCodesForParticipant = async (req, res) => {
 const validateQRCode = async (req, res) => {
   const { qrData } = req.body;
 
+  console.log("Dados recebidos no backend:", qrData);
+
   try {
-    const parsedData = JSON.parse(qrData); // Pode falhar se qrData não for JSON
-    const { checkoutId, participantId, date } = parsedData;
+    let parsedData;
+    try {
+      parsedData = JSON.parse(qrData);
+    } catch (parseError) {
+      console.error("Erro ao parsear qrData:", parseError.message);
+      throw new Error("Formato de QR Code inválido");
+    }
+
+    const { checkoutId, participantId, date, signature } = parsedData;
+    console.log("Dados parseados:", {
+      checkoutId,
+      participantId,
+      date,
+      signature,
+    });
+
+    const expectedSignature = crypto
+      .createHmac("sha256", secret)
+      .update(`${checkoutId}-${participantId.split("-")[1]}-${date}`)
+      .digest("hex");
+    if (signature !== expectedSignature) {
+      throw new Error("Assinatura inválida no QR Code.");
+    }
 
     const checkoutRef = doc(db, "checkouts", checkoutId);
     const checkoutSnap = await getDoc(checkoutRef);
@@ -98,12 +129,18 @@ const validateQRCode = async (req, res) => {
     const participantIndex = parseInt(participantId.split("-")[1], 10);
     const participant = checkout.participants[participantIndex];
 
-    if (!participant || !participant.qrCodes || !participant.qrCodes[date]) {
+    if (
+      !participant ||
+      !participant.qrRawData ||
+      !participant.qrRawData[date]
+    ) {
       throw new Error("QR Code inválido ou não encontrado.");
     }
 
-    const isValid = participant.qrCodes[date] === qrData;
+    const isValid = participant.qrRawData[date] === qrData;
     if (!isValid) {
+      console.log("QR esperado:", participant.qrRawData[date]);
+      console.log("QR recebido:", qrData);
       throw new Error("QR Code inválido.");
     }
 
@@ -112,7 +149,11 @@ const validateQRCode = async (req, res) => {
     }
 
     participant.validated[date] = true;
-    await updateDoc(checkoutRef, { participants: checkout.participants });
+    const validationLogKey = `validationLog.${participantId}.${date}`;
+    await updateDoc(checkoutRef, {
+      participants: checkout.participants,
+      [validationLogKey]: new Date().toISOString(), // Log de validação
+    });
 
     sendResponse(res, 200, true, "Validação concluída", { isValid: true });
   } catch (error) {
