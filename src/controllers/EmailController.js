@@ -1,5 +1,5 @@
 // backend/src/controllers/EmailController.js
-const emailService = require("../services/emailService");
+const emailService = require("../services/EmailService");
 const { sendResponse } = require("../utils/response");
 const axios = require("axios");
 const {
