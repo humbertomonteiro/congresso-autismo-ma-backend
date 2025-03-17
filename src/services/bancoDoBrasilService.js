@@ -52,7 +52,7 @@ class BancoDoBrasilService {
       `${this.authBaseUrl}/oauth/token`,
       new URLSearchParams({
         grant_type: "client_credentials",
-        scope: "cob.write pix.write",
+        scope: "cobrancas.boletos-info cobrancas.boletos-requisicao",
       }),
       {
         headers: {
@@ -110,6 +110,8 @@ class BancoDoBrasilService {
   ) {
     const token = await this.getAccessToken();
     const boletoEndpoint = `${this.apiBaseUrl}/boletos?gw-dev-app-key=${config.bancoDoBrasil.developerApiKey}`;
+    console.log("Endpoint:", boletoEndpoint);
+    console.log("Token:", token);
 
     const numeroControle = Date.now().toString().slice(-10).padStart(10, "0");
     const numeroTituloCliente = `000${config.bancoDoBrasil.numeroConvenio}${numeroControle}`;
@@ -163,11 +165,13 @@ class BancoDoBrasilService {
       indicadorPix: "S",
       textoEnderecoEmail: "saludcuidarmais@gmail.com",
     };
+    console.log("Payload enviado:", JSON.stringify(payload, null, 2));
 
     const response = await this.requestWithRetries(boletoEndpoint, payload, {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     });
+    console.log("Resposta da API:", JSON.stringify(response, null, 2));
 
     const boletoFilePath = await this.generateBoletoPDF(
       response,

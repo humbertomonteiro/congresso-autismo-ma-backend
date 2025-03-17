@@ -5,7 +5,7 @@ const config = require("./config");
 const paymentRoutes = require("./routes/paymentRoutes");
 const emailRoutes = require("./routes/emailRoutes");
 const credentialRoutes = require("./routes/credentialRoutes");
-const emailService = require("./services/emailService");
+const emailService = require("./services/EmailService");
 const responseMiddleware = require("./middleware/response");
 
 dotenv.config();

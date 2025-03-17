@@ -1,5 +1,5 @@
 // src/controllers/EmailController.js
-const emailService = require("../services/emailService");
+const emailService = require("../services/EmailService");
 const axios = require("axios");
 const config = require("../config"); // Ajustado para nova estrutura
 require("dotenv").config();
