@@ -8,7 +8,7 @@ const generateQRCodesForParticipant = async (req, res) => {
     const { qrRawData } = await CredentialService.generateQRCodesForParticipant(
       checkoutId,
       participantIndex,
-      req.body.participantName // Passado pelo corpo da requisição, se necessário
+      req.body.participantName
     );
     res.sendResponse(200, true, "QR Codes gerados com sucesso", qrRawData);
   } catch (error) {
