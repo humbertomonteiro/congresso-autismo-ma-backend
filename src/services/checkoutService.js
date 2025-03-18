@@ -1,3 +1,4 @@
+// src/services/CheckoutService.js
 class CheckoutService {
   constructor() {
     this.basePrice = 499;

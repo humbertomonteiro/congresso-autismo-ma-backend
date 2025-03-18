@@ -1,9 +1,16 @@
-// src/config.js
 const { initializeApp } = require("firebase/app");
 const { getFirestore } = require("firebase/firestore");
 const dotenv = require("dotenv");
 
+// Carrega variáveis de ambiente
 dotenv.config();
+
+// Configuração do ambiente
+const env = process.env.BB_ENV || "sandbox";
+const isProduction = env === "production";
+
+console.log("Ambiente (BB_ENV):", env);
+console.log("isProduction:", isProduction);
 
 // Configuração do Firebase
 const firebaseConfig = {
@@ -19,12 +26,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const env = process.env.BB_ENV || "sandbox";
-const isProduction = env === "production";
-
-console.log("Ambiente (BB_ENV):", env);
-console.log("isProduction:", isProduction);
-
+// Configuração da Cielo
 const cieloConfig = {
   merchantId: isProduction
     ? process.env.CIELO_MERCHANT_ID_PRODUCTION
@@ -40,6 +42,7 @@ const cieloConfig = {
     : "https://apiquerysandbox.cieloecommerce.cielo.com.br",
 };
 
+// Configuração do Banco do Brasil
 const bancoDoBrasilConfig = {
   clientId: isProduction
     ? process.env.BB_CLIENT_ID_PRODUCTION
@@ -55,10 +58,10 @@ const bancoDoBrasilConfig = {
     : process.env.BB_NUMERO_CONVENIO_SANDBOX || "3128557",
   agencia: isProduction
     ? process.env.BB_AGENCIA_PRODUCTION
-    : process.env.BB_AGENCIA_SANDBOX || "6543-1", // Exemplo, substitua pelo valor real
+    : process.env.BB_AGENCIA_SANDBOX || "6543-1",
   conta: isProduction
     ? process.env.BB_CONTA_PRODUCTION
-    : process.env.BB_CONTA_SANDBOX || "123456-7", // Exemplo, substitua pelo valor real
+    : process.env.BB_CONTA_SANDBOX || "123456-7",
   numeroCarteira: isProduction
     ? process.env.BB_NUMERO_CARTEIRA_PRODUCTION || 17
     : process.env.BB_NUMERO_CARTEIRA_SANDBOX || 17,
@@ -68,8 +71,6 @@ const bancoDoBrasilConfig = {
   numeroVariacaoCarteira: isProduction
     ? process.env.BB_NUMERO_VARIACAO_CARTEIRA_PRODUCTION || 35
     : process.env.BB_NUMERO_VARIACAO_CARTEIRA_SANDBOX || 35,
-  baseUrlSandbox: "https://api.hm.bb.com.br/cobrancas/v2",
-  baseUrlProduction: "https://api.bb.com.br/cobrancas/v2",
   baseUrl: isProduction
     ? "https://api.bb.com.br/cobrancas/v2"
     : "https://api.hm.bb.com.br/cobrancas/v2",
@@ -80,24 +81,22 @@ const bancoDoBrasilConfig = {
   certificadoSenha: process.env.BB_CERTIFICADO_SENHA,
 };
 
-console.log("cielo:", {
+// Log para depuração (pode remover em produção)
+console.log("Cielo Config:", {
   merchantId: cieloConfig.merchantId,
   merchantKey: cieloConfig.merchantKey,
-
-  // clientId: bancoDoBrasilConfig.clientId,
-  // clientSecret: bancoDoBrasilConfig.clientSecret,
-  // developerApiKey: bancoDoBrasilConfig.developerApiKey,
-  // numeroConvenio: bancoDoBrasilConfig.numeroConvenio,
-  // agencia: bancoDoBrasilConfig.agencia,
-  // conta: bancoDoBrasilConfig.conta,
-  // numeroCarteira: bancoDoBrasilConfig.numeroCarteira,
-  // numeroVariacaoCarteira: bancoDoBrasilConfig.numeroVariacaoCarteira,
-  // authBaseUrl: bancoDoBrasilConfig.authBaseUrl,
-  // baseUrl: bancoDoBrasilConfig.baseUrl,
 });
 
+// Exportação das configurações
 module.exports = {
-  db,
-  cieloConfig,
-  bancoDoBrasilConfig,
+  port: process.env.PORT || 5000, // Adicionado para o index.js
+  env: {
+    name: env,
+    isProduction,
+  },
+  firebase: {
+    db,
+  },
+  cielo: cieloConfig,
+  bancoDoBrasil: bancoDoBrasilConfig,
 };

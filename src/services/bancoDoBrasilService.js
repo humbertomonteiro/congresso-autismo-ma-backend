@@ -1,27 +1,25 @@
-// src/services/bancoDoBrasilService.js
+// src/services/BancoDoBrasilService.js
 const axios = require("axios");
 const https = require("https");
-const { bancoDoBrasilConfig } = require("../config");
+const config = require("../config");
 const bwipjs = require("bwip-js");
 const QRCode = require("qrcode");
 const fs = require("fs");
 const path = require("path");
 const puppeteer = require("puppeteer");
-const CheckoutService = require("./checkoutService");
+const CheckoutService = require("./CheckoutService");
 
 class BancoDoBrasilService {
   constructor() {
-    this.authBaseUrl = bancoDoBrasilConfig.authBaseUrl;
-    this.apiBaseUrl = bancoDoBrasilConfig.baseUrl;
+    this.authBaseUrl = config.bancoDoBrasil.authBaseUrl;
+    this.apiBaseUrl = config.bancoDoBrasil.baseUrl;
     this.agent = new https.Agent({
-      rejectUnauthorized: false, // Desabilitar verificação de certificado (apenas para testes)
-      // Descomente se precisar usar o certificado
-      // pfx: fs.readFileSync(bancoDoBrasilConfig.certificadoPfx),
-      // passphrase: bancoDoBrasilConfig.certificadoSenha,
+      rejectUnauthorized: false,
+      // pfx: fs.readFileSync(config.bancoDoBrasil.certificadoPfx),
+      // passphrase: config.bancoDoBrasil.certificadoSenha,
     });
   }
 
-  // Função auxiliar para formatar data
   formatDate(date) {
     const day = String(date.getDate()).padStart(2, "0");
     const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -29,75 +27,76 @@ class BancoDoBrasilService {
     return `${day}.${month}.${year}`;
   }
 
-  // Função genérica para requisições com retentativas
   async requestWithRetries(url, payload, headers, retries = 3, delayMs = 1000) {
     for (let attempt = 1; attempt <= retries; attempt++) {
       try {
-        console.log(`Tentativa ${attempt} - Enviando requisição para: ${url}`);
-        console.log("Payload:", JSON.stringify(payload, null, 2));
-        console.log("Headers:", headers);
-
         const response = await axios.post(url, payload, {
           headers,
           httpsAgent: this.agent,
           timeout: 10000,
         });
-
-        console.log("Resposta recebida:", response.data);
         return response.data;
       } catch (error) {
-        console.error(`Tentativa ${attempt} falhou:`, {
-          status: error.response?.status,
-          data: error.response?.data,
-          headers: error.response?.headers,
-          message: error.message,
-        });
+        console.error(`Tentativa ${attempt} falhou:`, error.message);
         if (attempt === retries) throw error;
         await new Promise((resolve) => setTimeout(resolve, delayMs * attempt));
       }
     }
   }
 
-  async getAccessToken(retries = 3, delayMs = 1000) {
-    console.log("Tentando obter token em:", `${this.authBaseUrl}/oauth/token`);
-    console.log("Usando Client ID:", bancoDoBrasilConfig.clientId);
-    console.log("Usando Client Secret:", bancoDoBrasilConfig.clientSecret);
-
-    for (let attempt = 1; attempt <= retries; attempt++) {
-      try {
-        const auth = Buffer.from(
-          `${bancoDoBrasilConfig.clientId}:${bancoDoBrasilConfig.clientSecret}`
-        ).toString("base64");
-        console.log("Authorization Header:", `Basic ${auth}`);
-
-        const response = await axios.post(
-          `${this.authBaseUrl}/oauth/token`,
-          new URLSearchParams({
-            grant_type: "client_credentials",
-            scope: "cobrancas.boletos-info cobrancas.boletos-requisicao",
-          }),
-          {
-            headers: {
-              Authorization: `Basic ${auth}`,
-              "Content-Type": "application/x-www-form-urlencoded",
-            },
-            httpsAgent: this.agent,
-            timeout: 10000,
-          }
-        );
-        console.log("Token obtido:", response.data.access_token);
-        return response.data.access_token;
-      } catch (error) {
-        console.error(`Tentativa ${attempt} falhou:`, {
-          status: error.response?.status,
-          data: error.response?.data,
-          headers: error.response?.headers,
-          message: error.message,
-        });
-        if (attempt === retries) throw error;
-        await new Promise((resolve) => setTimeout(resolve, delayMs * attempt));
+  async getAccessToken() {
+    const auth = Buffer.from(
+      `${config.bancoDoBrasil.clientId}:${config.bancoDoBrasil.clientSecret}`
+    ).toString("base64");
+    const response = await axios.post(
+      `${this.authBaseUrl}/oauth/token`,
+      new URLSearchParams({
+        grant_type: "client_credentials",
+        scope: "cobrancas.boletos-info cobrancas.boletos-requisicao",
+      }),
+      {
+        headers: {
+          Authorization: `Basic ${auth}`,
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        httpsAgent: this.agent,
       }
-    }
+    );
+    return response.data.access_token;
+  }
+
+  async createPixPayment(amount, customer) {
+    const token = await this.getAccessToken();
+    const pixEndpoint = `${this.apiBaseUrl}/pix/v2/cob?gw-dev-app-key=${config.bancoDoBrasil.developerApiKey}`;
+    const txId = `TX${Date.now()}`;
+
+    const payload = {
+      calendario: {
+        expiracao: 3600, // 1 hora
+      },
+      devedor: {
+        cpf: customer.Identity,
+        nome: customer.Name,
+      },
+      valor: {
+        original: (amount / 100).toFixed(2),
+      },
+      chave: "saludcuidarmais@gmail.com", // Chave Pix fixa
+      solicitacaoPagador: "Pagamento Congresso Autismo MA 2025",
+      infoAdicionais: [{ nome: "Evento", valor: "Congresso Autismo MA 2025" }],
+    };
+
+    const response = await this.requestWithRetries(pixEndpoint, payload, {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    });
+
+    return {
+      txId: response.txid,
+      qrCode: response.qrcode.qrCode,
+      qrCodeLink: response.qrcode.linkVisualizacao,
+      expirationDate: new Date(Date.now() + 3600 * 1000).toISOString(),
+    };
   }
 
   async createBoletoPayment(
@@ -110,25 +109,25 @@ class BancoDoBrasilService {
     participants
   ) {
     const token = await this.getAccessToken();
-    const boletoEndpoint = `${this.apiBaseUrl}/boletos?gw-dev-app-key=${bancoDoBrasilConfig.developerApiKey}`;
-    console.log("Enviando requisição Boleto para:", boletoEndpoint);
+    const boletoEndpoint = `${this.apiBaseUrl}/boletos?gw-dev-app-key=${config.bancoDoBrasil.developerApiKey}`;
+    console.log("Endpoint:", boletoEndpoint);
+    console.log("Token:", token);
 
     const numeroControle = Date.now().toString().slice(-10).padStart(10, "0");
-    const numeroTituloCliente = `000${bancoDoBrasilConfig.numeroConvenio}${numeroControle}`;
-
+    const numeroTituloCliente = `000${config.bancoDoBrasil.numeroConvenio}${numeroControle}`;
     const cepSemHifen = boletoData.zipCode.replace(/[^0-9]/g, "");
 
     const payload = {
-      numeroConvenio: parseInt(bancoDoBrasilConfig.numeroConvenio),
-      numeroCarteira: parseInt(bancoDoBrasilConfig.numeroCarteira),
+      numeroConvenio: parseInt(config.bancoDoBrasil.numeroConvenio),
+      numeroCarteira: parseInt(config.bancoDoBrasil.numeroCarteira),
       numeroVariacaoCarteira: parseInt(
-        bancoDoBrasilConfig.numeroVariacaoCarteira
+        config.bancoDoBrasil.numeroVariacaoCarteira
       ),
       codigoModalidade: 1,
-      dataEmissao: this.formatDate(new Date()).replace(/\//g, "."),
+      dataEmissao: this.formatDate(new Date()),
       dataVencimento: this.formatDate(
         new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-      ).replace(/\//g, "."),
+      ),
       valorOriginal: (amount / 100).toFixed(2),
       valorAbatimento: 0,
       quantidadeDiasProtesto: 15,
@@ -160,48 +159,36 @@ class BancoDoBrasilService {
       },
       beneficiarioFinal: {
         tipoInscricao: 2,
-        numeroInscricao: parseInt(bancoDoBrasilConfig.cnpj),
+        numeroInscricao: parseInt(config.bancoDoBrasil.cnpj),
         nome: "CONGRESSO AUTISMO MA LTDA",
       },
       indicadorPix: "S",
       textoEnderecoEmail: "saludcuidarmais@gmail.com",
     };
+    console.log("Payload enviado:", JSON.stringify(payload, null, 2));
 
-    try {
-      const response = await this.requestWithRetries(boletoEndpoint, payload, {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-        Accept: "application/json, text/html",
-        "Accept-Encoding": "gzip, deflate",
-        Connection: "keep-alive",
-      });
+    const response = await this.requestWithRetries(boletoEndpoint, payload, {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    });
+    console.log("Resposta da API:", JSON.stringify(response, null, 2));
 
-      const boletoFilePath = await this.generateBoletoPDF(
-        response,
-        boletoData,
-        customer,
-        ticketQuantity,
-        halfTickets,
-        coupon,
-        participants
-      );
+    const boletoFilePath = await this.generateBoletoPDF(
+      response,
+      boletoData,
+      customer,
+      ticketQuantity,
+      halfTickets,
+      coupon,
+      participants
+    );
 
-      return {
-        boletoUrl: response.linhaDigitavel,
-        qrCodePix: response.qrCode?.url,
-        numeroBoleto: response.numero,
-        boletoFile: boletoFilePath,
-      };
-    } catch (error) {
-      console.error("Erro na requisição Boleto:", {
-        status: error.response?.status,
-        data: JSON.stringify(error.response?.data, null, 2),
-        headers: error.response?.headers,
-        message: error.message,
-        code: error.code,
-      });
-      throw error;
-    }
+    return {
+      boletoUrl: response.linhaDigitavel,
+      qrCodePix: response.qrCode?.url,
+      numeroBoleto: response.numero,
+      boletoFile: boletoFilePath,
+    };
   }
 
   async generateBoletoPDF(
@@ -245,17 +232,7 @@ class BancoDoBrasilService {
     );
     const htmlTemplate = fs.readFileSync(templatePath, "utf8");
 
-    let participantsFormatted = "Não informado";
-    if (Array.isArray(participants) && participants.length > 0) {
-      // Verifica se os elementos são strings ou objetos
-      participantsFormatted = participants
-        .map((participant) =>
-          typeof participant === "string"
-            ? participant
-            : participant.name || "Nome não disponível"
-        )
-        .join("<br>");
-    }
+    let participantsFormatted = participants.map((p) => p.name).join("<br>");
 
     const htmlContent = htmlTemplate
       .replace(
@@ -268,35 +245,17 @@ class BancoDoBrasilService {
       )
       .replace(/{{BENEFICIARIO_NOME}}/g, "CONGRESSO AUTISMO MA LTDA")
       .replace(/{{BENEFICIARIO_CNPJ}}/g, "27.943.639/0001-67")
-      .replace(
-        /{{BENEFICIARIO_ENDERECO}}/g,
-        `${response.beneficiario?.logradouro || ""}, ${
-          response.beneficiario?.bairro || ""
-        }, ${response.beneficiario?.cidade || ""} - ${
-          response.beneficiario?.uf || ""
-        }, CEP: ${response.beneficiario?.cep || ""}`
-      )
+      .replace(/{{BENEFICIARIO_ENDERECO}}/g, "Endereço do Beneficiário")
       .replace(
         /{{AGENCIA_CONTA}}/g,
-        `${response.beneficiario?.agencia || ""}-${
-          response.beneficiario?.indicadorComprovacao || ""
-        } / ${response.beneficiario?.contaCorrente || ""}`
+        `${config.bancoDoBrasil.agencia} / ${config.bancoDoBrasil.conta}`
       )
       .replace(/{{NOSSO_NUMERO}}/g, response.numero || "Não disponível")
-      .replace(
-        /{{QUANTIDADE}}/g,
-        ticketQuantity ? ticketQuantity.toString() : "1"
-      )
-      .replace(
-        /{{PAGADOR_NOME}}/g,
-        customer.Name.toUpperCase() || "Não disponível"
-      )
+      .replace(/{{QUANTIDADE}}/g, ticketQuantity.toString())
+      .replace(/{{PAGADOR_NOME}}/g, customer.Name.toUpperCase())
       .replace(
         /{{PAGADOR_CPF}}/g,
-        customer.Identity.replace(
-          /(\d{3})(\d{3})(\d{3})(\d{2})/,
-          "$1.$2.$3-$4"
-        ) || "Não disponível"
+        customer.Identity.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4")
       )
       .replace(
         /{{PAGADOR_ENDERECO}}/g,
@@ -318,7 +277,7 @@ class BancoDoBrasilService {
         new Date().toLocaleDateString("pt-BR")
       )
       .replace(/{{VALOR}}/g, calculation.total)
-      .replace(/{{CARTEIRA}}/g, response.numeroCarteira?.toString() || "17")
+      .replace(/{{CARTEIRA}}/g, config.bancoDoBrasil.numeroCarteira.toString())
       .replace(
         /{{DEMONSTRATIVO}}/g,
         "APÓS O VENCIMENTO, MULTA DE 3,00% E MORA DIÁRIA DE R$ 1,00<br>CNPJ DO BENEFICIÁRIO: 27.943.639/0001-67"
@@ -337,11 +296,10 @@ class BancoDoBrasilService {
       .replace(/{{TOTAL}}/g, calculation.total)
       .replace(/{{PARTICIPANTS}}/g, participantsFormatted);
 
-    const isProduction = process.env.NODE_ENV === "production";
-    const executablePath = isProduction
-      ? "/usr/local/chromium/chrome"
-      : undefined;
-
+    const executablePath =
+      process.env.NODE_ENV === "production"
+        ? "/usr/local/chromium/chrome"
+        : undefined;
     const browser = await puppeteer.launch({
       headless: true,
       executablePath,
