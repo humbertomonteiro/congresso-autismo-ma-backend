@@ -7,6 +7,7 @@ const emailRoutes = require("./routes/emailRoutes");
 const credentialRoutes = require("./routes/credentialRoutes");
 const emailService = require("./services/EmailService");
 const responseMiddleware = require("./middleware/response");
+const cors = require("cors");
 
 dotenv.config();
 
@@ -18,8 +19,10 @@ const corsOptions = {
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
 };
-app.use(cors(corsOptions));
-app.options("*", cors(corsOptions));
+
+app.use(cors());
+// app.use(cors(corsOptions));
+// app.options("*", cors(corsOptions));
 
 app.use(express.json());
 
