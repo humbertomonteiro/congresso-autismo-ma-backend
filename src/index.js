@@ -12,12 +12,12 @@ dotenv.config();
 
 const app = express();
 
-const corsOptions = {
-  origin: ["http://localhost:5173", "https://congressoautismoma.com.br"],
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true,
-};
+// const corsOptions = {
+//   origin: ["http://localhost:5173", "https://congressoautismoma.com.br"],
+//   methods: ["GET", "POST", "PUT", "DELETE"],
+//   allowedHeaders: ["Content-Type", "Authorization"],
+//   credentials: true,
+// };
 
 app.use(cors());
 // app.use(cors(corsOptions));
