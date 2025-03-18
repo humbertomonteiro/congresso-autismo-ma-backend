@@ -135,36 +135,28 @@ class EmailService {
       `tickets_${recipient.checkoutId}_${recipient.participantIndex}.pdf`
     );
 
-    logger.info(`Iniciando geração de PDF para ${recipient.participantName}`);
     await fs.mkdir(tempDir, { recursive: true });
 
+    // Usa os QR codes diretamente como retornados (data:image/png;base64,...)
     const qrCodeDay1 = qrCodes["2025-05-31"];
     const qrCodeDay2 = qrCodes["2025-06-01"];
-    logger.info(
-      `QR Codes recebidos - Dia 1: ${
-        qrCodeDay1 ? "presente" : "ausente"
-      }, Dia 2: ${qrCodeDay2 ? "presente" : "ausente"}`
-    );
 
     const templatePath = path.join(
       __dirname,
       "../templates/ticketTemplate.html"
     );
     const htmlTemplate = await fs.readFile(templatePath, "utf8");
-    logger.info(`Template HTML carregado de ${templatePath}`);
 
     const htmlContent = htmlTemplate
       .replace(/{{PARTICIPANT_NAME}}/g, recipient.participantName.toUpperCase())
-      .replace(/{{QRCODE_DAY1}}/g, qrCodeDay1 || "QR Code não gerado")
-      .replace(/{{QRCODE_DAY2}}/g, qrCodeDay2 || "QR Code não gerado")
+      .replace(/{{QRCODE_DAY1}}/g, qrCodeDay1)
+      .replace(/{{QRCODE_DAY2}}/g, qrCodeDay2)
       .replace(/{{EVENT_NAME}}/g, "CONGRESSO AUTISMO MA 2025")
       .replace(/{{DATE_DAY1}}/g, "31.05.2025")
       .replace(/{{DATE_DAY2}}/g, "01.06.2025")
       .replace(/{{LOCATION}}/g, "CENTRO DE CONVENÇÕES MA")
       .replace(/{{TIME}}/g, "08:00 - 18:00")
       .replace(/{{SUPPORT_EMAIL}}/g, "suporte@congressoautismoma.com.br");
-
-    logger.info(`HTML preenchido para ${recipient.participantName}`);
 
     const executablePath =
       process.env.NODE_ENV === "production"
@@ -181,18 +173,13 @@ class EmailService {
         "--disable-gpu",
       ],
     });
-    logger.info("Puppeteer iniciado");
 
     const page = await browser.newPage();
     await page.setContent(htmlContent, { waitUntil: "networkidle0" });
-    logger.info("Conteúdo HTML definido na página");
-
     await page.pdf({ path: pdfPath, format: "A4", printBackground: true });
-    logger.info(`PDF gerado em ${pdfPath}`);
-
     await browser.close();
-    logger.info("Puppeteer fechado");
 
+    console.log("PDF gerado com sucesso em:", pdfPath);
     return pdfPath;
   }
 
@@ -205,6 +192,8 @@ class EmailService {
     this.isProcessing = true;
     logger.info("Iniciando envio de QR codes para checkouts aprovados...");
 
+    const processingCheckouts = new Set();
+
     try {
       const checkouts = await EmailRepository.fetchCheckouts();
       const approvedCheckouts = checkouts.filter(
@@ -214,11 +203,22 @@ class EmailService {
         `Encontrados ${approvedCheckouts.length} checkouts aprovados`
       );
 
+      // Carrega o template simples uma vez
+      const templatePath = path.join(
+        __dirname,
+        "../templates/emailTemplateSimple.html"
+      );
+      const htmlTemplate = await fs.readFile(templatePath, "utf-8");
+
       for (const checkout of approvedCheckouts) {
-        if (checkout.qrCodesSent) {
-          logger.info(`QR codes já enviados para checkout ${checkout.id}`);
+        if (checkout.qrCodesSent || processingCheckouts.has(checkout.id)) {
+          logger.info(
+            `QR codes já enviados ou em processamento para checkout ${checkout.id}`
+          );
           continue;
         }
+
+        processingCheckouts.add(checkout.id);
 
         const emailSet = new Set();
         const recipients = checkout.participants
@@ -241,13 +241,20 @@ class EmailService {
 
         for (const recipient of recipients) {
           logger.info(`Processando QR codes para ${recipient.email}`);
-          const html = `
-            <h2>Olá ${recipient.participantName},</h2>
-            <p>Seu pagamento foi aprovado! Aqui estão seus QR codes para o Congresso Autismo MA 2025.</p>
-            <p>Apresente o PDF anexo na entrada do evento em cada dia.</p>
-            <p>Atenciosamente,<br>Equipe Congresso Autismo MA</p>
-            <p><small>Suporte: suporte@congressoautismoma.com.br</small></p>
-          `;
+
+          // Preenche o template com conteúdo personalizado
+          const html = htmlTemplate
+            .replace("{{nome}}", recipient.participantName || "Participante")
+            .replace(
+              "{{title}}",
+              "Seu Passaporte para o Congresso Autismo MA 2025"
+            )
+            .replace(
+              "{{body}}",
+              "Seu pagamento foi aprovado! Este é o seu passaporte para o maior evento de autismo do Maranhão, no <strong>Centro de Convenções MA</strong>, nos dias <strong>31/05/2025 e 01/06/2025</strong>. Apresente o PDF anexo na entrada e mergulhe nessa experiência transformadora!<br><br>" +
+                "<strong>Juntos, fazemos a diferença.</strong><br><br>" +
+                "Atenciosamente,<br>Equipe Congresso Autismo MA<br><br>"
+            );
 
           let attachments = [];
           try {
@@ -280,18 +287,11 @@ class EmailService {
               participantUpdate
             );
             logger.info(`Participante atualizado no checkout ${checkout.id}`);
-          } catch (pdfError) {
-            logger.error(
-              `Erro ao gerar PDF para ${recipient.email}: ${pdfError.message}`
-            );
-            continue;
-          }
 
-          try {
             await this.sendEmail({
               from: emailAccounts[0].user,
               to: recipient.email,
-              subject: "Seus QR Codes - Congresso Autismo MA 2025",
+              subject: "Seu Passaporte para o Congresso Autismo MA 2025",
               html,
               attachments,
             });
@@ -302,9 +302,9 @@ class EmailService {
             logger.info(
               `QR codes enviados para ${recipient.email} (checkout ${checkout.id})`
             );
-          } catch (emailError) {
+          } catch (error) {
             logger.error(
-              `Erro ao enviar email para ${recipient.email}: ${emailError.message}`
+              `Erro ao processar ${recipient.email} (checkout ${checkout.id}): ${error.message}`
             );
           } finally {
             if (attachments.length > 0) {
@@ -327,7 +327,6 @@ class EmailService {
       logger.info("Processamento de QR codes finalizado");
     }
   }
-
   async processAutomaticEmails(templateIds = null) {
     if (this.isProcessing) {
       console.log("Processamento já em andamento, ignorando nova execução.");

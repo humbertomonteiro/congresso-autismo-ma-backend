@@ -2,6 +2,7 @@
 const CheckoutService = require("../services/CheckoutService");
 const CieloService = require("../services/CieloService");
 const BancoDoBrasilService = require("../services/BancoDoBrasilService");
+const CheckoutRepository = require("../repositories/CheckoutRepository");
 const fs = require("fs");
 
 const processCreditPayment = async (req, res) => {
