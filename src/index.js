@@ -7,7 +7,6 @@ const emailRoutes = require("./routes/emailRoutes");
 const credentialRoutes = require("./routes/credentialRoutes");
 const emailService = require("./services/EmailService");
 const responseMiddleware = require("./middleware/response");
-const cors = require("cors");
 
 dotenv.config();
 
