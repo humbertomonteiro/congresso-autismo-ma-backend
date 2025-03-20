@@ -7,6 +7,8 @@ const emailRoutes = require("./routes/emailRoutes");
 const credentialRoutes = require("./routes/credentialRoutes");
 const emailService = require("./services/EmailService");
 const responseMiddleware = require("./middleware/response");
+const CheckoutService = require("./services/CheckoutService");
+const cron = require("node-cron");
 
 dotenv.config();
 
@@ -38,6 +40,15 @@ app.use("/api/credentials", credentialRoutes);
 
 emailService.startEmailService();
 emailService.startQRCodeService();
+
+cron.schedule("0 */6 * * *", () => {
+  console.log(
+    "[Server] Executando verificação automática de pagamentos pendentes..."
+  );
+  CheckoutService.verifyAllPendingPayments().catch((error) =>
+    console.error("[Server] Erro na verificação automática:", error.message)
+  );
+});
 
 app.use((err, req, res, next) => {
   console.error("Erro no servidor:", err.stack);

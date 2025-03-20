@@ -1,6 +1,14 @@
 // src/repositories/CheckoutRepository.js
 const config = require("../config");
-const { collection, addDoc } = require("firebase/firestore");
+const {
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  where,
+  doc,
+  updateDoc,
+} = require("firebase/firestore");
 
 class CheckoutRepository {
   async saveCheckout(checkoutData) {
@@ -9,6 +17,23 @@ class CheckoutRepository {
       checkoutData
     );
     return docRef.id;
+  }
+
+  async getPendingCheckouts() {
+    const checkoutsRef = collection(config.firebase.db, "checkouts");
+    const q = query(checkoutsRef, where("status", "==", "pending"));
+    const querySnapshot = await getDocs(q);
+    const checkouts = [];
+    querySnapshot.forEach((doc) => {
+      checkouts.push({ id: doc.id, ...doc.data() });
+    });
+    // console.log(checkouts);
+    return checkouts;
+  }
+
+  async updateCheckoutStatus(checkoutId, newStatus) {
+    const checkoutRef = doc(config.firebase.db, "checkouts", checkoutId);
+    await updateDoc(checkoutRef, { status: newStatus });
   }
 
   async saveCieloSales(sales) {

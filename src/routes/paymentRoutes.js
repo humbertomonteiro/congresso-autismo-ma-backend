@@ -9,5 +9,7 @@ router.post("/boleto", paymentController.processBoletoPayment);
 router.post("/validate-coupon", paymentController.validateCoupon);
 router.post("/calculate-totals", paymentController.calculateTotals);
 router.get("/fetch-cielo-sales", paymentController.fetchCieloSales);
+router.get("/verify/:paymentId", paymentController.verifyPayment);
+router.get("/verify-all", paymentController.verifyAllPayments);
 
 module.exports = router;

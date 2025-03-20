@@ -62,7 +62,8 @@ const processPixPayment = async (req, res) => {
       MerchantOrderId: `ORDER_${Date.now()}`,
       Customer: {
         Name: participants[0].name,
-        Identity: participants[0].cpf.replace(/\D/g, ""),
+        Identity: participants[0].document.replace(/\D/g, ""),
+        IdentityType: participants[0].documentType,
       },
       Amount: totals.totalInCents,
     };
@@ -149,23 +150,26 @@ const processPixPayment = async (req, res) => {
 };
 
 const processBoletoPayment = async (req, res) => {
-  const { ticketQuantity, halfTickets, coupon, participants, boletoData } =
-    req.body;
+  const { ticketQuantity, halfTickets, coupon, participants, payer } = req.body;
 
   try {
     CheckoutService.validateParticipants(participants, ticketQuantity);
-    CheckoutService.validateBoleto(boletoData);
+    CheckoutService.validateBoleto(payer);
     const totals = CheckoutService.calculateTotal(
       ticketQuantity,
       halfTickets,
       coupon
     );
 
+    if (!payer.document) {
+      throw new Error("Documento do pagador é obrigatório.");
+    }
+
     const paymentData = {
       MerchantOrderId: `ORDER_${Date.now()}`,
       Customer: {
-        Name: participants[0].name,
-        Identity: participants[0].cpf.replace(/\D/g, ""),
+        Name: payer.name,
+        Identity: payer.document.replace(/\D/g, ""),
       },
       Amount: totals.totalInCents,
     };
@@ -173,7 +177,7 @@ const processBoletoPayment = async (req, res) => {
     const boletoResponse = await BancoDoBrasilService.createBoletoPayment(
       paymentData.Amount,
       paymentData.Customer,
-      boletoData,
+      payer,
       ticketQuantity,
       halfTickets,
       coupon,
@@ -200,8 +204,9 @@ const processBoletoPayment = async (req, res) => {
         boleto: {
           boletoUrl: boletoResponse.boletoUrl,
           qrCodePix: boletoResponse.qrCodePix,
-          address: boletoData,
+          address: payer,
           pdfFilePath: boletoResponse.boletoFile,
+          dataVencimento: boletoResponse.dataVencimento,
         },
       },
       sentEmails: [],
@@ -220,6 +225,7 @@ const processBoletoPayment = async (req, res) => {
       "Content-Disposition",
       `attachment; filename=boleto_${boletoResponse.numeroBoleto}.pdf`
     );
+    res.setHeader("x-payment-id", boletoResponse.numeroBoleto);
     const fileStream = fs.createReadStream(boletoResponse.boletoFile);
     fileStream.pipe(res);
 
@@ -259,7 +265,7 @@ const processBoletoPayment = async (req, res) => {
         discount: totals?.discount || "0.00",
         total: totals?.total || "0.00",
       },
-      paymentDetails: { boleto: boletoData || null },
+      paymentDetails: { boleto: payer || null },
       sentEmails: [],
       errorLog: error.message,
     };
@@ -318,6 +324,56 @@ const fetchCieloSales = async (req, res) => {
   }
 };
 
+const verifyPayment = async (req, res) => {
+  const { paymentId } = req.params;
+  try {
+    const result = await CheckoutService.verifyPaymentById(paymentId);
+    if (result.status === "not_found") {
+      return res.sendResponse(
+        404,
+        false,
+        "Pagamento não encontrado ou não está pendente"
+      );
+    }
+    res.sendResponse(200, true, "Status do pagamento verificado", result);
+  } catch (error) {
+    console.error(
+      `[PaymentController] Erro ao verificar pagamento ${paymentId}:`,
+      error.message
+    );
+    res.sendResponse(
+      500,
+      false,
+      "Erro ao verificar pagamento",
+      null,
+      error.message
+    );
+  }
+};
+
+const verifyAllPayments = async (req, res) => {
+  try {
+    await CheckoutService.verifyAllPendingPayments();
+    res.sendResponse(
+      200,
+      true,
+      "Verificação de todos os pagamentos pendentes concluída"
+    );
+  } catch (error) {
+    console.error(
+      "[PaymentController] Erro ao verificar todos os pendentes:",
+      error.message
+    );
+    res.sendResponse(
+      500,
+      false,
+      "Erro ao verificar pagamentos pendentes",
+      null,
+      error.message
+    );
+  }
+};
+
 module.exports = {
   processCreditPayment,
   processPixPayment,
@@ -325,4 +381,6 @@ module.exports = {
   validateCoupon,
   calculateTotals,
   fetchCieloSales,
+  verifyPayment,
+  verifyAllPayments,
 };

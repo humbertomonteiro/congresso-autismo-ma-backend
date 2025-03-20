@@ -6,6 +6,7 @@ const fs = require("fs").promises;
 const path = require("path");
 const axios = require("axios");
 const puppeteer = require("puppeteer");
+const { generateTicketPDF } = require("../utils/templateUtils");
 require("dotenv").config();
 
 const emailAccounts = [
@@ -34,6 +35,7 @@ class EmailService {
       .replace("{{fullTickets}}", data.fullTickets || 0)
       .replace("{{valueTicketsAll}}", data.valueTicketsAll || "0.00")
       .replace("{{halfTickets}}", data.halfTickets || 0)
+      .replace("{{installments}}", data.installments || 1)
       .replace("{{valueTicketsHalf}}", data.valueTicketsHalf || "0.00")
       .replace("{{total}}", data.total || "0.00");
 
@@ -128,61 +130,6 @@ class EmailService {
     console.log(`Email enviado de ${from} para ${to}`);
   }
 
-  async generateTicketPDF(recipient, qrCodes) {
-    const tempDir = path.join(__dirname, "../temp");
-    const pdfPath = path.join(
-      tempDir,
-      `tickets_${recipient.checkoutId}_${recipient.participantIndex}.pdf`
-    );
-
-    await fs.mkdir(tempDir, { recursive: true });
-
-    // Usa os QR codes diretamente como retornados (data:image/png;base64,...)
-    const qrCodeDay1 = qrCodes["2025-05-31"];
-    const qrCodeDay2 = qrCodes["2025-06-01"];
-
-    const templatePath = path.join(
-      __dirname,
-      "../templates/ticketTemplate.html"
-    );
-    const htmlTemplate = await fs.readFile(templatePath, "utf8");
-
-    const htmlContent = htmlTemplate
-      .replace(/{{PARTICIPANT_NAME}}/g, recipient.participantName.toUpperCase())
-      .replace(/{{QRCODE_DAY1}}/g, qrCodeDay1)
-      .replace(/{{QRCODE_DAY2}}/g, qrCodeDay2)
-      .replace(/{{EVENT_NAME}}/g, "CONGRESSO AUTISMO MA 2025")
-      .replace(/{{DATE_DAY1}}/g, "31.05.2025")
-      .replace(/{{DATE_DAY2}}/g, "01.06.2025")
-      .replace(/{{LOCATION}}/g, "CENTRO DE CONVENÇÕES MA")
-      .replace(/{{TIME}}/g, "08:00 - 18:00")
-      .replace(/{{SUPPORT_EMAIL}}/g, "suporte@congressoautismoma.com.br");
-
-    const executablePath =
-      process.env.NODE_ENV === "production"
-        ? "/usr/local/chromium/chrome"
-        : undefined;
-
-    const browser = await puppeteer.launch({
-      headless: true,
-      executablePath,
-      args: [
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-        "--disable-dev-shm-usage",
-        "--disable-gpu",
-      ],
-    });
-
-    const page = await browser.newPage();
-    await page.setContent(htmlContent, { waitUntil: "networkidle0" });
-    await page.pdf({ path: pdfPath, format: "A4", printBackground: true });
-    await browser.close();
-
-    console.log("PDF gerado com sucesso em:", pdfPath);
-    return pdfPath;
-  }
-
   async sendQRCodesForApprovedCheckouts() {
     if (this.isProcessing) {
       logger.info("Processamento já em andamento, ignorando nova execução.");
@@ -251,9 +198,12 @@ class EmailService {
             )
             .replace(
               "{{body}}",
-              "Seu pagamento foi aprovado! Este é o seu passaporte para o maior evento de autismo do Maranhão, no <strong>Centro de Convenções MA</strong>, nos dias <strong>31/05/2025 e 01/06/2025</strong>. Apresente o PDF anexo na entrada e mergulhe nessa experiência transformadora!<br><br>" +
-                "<strong>Juntos, fazemos a diferença.</strong><br><br>" +
-                "Atenciosamente,<br>Equipe Congresso Autismo MA<br><br>"
+              "Seja bem-vindo a terceira edição do congresso de autismo e neurodiversidade em são luís- MA.<br><br>" +
+                "<strong>Importante: Esteja atento as regras de natureza obrigatória com respeito ao uso das credenciais e utilização do crachá de identifi cação, que será disponibilizado no dia do evento:</strong><br><br>" +
+                "<p>1- O QR-code tem a única função de fornecer a liberação da sua entrada no congresso. Para cada dia uma autorização de QR-code diferente.</p><br><br>" +
+                "<p>2- O uso do crachá é obrigatório. Portanto, é de inteira responsabilidade do inscrito o zelo para com a sua identifi cação. Pois, a equipe de fi scalização será aconselhada a não autorizar a permanência de inscritos que se apresentarem sem o uso de seu crachá.</p><br><br>" +
+                "<p>Em caso de dúvidas, fi que a vontade para entrar em contato com a nossa equipe de suporte pelos canais de atendimento (e-mail, telefones).</p><br><br>" +
+                "Cordialmente, a comissão organizadora.<br><br>"
             );
 
           let attachments = [];
@@ -270,7 +220,7 @@ class EmailService {
               )}`
             );
 
-            const pdfPath = await this.generateTicketPDF(recipient, qrCodes);
+            const pdfPath = await generateTicketPDF(recipient, qrCodes);
             attachments.push({
               filename: `ingressos_${recipient.participantName}.pdf`,
               path: pdfPath,
@@ -424,7 +374,7 @@ class EmailService {
                   recipient.participantName
                 );
 
-              const pdfPath = await this.generateTicketPDF(recipient, qrCodes);
+              const pdfPath = await generateTicketPDF(recipient, qrCodes);
               attachments.push({
                 filename: `ingressos_${recipient.participantName}.pdf`,
                 path: pdfPath,
@@ -484,12 +434,12 @@ class EmailService {
 
   startQRCodeService() {
     console.log("Iniciando serviço de envio de QR codes...");
-    setInterval(() => this.sendQRCodesForApprovedCheckouts(), 900000);
+    setInterval(() => this.sendQRCodesForApprovedCheckouts(), 2400000);
   }
 
   startEmailService() {
     console.log("Iniciando serviço de emails automáticos...");
-    setInterval(() => this.processAutomaticEmails(), 900000);
+    setInterval(() => this.processAutomaticEmails(), 4800000);
   }
 }
 
