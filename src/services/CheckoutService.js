@@ -27,6 +27,8 @@ class CheckoutService {
       discount = ticketQuantity * 50;
     } else if (coupon === "teste-cartao") {
       discount = 498;
+    } else if (coupon === "teste-boleto") {
+      discount = 494;
     } else if (coupon && coupon !== "grupo") {
       throw new Error("Cupom inválido.");
     }
