@@ -144,6 +144,10 @@ class BancoDoBrasilService {
     const numeroTituloCliente = `000${config.bancoDoBrasil.numeroConvenio}${numeroControle}`;
     const cepSemHifen = payer.zipCode.replace(/[^0-9]/g, "");
 
+    const now = new Date();
+    const today = new Date(
+      now.toLocaleString("en-US", { timeZone: "America/Sao_Paulo" })
+    );
     const cleanIdentity = customer.Identity.replace(/\D/g, "");
     const tipoInscricao = cleanIdentity.length === 11 ? 1 : 2;
 
@@ -154,7 +158,7 @@ class BancoDoBrasilService {
         config.bancoDoBrasil.numeroVariacaoCarteira
       ),
       codigoModalidade: 1,
-      dataEmissao: this.formatDate(new Date()),
+      dataEmissao: this.formatDate(today),
       dataVencimento: this.formatDate(
         new Date(Date.now() + 3 * 24 * 60 * 60 * 1000)
       ),
