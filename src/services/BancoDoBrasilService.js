@@ -145,9 +145,8 @@ class BancoDoBrasilService {
     const cepSemHifen = payer.zipCode.replace(/[^0-9]/g, "");
 
     const now = new Date();
-    const today = new Date(
-      now.toLocaleString("en-US", { timeZone: "America/Sao_Paulo" })
-    );
+    const offsetBrasil = -3 * 60;
+    const today = new Date(now.getTime() + offsetBrasil * 60 * 1000);
     const cleanIdentity = customer.Identity.replace(/\D/g, "");
     const tipoInscricao = cleanIdentity.length === 11 ? 1 : 2;
 
