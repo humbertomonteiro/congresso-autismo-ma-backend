@@ -34,6 +34,12 @@ class BancoDoBrasilService {
         return response.data;
       } catch (error) {
         console.error(`Tentativa ${attempt} falhou:`, error.message);
+        if (error.response) {
+          console.error(
+            "Resposta da API:",
+            JSON.stringify(error.response.data, null, 2)
+          );
+        }
         if (attempt === retries) throw error;
         await new Promise((resolve) => setTimeout(resolve, delayMs * attempt));
       }
@@ -164,7 +170,7 @@ class BancoDoBrasilService {
       jurosMora: { tipo: 1, valor: 1.0, porcentagem: 0 },
       multa: { tipo: 0, dados: "", porcentagem: 0, valor: 0 },
       pagador: {
-        tipoInscricao: customer.IdentityType === "cpf" ? 1 : 2,
+        tipoInscricao: payer.IdentityType === "cpf" ? 1 : 2,
         numeroInscricao: customer.Identity,
         nome: customer.Name.toUpperCase(),
         endereco: `${payer.street.toUpperCase()} N ${

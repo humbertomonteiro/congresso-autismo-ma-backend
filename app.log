@@ -382,3 +382,8 @@
 2025-03-21T00:46:46.624Z [INFO]: QR codes já enviados ou em processamento para checkout ENQqCw1wI8qMDnoVpjSD
 2025-03-21T00:46:46.625Z [INFO]: QR codes já enviados ou em processamento para checkout ZwyBilaFkfEo52vZXauc
 2025-03-21T00:46:46.626Z [INFO]: Processamento de QR codes finalizado
+2025-03-21T01:06:44.935Z [INFO]: Iniciando envio de QR codes para checkouts aprovados...
+2025-03-21T01:06:45.048Z [INFO]: Encontrados 2 checkouts aprovados
+2025-03-21T01:06:45.050Z [INFO]: QR codes já enviados ou em processamento para checkout ENQqCw1wI8qMDnoVpjSD
+2025-03-21T01:06:45.050Z [INFO]: QR codes já enviados ou em processamento para checkout ZwyBilaFkfEo52vZXauc
+2025-03-21T01:06:45.051Z [INFO]: Processamento de QR codes finalizado
