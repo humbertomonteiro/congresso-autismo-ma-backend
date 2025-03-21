@@ -150,6 +150,8 @@ class BancoDoBrasilService {
     const cleanIdentity = customer.Identity.replace(/\D/g, "");
     const tipoInscricao = cleanIdentity.length === 11 ? 1 : 2;
 
+    console.log("Data calculada (today):", today.toISOString());
+
     const payload = {
       numeroConvenio: parseInt(config.bancoDoBrasil.numeroConvenio),
       numeroCarteira: parseInt(config.bancoDoBrasil.numeroCarteira),
