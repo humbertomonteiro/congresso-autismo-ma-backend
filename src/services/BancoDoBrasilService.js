@@ -137,10 +137,15 @@ class BancoDoBrasilService {
     const boletoEndpoint = `${this.apiBaseUrl}/boletos?gw-dev-app-key=${config.bancoDoBrasil.developerApiKey}`;
     console.log("Endpoint:", boletoEndpoint);
     console.log("Token:", token);
+    console.log("Customer:", customer); // Depuração
+    console.log("Payer:", payer);
 
     const numeroControle = Date.now().toString().slice(-10).padStart(10, "0");
     const numeroTituloCliente = `000${config.bancoDoBrasil.numeroConvenio}${numeroControle}`;
     const cepSemHifen = payer.zipCode.replace(/[^0-9]/g, "");
+
+    const cleanIdentity = customer.Identity.replace(/\D/g, "");
+    const tipoInscricao = cleanIdentity.length === 11 ? 1 : 2;
 
     const payload = {
       numeroConvenio: parseInt(config.bancoDoBrasil.numeroConvenio),
@@ -170,7 +175,7 @@ class BancoDoBrasilService {
       jurosMora: { tipo: 1, valor: 1.0, porcentagem: 0 },
       multa: { tipo: 0, dados: "", porcentagem: 0, valor: 0 },
       pagador: {
-        tipoInscricao: payer.IdentityType === "cpf" ? 1 : 2,
+        tipoInscricao: tipoInscricao,
         numeroInscricao: customer.Identity,
         nome: customer.Name.toUpperCase(),
         endereco: `${payer.street.toUpperCase()} N ${
