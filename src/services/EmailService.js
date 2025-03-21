@@ -22,7 +22,28 @@ class EmailService {
     this.isProcessing = false;
   }
 
-  async sendManualEmail({ from, to, subject, data }) {
+  async sendEmail({ from, to, subject, html, attachments }) {
+    const account = emailAccounts.find((acc) => acc.user === from);
+    if (!account) throw new Error("Conta de email não configurada.");
+
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: { user: account.user, pass: account.pass },
+    });
+
+    const mailOptions = {
+      from: account.user,
+      to: Array.isArray(to) ? to : [to],
+      subject,
+      html,
+      attachments,
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log(`Email enviado de ${from} para ${to}`);
+  }
+
+  async sendEmailConfirmationPayment({ checkoutId, from, to, subject, data }) {
     const templatePath = path.join(
       __dirname,
       "../templates/emailTemplate.html"
@@ -53,6 +74,48 @@ class EmailService {
     }
 
     await this.sendEmail({ from, to, subject, html: htmlTemplate });
+
+    // Verifica se o checkoutId é válido antes de prosseguir
+    if (!checkoutId) {
+      console.error(
+        "Erro: checkoutId não foi fornecido para atualizar sentEmails"
+      );
+      return; // Sai do método sem tentar atualizar
+    }
+
+    console.log(
+      `Tentando atualizar sentEmails para o checkoutId: ${checkoutId}`
+    );
+
+    try {
+      const checkout = await EmailRepository.fetchCheckoutByTransactionId(
+        checkoutId
+      );
+      if (!checkout) {
+        console.error(
+          `Checkout com transactionId ${checkoutId} não encontrado`
+        );
+        return;
+      }
+
+      const updatedSentEmails = [
+        ...(checkout.sentEmails || []),
+        "confirmationPayment",
+      ];
+
+      // Usa o ID real do documento (checkout.id) para atualizar
+      await EmailRepository.updateCheckout(checkout.id, {
+        sentEmails: updatedSentEmails,
+      });
+
+      console.log(
+        `Email de confirmação enviado e flag "confirmationPayment" adicionada ao checkout ${checkout.id} (transactionId: ${checkoutId})`
+      );
+    } catch (error) {
+      console.error(
+        `Erro ao atualizar sentEmails para o transactionId ${checkoutId}: ${error.message}`
+      );
+    }
   }
 
   async generateEmailTemplate(status, theme) {
@@ -107,27 +170,6 @@ class EmailService {
 
   async addContactToList(listId, email) {
     await EmailRepository.addContactToList(listId, email);
-  }
-
-  async sendEmail({ from, to, subject, html, attachments }) {
-    const account = emailAccounts.find((acc) => acc.user === from);
-    if (!account) throw new Error("Conta de email não configurada.");
-
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: { user: account.user, pass: account.pass },
-    });
-
-    const mailOptions = {
-      from: account.user,
-      to: Array.isArray(to) ? to : [to],
-      subject,
-      html,
-      attachments,
-    };
-
-    await transporter.sendMail(mailOptions);
-    console.log(`Email enviado de ${from} para ${to}`);
   }
 
   async sendQRCodesForApprovedCheckouts() {
@@ -277,6 +319,7 @@ class EmailService {
       logger.info("Processamento de QR codes finalizado");
     }
   }
+
   async processAutomaticEmails(templateIds = null) {
     if (this.isProcessing) {
       console.log("Processamento já em andamento, ignorando nova execução.");
@@ -293,6 +336,52 @@ class EmailService {
         ? templates.filter((t) => templateIds.includes(t.id))
         : templates;
 
+      // primeira parte
+      const approvedCheckouts = checkouts.filter(
+        (c) => c.status.toLowerCase() === "approved"
+      );
+
+      for (const checkout of approvedCheckouts) {
+        if (
+          !checkout.sentEmails ||
+          !checkout.sentEmails.includes("confirmationPayment")
+        ) {
+          const firstParticipant = checkout.participants[0];
+          const emailData = {
+            checkoutId: checkout.transactionId,
+            from: emailAccounts[0].user,
+            to: firstParticipant.email,
+            subject: "Confirmação de Pagamento - Congresso Autismo MA 2025",
+            data: {
+              name: firstParticipant.name,
+              transactionId: checkout.paymentId,
+              fullTickets: checkout.orderDetails.fullTickets || 0,
+              valueTicketsAll: checkout.orderDetails.valueTicketsAll || "0.00",
+              halfTickets: checkout.orderDetails.halfTickets || 0,
+              installments:
+                checkout.paymentDetails.creditCard?.installments || 1,
+              valueTicketsHalf:
+                checkout.orderDetails.valueTicketsHalf || "0.00",
+              total: checkout.totalAmount || "0.00",
+              coupon: checkout.orderDetails.coupon || "",
+              discount: checkout.orderDetails.discount || "0.00",
+            },
+          };
+
+          try {
+            await this.sendEmailConfirmationPayment(emailData);
+            console.log(
+              `Email de confirmação enviado para ${firstParticipant.email} do checkout ${checkout.transactionId}`
+            );
+          } catch (error) {
+            console.error(
+              `Erro ao enviar email de confirmação para ${firstParticipant.email}: ${error.message}`
+            );
+          }
+        }
+      }
+
+      // segunda parte
       const templatePath = path.join(
         __dirname,
         "../templates/emailTemplateSimple.html"
@@ -434,12 +523,12 @@ class EmailService {
 
   startQRCodeService() {
     console.log("Iniciando serviço de envio de QR codes...");
-    setInterval(() => this.sendQRCodesForApprovedCheckouts(), 2400000);
+    setInterval(() => this.sendQRCodesForApprovedCheckouts(), 1200000);
   }
 
   startEmailService() {
     console.log("Iniciando serviço de emails automáticos...");
-    setInterval(() => this.processAutomaticEmails(), 4800000);
+    setInterval(() => this.processAutomaticEmails(), 900000);
   }
 }
 

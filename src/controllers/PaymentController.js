@@ -33,6 +33,7 @@ const processCreditPayment = async (req, res) => {
       paymentId: result.paymentId,
       status: result.status,
       totalAmount: totals.total,
+      transactionId: result.transactionId,
     });
   } catch (error) {
     console.error("Erro ao processar crédito:", error.message);

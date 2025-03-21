@@ -4,10 +4,11 @@ const axios = require("axios");
 require("dotenv").config();
 
 const sendEmail = async (req, res) => {
-  const { from, to, subject, data } = req.body;
+  const { checkoutId, from, to, subject, data } = req.body;
 
   try {
-    const result = await EmailService.sendManualEmail({
+    const result = await EmailService.sendEmailConfirmationPayment({
+      checkoutId,
       from,
       to,
       subject,

@@ -123,13 +123,26 @@ class CieloService {
       // Salvar no Firebase
       await CheckoutRepository.saveCheckout(checkoutData);
 
-      return {
+      console.log("Response sendo retornado:", {
         paymentId: creditResponse.paymentId,
+        transactionId: paymentData.MerchantOrderId,
         status: customStatus,
         message:
           customStatus === "pending"
             ? "Pagamento em processamento, aguarde a confirmação."
             : "Pagamento processado com sucesso",
+        success: true, // Adiciona success explicitamente
+      });
+
+      return {
+        paymentId: creditResponse.paymentId,
+        transactionId: paymentData.MerchantOrderId,
+        status: customStatus,
+        message:
+          customStatus === "pending"
+            ? "Pagamento em processamento, aguarde a confirmação."
+            : "Pagamento processado com sucesso",
+        success: true,
       };
     } catch (error) {
       console.error("Erro no CieloService:", error.message);

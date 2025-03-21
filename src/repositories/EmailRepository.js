@@ -21,6 +21,21 @@ class EmailRepository {
     return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
   }
 
+  async fetchCheckoutByTransactionId(transactionId) {
+    const snapshot = await getDocs(collection(db, "checkouts"));
+    const checkouts = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    const checkout = checkouts.find((c) => c.transactionId === transactionId);
+    if (!checkout) {
+      throw new Error(
+        `Checkout com transactionId ${transactionId} não encontrado`
+      );
+    }
+    return checkout;
+  }
+
   async updateCheckout(checkoutId, data) {
     const checkoutRef = doc(db, "checkouts", checkoutId);
     await updateDoc(checkoutRef, data);
