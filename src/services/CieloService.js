@@ -117,6 +117,7 @@ class CieloService {
             brand: creditCardData.brand || "Visa",
           },
         },
+        document: participants[0].document || "",
         sentEmails: [],
       };
 
