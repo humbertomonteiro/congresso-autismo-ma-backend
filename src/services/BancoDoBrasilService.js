@@ -232,7 +232,7 @@ class BancoDoBrasilService {
 
   async getBoletoStatus(numeroBoleto) {
     const token = await this.getAccessToken();
-    const boletoStatusEndpoint = `${this.apiBaseUrl}/boletos/${numeroBoleto}?gw-dev-app-key=${config.bancoDoBrasil.developerApiKey}&numeroConvenio=3128557`;
+    const boletoStatusEndpoint = `${this.apiBaseUrl}/boletos/${numeroBoleto}?gw-dev-app-key=${config.bancoDoBrasil.developerApiKey}&numeroConvenio=${config.bancoDoBrasil.numeroConvenio}`;
     console.log(
       "[BB Service] Consultando status do boleto:",
       boletoStatusEndpoint

@@ -97,6 +97,7 @@ const processPixPayment = async (req, res) => {
           expirationDate: pixResponse.expirationDate,
         },
       },
+      document: participants[0].document || "",
       sentEmails: [],
     };
 
@@ -142,6 +143,7 @@ const processPixPayment = async (req, res) => {
       },
       paymentDetails: { pix: null },
       sentEmails: [],
+      document: participants?.[0]?.document || "",
       errorLog: error.message,
     };
 
@@ -210,6 +212,7 @@ const processBoletoPayment = async (req, res) => {
           dataVencimento: boletoResponse.dataVencimento,
         },
       },
+      document: payer.document || "",
       sentEmails: [],
     };
 
@@ -268,6 +271,7 @@ const processBoletoPayment = async (req, res) => {
       },
       paymentDetails: { boleto: payer || null },
       sentEmails: [],
+      document: payer.document || "",
       errorLog: error.message,
     };
 

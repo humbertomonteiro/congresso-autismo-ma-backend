@@ -15,6 +15,8 @@ const emailAccounts = [
   { user: process.env.EMAIL_USER_3, pass: process.env.EMAIL_PASS_3 },
   { user: process.env.EMAIL_USER_4, pass: process.env.EMAIL_PASS_4 },
   { user: process.env.EMAIL_USER_5, pass: process.env.EMAIL_PASS_5 },
+  { user: process.env.EMAIL_USER_6, pass: process.env.EMAIL_PASS_6 },
+  { user: process.env.EMAIL_USER_7, pass: process.env.EMAIL_PASS_7 },
 ].filter((acc) => acc.user && acc.pass);
 
 class EmailService {
