@@ -23,6 +23,23 @@ const mapCieloStatusToCustom = (cieloStatus) => {
   }
 };
 
+// Função para normalizar a bandeira do cartão
+const normalizeBrand = (brand) => {
+  const brandMap = {
+    visa: "Visa",
+    mastercard: "MasterCard",
+    amex: "Amex",
+    elo: "Elo",
+    diners: "Diners",
+    discover: "Discover",
+    jcb: "JCB",
+    aura: "Aura",
+    hipercard: "Hipercard",
+  };
+  const lowerBrand = brand.toLowerCase();
+  return brandMap[lowerBrand] || brand; // Retorna o valor normalizado ou o original se não for encontrado
+};
+
 class CieloService {
   async processCreditPayment(
     ticketQuantity,
@@ -36,7 +53,10 @@ class CieloService {
     let paymentData;
 
     try {
-      // Montar paymentData
+      // Normalizar o valor da bandeira antes de usar
+      const normalizedBrand = normalizeBrand(creditCardData.brand);
+
+      // Montar paymentData com o brand normalizado
       paymentData = {
         MerchantOrderId: `ORDER_${Date.now()}`,
         Customer: { Name: participants[0].name },
@@ -50,7 +70,7 @@ class CieloService {
             Holder: creditCardData.cardName,
             ExpirationDate: creditCardData.maturity,
             SecurityCode: creditCardData.cardCode,
-            Brand: creditCardData.brand,
+            Brand: normalizedBrand, // Usar o valor normalizado aqui
           },
         },
       };
@@ -114,7 +134,7 @@ class CieloService {
           creditCard: {
             last4Digits: creditCardData.cardNumber.slice(-4),
             installments: creditCardData.installments,
-            brand: creditCardData.brand || "Visa",
+            brand: normalizedBrand, // Usar o valor normalizado aqui também
           },
         },
         document: participants[0].document || "",
@@ -132,7 +152,7 @@ class CieloService {
           customStatus === "pending"
             ? "Pagamento em processamento, aguarde a confirmação."
             : "Pagamento processado com sucesso",
-        success: true, // Adiciona success explicitamente
+        success: true,
       });
 
       return {
@@ -202,7 +222,6 @@ class CieloService {
   }
 
   async fetchCieloSales() {
-    // Placeholder mantido do código novo, não alterado
     throw new Error("Método fetchCieloSales não implementado ainda");
   }
 }
