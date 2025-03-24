@@ -6,8 +6,14 @@ const CheckoutRepository = require("../repositories/CheckoutRepository");
 const fs = require("fs");
 
 const processCreditPayment = async (req, res) => {
-  const { ticketQuantity, halfTickets, coupon, participants, creditCardData } =
-    req.body;
+  const {
+    ticketQuantity,
+    halfTickets,
+    coupon,
+    participants,
+    creditCardData,
+    payer,
+  } = req.body;
 
   try {
     // Validações
@@ -26,7 +32,8 @@ const processCreditPayment = async (req, res) => {
       coupon,
       participants,
       creditCardData,
-      totals
+      totals,
+      payer
     );
 
     res.sendResponse(200, true, result.message, {

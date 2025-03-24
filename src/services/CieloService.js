@@ -27,7 +27,7 @@ const mapCieloStatusToCustom = (cieloStatus) => {
 const normalizeBrand = (brand) => {
   const brandMap = {
     visa: "Visa",
-    mastercard: "MasterCard",
+    mastercard: "Master",
     amex: "Amex",
     elo: "Elo",
     diners: "Diners",
@@ -37,7 +37,7 @@ const normalizeBrand = (brand) => {
     hipercard: "Hipercard",
   };
   const lowerBrand = brand.toLowerCase();
-  return brandMap[lowerBrand] || brand; // Retorna o valor normalizado ou o original se não for encontrado
+  return brandMap[lowerBrand] || brand;
 };
 
 class CieloService {
@@ -47,7 +47,8 @@ class CieloService {
     coupon,
     participants,
     creditCardData,
-    totals
+    totals,
+    payer
   ) {
     let creditResponse;
     let paymentData;
@@ -59,7 +60,11 @@ class CieloService {
       // Montar paymentData com o brand normalizado
       paymentData = {
         MerchantOrderId: `ORDER_${Date.now()}`,
-        Customer: { Name: participants[0].name },
+        Customer: {
+          Name: payer.name,
+          Identity: payer.document.replace(/\D/g, ""),
+          IdentityType: payer.documentType || "cpf",
+        },
         Payment: {
           Type: "CreditCard",
           Amount: totals.totalInCents,
