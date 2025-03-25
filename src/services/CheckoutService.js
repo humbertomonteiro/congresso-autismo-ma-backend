@@ -24,7 +24,7 @@ class CheckoutService {
     let discount = 0;
 
     if (coupon === "grupo" && ticketQuantity >= 5) {
-      discount = ticketQuantity * 50;
+      discount = (ticketQuantity - halfTickets) * 50;
     } else if (coupon === "teste-cartao") {
       discount = 498;
     } else if (coupon && coupon !== "grupo") {

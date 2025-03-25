@@ -67,39 +67,39 @@ class BancoDoBrasilService {
     return response.data.access_token;
   }
 
-  async createPixPayment(amount, customer) {
-    const token = await this.getAccessToken();
-    const pixEndpoint = `${this.apiBaseUrl}/pix/v2/cob?gw-dev-app-key=${config.bancoDoBrasil.developerApiKey}`;
-    const txId = `TX${Date.now()}`;
+  // async createPixPayment(amount, customer) {
+  //   const token = await this.getAccessToken();
+  //   const pixEndpoint = `${this.apiBaseUrl}/pix/v2/cob?gw-dev-app-key=${config.bancoDoBrasil.developerApiKey}`;
+  //   const txId = `TX${Date.now()}`;
 
-    const payload = {
-      calendario: {
-        expiracao: 3600, // 1 hora
-      },
-      devedor: {
-        cpf: customer.Identity,
-        nome: customer.Name,
-      },
-      valor: {
-        original: (amount / 100).toFixed(2),
-      },
-      chave: "saludcuidarmais@gmail.com", // Chave Pix fixa
-      solicitacaoPagador: "Pagamento Congresso Autismo MA 2025",
-      infoAdicionais: [{ nome: "Evento", valor: "Congresso Autismo MA 2025" }],
-    };
+  //   const payload = {
+  //     calendario: {
+  //       expiracao: 3600, // 1 hora
+  //     },
+  //     devedor: {
+  //       cpf: customer.Identity,
+  //       nome: customer.Name,
+  //     },
+  //     valor: {
+  //       original: (amount / 100).toFixed(2),
+  //     },
+  //     chave: "saludcuidarmais@gmail.com", // Chave Pix fixa
+  //     solicitacaoPagador: "Pagamento Congresso Autismo MA 2025",
+  //     infoAdicionais: [{ nome: "Evento", valor: "Congresso Autismo MA 2025" }],
+  //   };
 
-    const response = await this.requestWithRetries(pixEndpoint, payload, {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    });
+  //   const response = await this.requestWithRetries(pixEndpoint, payload, {
+  //     Authorization: `Bearer ${token}`,
+  //     "Content-Type": "application/json",
+  //   });
 
-    return {
-      txId: response.txid,
-      qrCode: response.qrcode.qrCode,
-      qrCodeLink: response.qrcode.linkVisualizacao,
-      expirationDate: new Date(Date.now() + 3600 * 1000).toISOString(),
-    };
-  }
+  //   return {
+  //     txId: response.txid,
+  //     qrCode: response.qrcode.qrCode,
+  //     qrCodeLink: response.qrcode.linkVisualizacao,
+  //     expirationDate: new Date(Date.now() + 3600 * 1000).toISOString(),
+  //   };
+  // }
 
   async getPixStatus(txId) {
     const token = await this.getAccessToken();
@@ -137,16 +137,14 @@ class BancoDoBrasilService {
     const boletoEndpoint = `${this.apiBaseUrl}/boletos?gw-dev-app-key=${config.bancoDoBrasil.developerApiKey}`;
     console.log("Endpoint:", boletoEndpoint);
     console.log("Token:", token);
-    console.log("Customer:", customer); // Depuração
+    console.log("Customer:", customer);
     console.log("Payer:", payer);
 
     const numeroControle = Date.now().toString().slice(-10).padStart(10, "0");
     const numeroTituloCliente = `000${config.bancoDoBrasil.numeroConvenio}${numeroControle}`;
     const cepSemHifen = payer.zipCode.replace(/[^0-9]/g, "");
 
-    const now = new Date();
-    const offsetBrasil = -3 * 60;
-    const today = new Date(now.getTime() + offsetBrasil * 60 * 1000);
+    const today = new Date();
     const cleanIdentity = customer.Identity.replace(/\D/g, "");
     const tipoInscricao = cleanIdentity.length === 11 ? 1 : 2;
 
@@ -161,7 +159,7 @@ class BancoDoBrasilService {
       codigoModalidade: 1,
       dataEmissao: this.formatDate(today),
       dataVencimento: this.formatDate(
-        new Date(Date.now() + 3 * 24 * 60 * 60 * 1000)
+        new Date(today.getTime() + 3 * 24 * 60 * 60 * 1000)
       ),
       valorOriginal: (amount / 100).toFixed(2),
       valorAbatimento: 0,
@@ -225,7 +223,7 @@ class BancoDoBrasilService {
       numeroBoleto: response.numero,
       boletoFile: boletoFilePath,
       dataVencimento: new Date(
-        Date.now() + 3 * 24 * 60 * 60 * 1000
+        today.getTime() + 3 * 24 * 60 * 60 * 1000
       ).toISOString(),
     };
   }

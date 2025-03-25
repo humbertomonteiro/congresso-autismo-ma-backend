@@ -75,7 +75,7 @@ class CieloService {
             Holder: creditCardData.cardName,
             ExpirationDate: creditCardData.maturity,
             SecurityCode: creditCardData.cardCode,
-            Brand: normalizedBrand, // Usar o valor normalizado aqui
+            Brand: normalizedBrand,
           },
         },
       };
