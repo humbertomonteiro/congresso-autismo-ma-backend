@@ -246,7 +246,7 @@ class EmailService {
                 "<strong>Importante: Esteja atento as regras de natureza obrigatória com respeito ao uso das credenciais e utilização do crachá de identifi cação, que será disponibilizado no dia do evento:</strong><br><br>" +
                 "<p>1- O QR-code tem a única função de fornecer a liberação da sua entrada no congresso. Para cada dia uma autorização de QR-code diferente.</p><br>" +
                 "<p>2- O uso do crachá é obrigatório. Portanto, é de inteira responsabilidade do inscrito o zelo para com a sua identifi cação. Pois, a equipe de fi scalização será aconselhada a não autorizar a permanência de inscritos que se apresentarem sem o uso de seu crachá.</p><br>" +
-                "<p>Em caso de dúvidas, fi que a vontade para entrar em contato com a nossa equipe de suporte pelos canais de atendimento (e-mail, telefones).</p><br>" +
+                "<p>Em caso de dúvidas, fique a vontade para entrar em contato com a nossa equipe de suporte pelos canais de atendimento (e-mail, telefones).</p><br>" +
                 "<strong>Os ingressos estão em anexo.</strong><br>" +
                 "Cordialmente, a comissão organizadora.<br><br>"
             );
