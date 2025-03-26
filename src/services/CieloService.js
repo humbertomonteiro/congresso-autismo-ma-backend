@@ -72,6 +72,7 @@ class CieloService {
           Amount: totals.totalInCents,
           Installments: parseInt(creditCardData.installments),
           SoftDescriptor: EVENT_NAME,
+          Capture: true,
           CreditCard: {
             CardNumber: creditCardData.cardNumber.replace(/\s/g, ""),
             Holder: creditCardData.cardName,
