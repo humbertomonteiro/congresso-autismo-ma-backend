@@ -5,6 +5,8 @@ const BancoDoBrasilService = require("../services/BancoDoBrasilService");
 const CheckoutRepository = require("../repositories/CheckoutRepository");
 const fs = require("fs");
 
+const { toZonedTime } = require("date-fns-tz");
+
 const processCreditPayment = async (req, res) => {
   const {
     ticketQuantity,
@@ -175,6 +177,9 @@ const processBoletoPayment = async (req, res) => {
       throw new Error("Documento do pagador é obrigatório.");
     }
 
+    const now = new Date();
+    const brasiliaTime = toZonedTime(now, "America/Sao_Paulo");
+
     const paymentData = {
       MerchantOrderId: `ORDER_${Date.now()}`,
       Customer: {
@@ -196,7 +201,7 @@ const processBoletoPayment = async (req, res) => {
 
     const checkoutData = {
       transactionId: paymentData.MerchantOrderId,
-      timestamp: new Date().toISOString(),
+      timestamp: brasiliaTime.toISOString(),
       status: "pending",
       paymentMethod: "boleto",
       totalAmount: totals.total,

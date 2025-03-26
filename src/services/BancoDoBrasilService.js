@@ -5,6 +5,9 @@ const config = require("../config");
 const CheckoutService = require("./CheckoutService");
 const { generateBoletoPDF } = require("../utils/templateUtils");
 
+const { format, addDays } = require("date-fns");
+const { toZonedTime } = require("date-fns-tz");
+
 class BancoDoBrasilService {
   constructor() {
     this.authBaseUrl = config.bancoDoBrasil.authBaseUrl;
@@ -17,10 +20,7 @@ class BancoDoBrasilService {
   }
 
   formatDate(date) {
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const year = date.getFullYear();
-    return `${day}.${month}.${year}`;
+    return format(date, "dd.MM.yyyy");
   }
 
   async requestWithRetries(url, payload, headers, retries = 3, delayMs = 1000) {
@@ -144,7 +144,8 @@ class BancoDoBrasilService {
     const numeroTituloCliente = `000${config.bancoDoBrasil.numeroConvenio}${numeroControle}`;
     const cepSemHifen = payer.zipCode.replace(/[^0-9]/g, "");
 
-    const today = new Date();
+    const now = new Date();
+    const today = toZonedTime(now, "America/Sao_Paulo");
     const cleanIdentity = customer.Identity.replace(/\D/g, "");
     const tipoInscricao = cleanIdentity.length === 11 ? 1 : 2;
 
@@ -158,9 +159,7 @@ class BancoDoBrasilService {
       ),
       codigoModalidade: 1,
       dataEmissao: this.formatDate(today),
-      dataVencimento: this.formatDate(
-        new Date(today.getTime() + 3 * 24 * 60 * 60 * 1000)
-      ),
+      dataVencimento: this.formatDate(addDays(today, 3)),
       valorOriginal: (amount / 100).toFixed(2),
       valorAbatimento: 0,
       quantidadeDiasProtesto: 15,
@@ -222,9 +221,7 @@ class BancoDoBrasilService {
       qrCodePix: response.qrCode?.url,
       numeroBoleto: response.numero,
       boletoFile: boletoFilePath,
-      dataVencimento: new Date(
-        today.getTime() + 3 * 24 * 60 * 60 * 1000
-      ).toISOString(),
+      dataVencimento: addDays(today, 3).toISOString(),
     };
   }
 

@@ -2,6 +2,8 @@
 const CieloRepository = require("../repositories/CieloRepository");
 const CheckoutRepository = require("../repositories/CheckoutRepository");
 
+const { toZonedTime } = require("date-fns-tz");
+
 const EVENT_NAME = "Congresso Autismo MA 2025";
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -118,10 +120,13 @@ class CieloService {
         );
       }
 
+      const now = new Date();
+      const brasiliaTime = toZonedTime(now, "America/Sao_Paulo");
+
       // Montar checkoutData
       const checkoutData = {
         transactionId: paymentData.MerchantOrderId,
-        timestamp: new Date().toISOString(),
+        timestamp: brasiliaTime.toISOString(),
         status: customStatus,
         paymentMethod: "creditCard",
         totalAmount: totals.total,
@@ -139,7 +144,7 @@ class CieloService {
           creditCard: {
             last4Digits: creditCardData.cardNumber.slice(-4),
             installments: creditCardData.installments,
-            brand: normalizedBrand, // Usar o valor normalizado aqui também
+            brand: normalizedBrand,
           },
         },
         document: participants[0].document || "",
