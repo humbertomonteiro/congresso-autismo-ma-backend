@@ -22,31 +22,11 @@ const emailAccounts = [
 class EmailService {
   constructor() {
     this.isProcessing = false;
-    this.emailCountPerAccount = new Map();
-    this.dailyLimit = 400;
-  }
-
-  resetEmailCountIfNeeded() {
-    const now = new Date();
-    const lastReset = this.lastReset || now;
-    if (now.getDate() !== lastReset.getDate()) {
-      this.emailCountPerAccount.clear();
-      this.lastReset = now;
-    }
   }
 
   async sendEmail({ from, to, subject, html, attachments }) {
     const account = emailAccounts.find((acc) => acc.user === from);
     if (!account) throw new Error("Conta de email não configurada.");
-
-    this.resetEmailCountIfNeeded();
-
-    const currentCount = this.emailCountPerAccount.get(from) || 0;
-    if (currentCount >= this.dailyLimit) {
-      throw new Error(
-        `Limite diário de ${this.dailyLimit} emails atingido para ${from}`
-      );
-    }
 
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -61,14 +41,8 @@ class EmailService {
       attachments,
     };
 
-    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-    await delay(1000);
-
     await transporter.sendMail(mailOptions);
     console.log(`Email enviado de ${from} para ${to}`);
-
-    this.emailCountPerAccount.set(from, currentCount + 1);
-    logger.info(`Emails enviados hoje por ${from}: ${currentCount + 1}`);
   }
 
   async sendEmailConfirmationPayment({ checkoutId, from, to, subject, data }) {
@@ -323,10 +297,6 @@ class EmailService {
             logger.info(
               `QR codes enviados para ${recipient.email} (checkout ${checkout.id})`
             );
-
-            const delay = (ms) =>
-              new Promise((resolve) => setTimeout(resolve, ms));
-            await delay(2000);
           } catch (error) {
             logger.error(
               `Erro ao processar ${recipient.email} (checkout ${checkout.id}): ${error.message}`
@@ -543,10 +513,6 @@ class EmailService {
             }
 
             sentCount++;
-
-            const delay = (ms) =>
-              new Promise((resolve) => setTimeout(resolve, ms));
-            await delay(2000);
           }
         }
       }

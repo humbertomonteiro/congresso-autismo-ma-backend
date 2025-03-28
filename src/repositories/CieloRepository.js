@@ -46,30 +46,8 @@ class CieloRepository {
       console.log("Resposta do status:", response.data);
       return response.data.Payment;
     } catch (error) {
-      console.error(
-        "Erro ao consultar status:",
-        error.response?.data || error.message
-      );
+      console.error("Erro ao consultar status:", error);
       throw new Error("Erro ao verificar status na Cielo");
-    }
-  }
-
-  async capturePayment(paymentId, amount) {
-    try {
-      console.log("Capturando pagamento na Cielo para PaymentId:", paymentId);
-      const response = await axios.put(
-        `${config.cielo.baseUrl}/1/sales/${paymentId}/capture`, // Usando config.cielo.baseUrl
-        { Amount: amount }, // Amount em centavos, opcional (se omitido, captura o total)
-        { headers: this.#getHeaders() } // Usando #getHeaders para consistência
-      );
-      console.log("Resposta da captura:", response.data);
-      return response.data;
-    } catch (error) {
-      console.error(
-        "Erro ao capturar pagamento:",
-        error.response?.data || error.message
-      );
-      throw new Error("Erro ao capturar pagamento na Cielo");
     }
   }
 
@@ -83,10 +61,7 @@ class CieloRepository {
       );
       console.log("Pagamento estornado com sucesso");
     } catch (error) {
-      console.error(
-        "Erro ao estornar pagamento:",
-        error.response?.data || error.message
-      );
+      console.error("Erro ao estornar pagamento:", error);
       throw new Error("Erro ao estornar pagamento na Cielo");
     }
   }

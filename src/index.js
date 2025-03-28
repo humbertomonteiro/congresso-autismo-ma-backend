@@ -55,50 +55,6 @@ app.use((err, req, res, next) => {
   res.sendResponse(500, false, "Erro interno no servidor", null, err.message);
 });
 
-// Função assíncrona para verificar e capturar pagamentos
-// async function checkAndCapturePayments() {
-//   const paymentIds = [
-//     "c6aa5237-6e34-4c22-9aca-ce6222d42359", // Primeiro pagamento
-//     "17408f25-ae5a-45ce-a922-d39cd0a95669", // Segundo pagamento
-//   ];
-
-//   for (const paymentId of paymentIds) {
-//     try {
-//       console.log(`Processando pagamento ${paymentId}...`);
-//       const status = await CieloRepository.getPaymentStatus(paymentId);
-//       console.log(`Status do pagamento ${paymentId}:`, status);
-
-//       if (status.Status === 1) {
-//         console.log(`Capturando pagamento ${paymentId}...`);
-//         const captureResponse = await CieloRepository.capturePayment(
-//           paymentId,
-//           status.Amount
-//         );
-//         console.log(
-//           `Pagamento ${paymentId} capturado com sucesso:`,
-//           captureResponse
-//         );
-
-//         // Verifica o status após captura
-//         const updatedStatus = await CieloRepository.getPaymentStatus(paymentId);
-//         console.log(
-//           `Status atualizado após captura para ${paymentId}:`,
-//           updatedStatus
-//         );
-//       } else {
-//         console.log(
-//           `O pagamento ${paymentId} não está apto para captura. Status: ${status.Status}`
-//         );
-//       }
-//     } catch (error) {
-//       console.error(
-//         `Erro ao processar o pagamento ${paymentId}:`,
-//         error.message
-//       );
-//     }
-//   }
-// }
-
 const PORT = config.port || 5000;
 const server = app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
