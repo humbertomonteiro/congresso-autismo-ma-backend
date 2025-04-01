@@ -1,8 +1,8 @@
-// src/services/BancoDoBrasilService.js
 const axios = require("axios");
 const https = require("https");
 const config = require("../config");
 const CheckoutService = require("./CheckoutService");
+const CheckoutRepository = require("../repositories/CheckoutRepository");
 const { generateBoletoPDF } = require("../utils/templateUtils");
 
 const { format, addDays } = require("date-fns");
@@ -17,10 +17,48 @@ class BancoDoBrasilService {
       // pfx: fs.readFileSync(config.bancoDoBrasil.certificadoPfx),
       // passphrase: config.bancoDoBrasil.certificadoSenha,
     });
+    this.basePrice = 499;
+    this.halfPrice = 399;
   }
 
   formatDate(date) {
     return format(date, "dd.MM.yyyy");
+  }
+
+  calculateTotal(ticketQuantity, halfTickets, coupon) {
+    if (!Number.isInteger(ticketQuantity) || ticketQuantity <= 0) {
+      throw new Error("Quantidade de ingressos inválida.");
+    }
+    if (
+      !Number.isInteger(halfTickets) ||
+      halfTickets < 0 ||
+      halfTickets > ticketQuantity
+    ) {
+      throw new Error("Número de ingressos meia inválido.");
+    }
+
+    const fullTickets = ticketQuantity - halfTickets;
+    const valueTicketsAll = fullTickets * this.basePrice;
+    const valueTicketsHalf = halfTickets * this.halfPrice;
+    let discount = 0;
+
+    if (coupon === "grupo" && ticketQuantity >= 5) {
+      discount = (ticketQuantity - halfTickets) * 50;
+    } else if (coupon === "terapeuta") {
+      discount = 50;
+    } else if (coupon && coupon !== "grupo") {
+      throw new Error("Cupom inválido.");
+    }
+
+    const total = valueTicketsAll + valueTicketsHalf - discount;
+
+    return {
+      valueTicketsAll: valueTicketsAll.toFixed(2),
+      valueTicketsHalf: valueTicketsHalf.toFixed(2),
+      discount: discount.toFixed(2),
+      total: total.toFixed(2),
+      totalInCents: Math.round(total * 100),
+    };
   }
 
   async requestWithRetries(url, payload, headers, retries = 3, delayMs = 1000) {
@@ -67,39 +105,83 @@ class BancoDoBrasilService {
     return response.data.access_token;
   }
 
-  // async createPixPayment(amount, customer) {
-  //   const token = await this.getAccessToken();
-  //   const pixEndpoint = `${this.apiBaseUrl}/pix/v2/cob?gw-dev-app-key=${config.bancoDoBrasil.developerApiKey}`;
-  //   const txId = `TX${Date.now()}`;
+  async createPixPayment(amount, customer) {
+    const CheckoutRepository = require("../repositories/CheckoutRepository"); // Importa aqui
 
-  //   const payload = {
-  //     calendario: {
-  //       expiracao: 3600, // 1 hora
-  //     },
-  //     devedor: {
-  //       cpf: customer.Identity,
-  //       nome: customer.Name,
-  //     },
-  //     valor: {
-  //       original: (amount / 100).toFixed(2),
-  //     },
-  //     chave: "saludcuidarmais@gmail.com", // Chave Pix fixa
-  //     solicitacaoPagador: "Pagamento Congresso Autismo MA 2025",
-  //     infoAdicionais: [{ nome: "Evento", valor: "Congresso Autismo MA 2025" }],
-  //   };
+    const token = await this.getAccessToken();
+    const pixEndpoint = `${this.apiBaseUrl}/pix/v2/cob?gw-dev-app-key=${config.bancoDoBrasil.developerApiKey}`;
+    const txId = `TX${Date.now()}`;
 
-  //   const response = await this.requestWithRetries(pixEndpoint, payload, {
-  //     Authorization: `Bearer ${token}`,
-  //     "Content-Type": "application/json",
-  //   });
+    const payload = {
+      calendario: {
+        expiracao: 3600, // 1 hora
+      },
+      devedor: {
+        cpf: customer.Identity,
+        nome: customer.Name,
+      },
+      valor: {
+        original: (amount / 100).toFixed(2),
+      },
+      chave: "saludcuidarmais@gmail.com", // Chave Pix fixa
+      solicitacaoPagador: "Pagamento Congresso Autismo MA 2025",
+      infoAdicionais: [{ nome: "Evento", valor: "Congresso Autismo MA 2025" }],
+    };
 
-  //   return {
-  //     txId: response.txid,
-  //     qrCode: response.qrcode.qrCode,
-  //     qrCodeLink: response.qrcode.linkVisualizacao,
-  //     expirationDate: new Date(Date.now() + 3600 * 1000).toISOString(),
-  //   };
-  // }
+    const response = await this.requestWithRetries(pixEndpoint, payload, {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    });
+
+    // Prepara o checkoutData
+    const checkoutData = {
+      transactionId: txId,
+      timestamp: new Date().toISOString(),
+      status: "pending",
+      paymentMethod: "pix",
+      totalAmount: (amount / 100).toFixed(2),
+      eventName: "Congresso Autismo MA 2025",
+      participants: [{ name: customer.Name, document: customer.Identity }], // Ajuste se vier do frontend
+      paymentId: response.txid,
+      orderDetails: {
+        ticketQuantity: 1, // Ajuste conforme dados reais
+        fullTickets: 1,
+        halfTickets: 0,
+        valueTicketsAll: (amount / 100).toFixed(2),
+        valueTicketsHalf: "0.00",
+        discount: "0.00",
+        total: (amount / 100).toFixed(2),
+      },
+      paymentDetails: {
+        pix: {
+          qrCodeString: response.qrcode.qrCode,
+          qrCodeLink: response.qrcode.linkVisualizacao,
+          expirationDate: new Date(Date.now() + 3600 * 1000).toISOString(),
+        },
+      },
+      document: customer.Identity || "",
+      sentEmails: [],
+      pendingEmails: [],
+      qrCodesSent: false,
+    };
+
+    // Salva o checkout
+    const checkoutId = await CheckoutRepository.saveCheckout(checkoutData);
+
+    // Associa templates ao criar
+    await CheckoutRepository.addAllTemplatesToPendingEmails(
+      checkoutId,
+      checkoutData.status
+    );
+
+    return {
+      checkoutId, // Retorna o checkoutId
+      txId: response.txid,
+      qrCode: response.qrcode.qrCode,
+      qrCodeLink: response.qrcode.linkVisualizacao,
+      expirationDate: new Date(Date.now() + 3600 * 1000).toISOString(),
+    };
+  }
 
   async getPixStatus(txId) {
     const token = await this.getAccessToken();
@@ -133,96 +215,188 @@ class BancoDoBrasilService {
     coupon,
     participants
   ) {
-    const token = await this.getAccessToken();
-    const boletoEndpoint = `${this.apiBaseUrl}/boletos?gw-dev-app-key=${config.bancoDoBrasil.developerApiKey}`;
-    console.log("Endpoint:", boletoEndpoint);
-    console.log("Token:", token);
-    console.log("Customer:", customer);
-    console.log("Payer:", payer);
+    let boletoResponse;
+    try {
+      const token = await this.getAccessToken();
+      const boletoEndpoint = `${this.apiBaseUrl}/boletos?gw-dev-app-key=${config.bancoDoBrasil.developerApiKey}`;
+      const numeroControle = Date.now().toString().slice(-10).padStart(10, "0");
+      const numeroTituloCliente = `000${config.bancoDoBrasil.numeroConvenio}${numeroControle}`;
+      const cepSemHifen = payer.zipCode.replace(/[^0-9]/g, "");
 
-    const numeroControle = Date.now().toString().slice(-10).padStart(10, "0");
-    const numeroTituloCliente = `000${config.bancoDoBrasil.numeroConvenio}${numeroControle}`;
-    const cepSemHifen = payer.zipCode.replace(/[^0-9]/g, "");
+      const now = new Date();
+      const today = toZonedTime(now, "America/Sao_Paulo");
+      const cleanIdentity = customer.Identity.replace(/\D/g, "");
+      const tipoInscricao = cleanIdentity.length === 11 ? 1 : 2;
 
-    const now = new Date();
-    const today = toZonedTime(now, "America/Sao_Paulo");
-    const cleanIdentity = customer.Identity.replace(/\D/g, "");
-    const tipoInscricao = cleanIdentity.length === 11 ? 1 : 2;
+      const payload = {
+        numeroConvenio: parseInt(config.bancoDoBrasil.numeroConvenio),
+        numeroCarteira: parseInt(config.bancoDoBrasil.numeroCarteira),
+        numeroVariacaoCarteira: parseInt(
+          config.bancoDoBrasil.numeroVariacaoCarteira
+        ),
+        codigoModalidade: 1,
+        dataEmissao: this.formatDate(today),
+        dataVencimento: this.formatDate(addDays(today, 3)),
+        valorOriginal: (amount / 100).toFixed(2),
+        valorAbatimento: 0,
+        quantidadeDiasProtesto: 15,
+        indicadorAceiteTituloVencido: "S",
+        numeroDiasLimiteRecebimento: "",
+        codigoAceite: "A",
+        codigoTipoTitulo: "02",
+        descricaoTipoTitulo: "DM",
+        indicadorPermissaoRecebimentoParcial: "S",
+        numeroTituloBeneficiario: `0${cleanIdentity.slice(0, 4)}-DSD-1`,
+        textoCampoUtilizacaoBeneficiario: "CONGRESSOAUTISMOMA2025",
+        numeroTituloCliente: numeroTituloCliente,
+        mensagemBloquetoOcorrencia: "",
+        desconto: { tipo: 0 },
+        jurosMora: { tipo: 1, valor: 1.0, porcentagem: 0 },
+        multa: { tipo: 0, dados: "", porcentagem: 0, valor: 0 },
+        pagador: {
+          tipoInscricao,
+          numeroInscricao: cleanIdentity,
+          nome: customer.Name.toUpperCase(),
+          endereco: `${payer.street.toUpperCase()} N ${
+            payer.addressNumber || ""
+          }`,
+          cep: cepSemHifen,
+          cidade: payer.city.toUpperCase(),
+          bairro: payer.district.toUpperCase(),
+          uf: payer.state.toUpperCase(),
+          telefone: payer.phone || "",
+        },
+        beneficiarioFinal: {
+          tipoInscricao: 2,
+          numeroInscricao: parseInt(config.bancoDoBrasil.cnpj),
+          nome: "CONGRESSO AUTISMO MA LTDA",
+        },
+        indicadorPix: "S",
+        textoEnderecoEmail: "saludcuidarmais@gmail.com",
+      };
 
-    console.log("Data calculada (today):", today.toISOString());
+      boletoResponse = await this.requestWithRetries(boletoEndpoint, payload, {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      });
 
-    const payload = {
-      numeroConvenio: parseInt(config.bancoDoBrasil.numeroConvenio),
-      numeroCarteira: parseInt(config.bancoDoBrasil.numeroCarteira),
-      numeroVariacaoCarteira: parseInt(
-        config.bancoDoBrasil.numeroVariacaoCarteira
-      ),
-      codigoModalidade: 1,
-      dataEmissao: this.formatDate(today),
-      dataVencimento: this.formatDate(addDays(today, 3)),
-      valorOriginal: (amount / 100).toFixed(2),
-      valorAbatimento: 0,
-      quantidadeDiasProtesto: 15,
-      indicadorAceiteTituloVencido: "S",
-      numeroDiasLimiteRecebimento: "",
-      codigoAceite: "A",
-      codigoTipoTitulo: "02",
-      descricaoTipoTitulo: "DM",
-      indicadorPermissaoRecebimentoParcial: "S",
-      numeroTituloBeneficiario: `0${customer.Identity.slice(0, 4)}-DSD-1`,
-      textoCampoUtilizacaoBeneficiario: "CONGRESSOAUTISMOMA2025",
-      numeroTituloCliente: numeroTituloCliente,
-      mensagemBloquetoOcorrencia: "",
-      desconto: { tipo: 0 },
-      jurosMora: { tipo: 1, valor: 1.0, porcentagem: 0 },
-      multa: { tipo: 0, dados: "", porcentagem: 0, valor: 0 },
-      pagador: {
-        tipoInscricao: tipoInscricao,
-        numeroInscricao: customer.Identity,
-        nome: customer.Name.toUpperCase(),
-        endereco: `${payer.street.toUpperCase()} N ${
-          payer.addressNumber || ""
-        }`,
-        cep: cepSemHifen,
-        cidade: payer.city.toUpperCase(),
-        bairro: payer.district.toUpperCase(),
-        uf: payer.state.toUpperCase(),
-        telefone: payer.phone || "",
-      },
-      beneficiarioFinal: {
-        tipoInscricao: 2,
-        numeroInscricao: parseInt(config.bancoDoBrasil.cnpj),
-        nome: "CONGRESSO AUTISMO MA LTDA",
-      },
-      indicadorPix: "S",
-      textoEnderecoEmail: "saludcuidarmais@gmail.com",
-    };
-    console.log("Payload enviado:", JSON.stringify(payload, null, 2));
+      const boletoFilePath = await generateBoletoPDF(
+        boletoResponse,
+        payer,
+        customer,
+        ticketQuantity,
+        halfTickets,
+        coupon,
+        participants,
+        CheckoutService
+      );
 
-    const response = await this.requestWithRetries(boletoEndpoint, payload, {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    });
-    console.log("Resposta da API:", JSON.stringify(response, null, 2));
+      const totals = this.calculateTotal(ticketQuantity, halfTickets, coupon);
 
-    const boletoFilePath = await generateBoletoPDF(
-      response,
-      payer,
-      customer,
-      ticketQuantity,
-      halfTickets,
-      coupon,
-      participants,
-      CheckoutService
-    );
+      const checkoutData = {
+        transactionId: numeroTituloCliente,
+        timestamp: today.toISOString(),
+        status: "pending",
+        paymentMethod: "boleto",
+        totalAmount: totals.total,
+        eventName: "Congresso Autismo MA 2025",
+        participants,
+        paymentId: boletoResponse.numero,
+        orderDetails: {
+          ...totals,
+          ticketQuantity,
+          fullTickets: ticketQuantity - halfTickets,
+          halfTickets,
+          coupon: coupon || null,
+        },
+        paymentDetails: {
+          boleto: {
+            boletoUrl: boletoResponse.linhaDigitavel,
+            qrCodePix: boletoResponse.qrCode?.url,
+            address: payer,
+            pdfFilePath: boletoFilePath,
+            dataVencimento: addDays(today, 3).toISOString(),
+          },
+        },
+        document: customer.Identity || "",
+        sentEmails: [],
+        pendingEmails: [],
+        qrCodesSent: false,
+      };
 
-    return {
-      boletoUrl: response.linhaDigitavel,
-      qrCodePix: response.qrCode?.url,
-      numeroBoleto: response.numero,
-      boletoFile: boletoFilePath,
-      dataVencimento: addDays(today, 3).toISOString(),
-    };
+      const checkoutId = await CheckoutRepository.saveCheckout(checkoutData);
+      await CheckoutRepository.addAllTemplatesToPendingEmails(
+        checkoutId,
+        checkoutData.status
+      );
+
+      return {
+        checkoutId,
+        boletoUrl: boletoResponse.linhaDigitavel,
+        qrCodePix: boletoResponse.qrCode?.url,
+        numeroBoleto: boletoResponse.numero,
+        boletoFile: boletoFilePath,
+        dataVencimento: addDays(today, 3).toISOString(),
+      };
+    } catch (error) {
+      console.error(
+        "Erro ao criar boleto no BancoDoBrasilService:",
+        error.message
+      );
+
+      const totals = this.calculateTotal(ticketQuantity, halfTickets, coupon);
+      const errorCheckoutData = {
+        transactionId: numeroTituloCliente || `ORDER_${Date.now()}`,
+        timestamp: today.toISOString(),
+        status: "error",
+        paymentMethod: "boleto",
+        totalAmount: totals?.total || "0.00",
+        eventName: "Congresso Autismo MA 2025",
+        participants: participants || [],
+        paymentId: boletoResponse?.numero || null,
+        orderDetails: totals
+          ? {
+              ...totals,
+              ticketQuantity,
+              fullTickets: ticketQuantity - halfTickets,
+              halfTickets,
+              coupon: coupon || null,
+            }
+          : {
+              ticketQuantity,
+              fullTickets: ticketQuantity - halfTickets,
+              halfTickets,
+              coupon: coupon || null,
+              total: "0.00",
+              totalInCents: 0,
+            },
+        paymentDetails: {
+          boleto: boletoResponse
+            ? {
+                boletoUrl: boletoResponse.linhaDigitavel,
+                qrCodePix: boletoResponse.qrCode?.url,
+                address: payer,
+                pdfFilePath: null,
+                dataVencimento: addDays(today, 3).toISOString(),
+              }
+            : null,
+        },
+        document: customer.Identity || "",
+        sentEmails: [],
+        errorLog: error.message,
+        qrCodesSent: false,
+      };
+
+      const checkoutId = await CheckoutRepository.saveCheckout(
+        errorCheckoutData
+      );
+      await CheckoutRepository.addAllTemplatesToPendingEmails(
+        checkoutId,
+        errorCheckoutData.status
+      );
+
+      throw error;
+    }
   }
 
   async getBoletoStatus(numeroBoleto) {

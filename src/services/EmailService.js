@@ -1,12 +1,24 @@
 const logger = require("../logger");
 const nodemailer = require("nodemailer");
 const EmailRepository = require("../repositories/EmailRepository");
+const CheckoutRepository = require("../repositories/CheckoutRepository");
 const CredentialService = require("./CredentialService");
 const fs = require("fs").promises;
 const path = require("path");
-const axios = require("axios");
-const puppeteer = require("puppeteer");
 const { generateTicketPDF } = require("../utils/templateUtils");
+const {
+  arrayRemove,
+  arrayUnion,
+  collection,
+  addDoc,
+  getDocs,
+  doc,
+  updateDoc,
+  deleteDoc,
+  getDoc,
+  setDoc,
+} = require("firebase/firestore");
+const { db } = require("../config").firebase;
 require("dotenv").config();
 
 const emailAccounts = [
@@ -22,11 +34,73 @@ const emailAccounts = [
 class EmailService {
   constructor() {
     this.isProcessing = false;
+    this.dailyLimitPerAccount = 400;
+    this.totalDailyLimit = emailAccounts.length * this.dailyLimitPerAccount;
+    this.newParticipantsReserve = 500;
+    this.effectiveDailyLimit =
+      this.totalDailyLimit - this.newParticipantsReserve;
+  }
+
+  async getEmailStats() {
+    const today = new Date().toISOString().split("T")[0];
+    const statsDocRef = doc(db, "emailStats", today);
+    let stats = { totalSent: 0, lastUpdated: new Date().toISOString() };
+
+    const docSnap = await getDoc(statsDocRef);
+    if (docSnap.exists()) {
+      stats = docSnap.data();
+      logger.info(
+        `Stats carregados do Firestore: totalSent=${stats.totalSent}`
+      );
+    } else {
+      await setDoc(statsDocRef, {
+        totalSent: 0,
+        lastUpdated: new Date().toISOString(),
+      });
+      logger.info("Stats inicializados no Firestore: totalSent=0");
+    }
+
+    const totalSent = stats.totalSent || 0; // Garante que não seja undefined
+    const available = this.totalDailyLimit - totalSent;
+    const availableForTemplates = Math.max(
+      0,
+      available - this.newParticipantsReserve
+    );
+
+    logger.info(
+      `Calculado: totalDailyLimit=${this.totalDailyLimit}, totalSent=${totalSent}, available=${available}, availableForTemplates=${availableForTemplates}`
+    );
+
+    return { totalSent, available, availableForTemplates };
+  }
+
+  async incrementEmailCount(count = 1) {
+    const today = new Date().toISOString().split("T")[0];
+    const statsDocRef = doc(db, "emailStats", today);
+
+    const docSnap = await getDoc(statsDocRef);
+    if (docSnap.exists()) {
+      const currentStats = docSnap.data();
+      await updateDoc(statsDocRef, {
+        totalSent: currentStats.totalSent + count,
+        lastUpdated: new Date().toISOString(),
+      });
+    } else {
+      await setDoc(statsDocRef, {
+        totalSent: count,
+        lastUpdated: new Date().toISOString(),
+      });
+    }
   }
 
   async sendEmail({ from, to, subject, html, attachments }) {
     const account = emailAccounts.find((acc) => acc.user === from);
     if (!account) throw new Error("Conta de email não configurada.");
+
+    const stats = await this.getEmailStats();
+    if (stats.available <= 0) {
+      throw new Error("Limite diário total de emails atingido.");
+    }
 
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -41,11 +115,158 @@ class EmailService {
       attachments,
     };
 
+    await new Promise((resolve) => setTimeout(resolve, 100));
     await transporter.sendMail(mailOptions);
-    console.log(`Email enviado de ${from} para ${to}`);
+    await this.incrementEmailCount(1);
+    logger.info(
+      `Email enviado de ${from} para ${to}. Total enviado hoje: ${
+        stats.totalSent + 1
+      }`
+    );
   }
 
-  async sendEmailConfirmationPayment({ checkoutId, from, to, subject, data }) {
+  async getAllTemplates() {
+    try {
+      const snapshot = await getDocs(collection(db, "emailTemplates"));
+      const templates = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      logger.info(`Carregados ${templates.length} templates do Firestore`);
+      return templates;
+    } catch (error) {
+      logger.error(`Erro ao buscar templates: ${error.message}`);
+      throw new Error(`Erro ao buscar templates: ${error.message}`);
+    }
+  }
+
+  async updateTemplate(templateId, templateData) {
+    try {
+      const templateRef = doc(db, "emailTemplates", templateId);
+      await updateDoc(templateRef, templateData);
+      logger.info(`Template ${templateId} atualizado com sucesso`);
+    } catch (error) {
+      logger.error(
+        `Erro ao atualizar template ${templateId}: ${error.message}`
+      );
+      throw new Error(`Erro ao atualizar template: ${error.message}`);
+    }
+  }
+
+  async deleteTemplate(templateId) {
+    try {
+      const templateRef = doc(db, "emailTemplates", templateId);
+      await deleteDoc(templateRef);
+      logger.info(`Template ${templateId} deletado com sucesso`);
+    } catch (error) {
+      logger.error(`Erro ao deletar template ${templateId}: ${error.message}`);
+      throw new Error(`Erro ao deletar template: ${error.message}`);
+    }
+  }
+
+  async createTemplateByStatus({
+    subject,
+    title,
+    body,
+    statusFilter,
+    includeQRCodes = false,
+  }) {
+    const stats = await this.getEmailStats();
+    const templates = await this.getAllTemplates();
+    const sameStatusTemplates = templates.filter(
+      (t) => t.statusFilter === statusFilter
+    );
+    const unfinishedTemplates = sameStatusTemplates.some(
+      (t) => t.progress < 100
+    );
+    if (unfinishedTemplates) {
+      throw new Error(
+        `Finalize o envio do template anterior para "${statusFilter}" antes de criar outro.`
+      );
+    }
+
+    const checkouts = await CheckoutRepository.fetchCheckouts({
+      status: statusFilter,
+    });
+    const targetCount =
+      statusFilter === "approved"
+        ? checkouts.reduce((sum, c) => sum + c.participants.length, 0)
+        : checkouts.length;
+    if (targetCount > stats.availableForTemplates) {
+      throw new Error(
+        `Restam ${stats.availableForTemplates} emails para templates hoje. Não é possível enviar para ${targetCount} destinatários.`
+      );
+    }
+
+    const templateData = {
+      subject,
+      title,
+      body,
+      statusFilter,
+      includeQRCodes,
+      totalTarget: targetCount,
+      sentCount: 0,
+      progress: 0,
+      createdAt: new Date().toISOString(),
+    };
+    const docRef = await addDoc(collection(db, "emailTemplates"), templateData);
+    const templateId = docRef.id;
+    logger.info(
+      `Template ${templateId} criado para ${statusFilter} com alvo de ${targetCount} emails.`
+    );
+
+    for (const checkout of checkouts) {
+      await CheckoutRepository.updateCheckout(checkout.id, {
+        pendingEmails: arrayUnion(templateId),
+      });
+    }
+
+    return { templateId };
+  }
+
+  async sendEmailConfirmationPayment(emailData) {
+    const { checkoutId, from, to, subject, data } = emailData;
+
+    const stats = await this.getEmailStats();
+    if (stats.available <= 0) {
+      throw new Error("Limite diário total de emails atingido.");
+    }
+
+    const checkoutRef = doc(db, "checkouts", checkoutId);
+    const checkoutSnap = await getDoc(checkoutRef);
+    if (!checkoutSnap.exists()) {
+      throw new Error(`Checkout ${checkoutId} não encontrado`);
+    }
+    const checkoutData = checkoutSnap.data();
+
+    const participant = checkoutData.participants.find((p) => p.email === to);
+    if (!participant) {
+      throw new Error(
+        `Participante com email ${to} não encontrado no checkout ${checkoutId}`
+      );
+    }
+    const participantIndex = checkoutData.participants.indexOf(participant);
+
+    const { qrCodes, qrRawData } =
+      await CredentialService.generateQRCodesForParticipant(
+        checkoutId,
+        participantIndex,
+        participant.name
+      );
+
+    const pdfPath = await generateTicketPDF(
+      { ...data, participantName: participant.name },
+      qrCodes
+    );
+    const attachments = [
+      {
+        filename: `ingresso_${participant.name}.pdf`,
+        path: pdfPath,
+        contentType: "application/pdf",
+      },
+    ];
+
+    // Construir o corpo do email com o template antigo
     const templatePath = path.join(
       __dirname,
       "../templates/emailTemplate.html"
@@ -53,7 +274,7 @@ class EmailService {
     let htmlTemplate = await fs.readFile(templatePath, "utf-8");
 
     htmlTemplate = htmlTemplate
-      .replace("{{nome}}", data.name || "Participante")
+      .replace("{{nome}}", participant.name || "Participante")
       .replace("{{transactionId}}", data.transactionId || "N/A")
       .replace("{{fullTickets}}", data.fullTickets || 0)
       .replace("{{valueTicketsAll}}", data.valueTicketsAll || "0.00")
@@ -75,463 +296,184 @@ class EmailService {
       );
     }
 
-    await this.sendEmail({ from, to, subject, html: htmlTemplate });
+    // Enviar o email
+    await this.sendEmail({
+      from,
+      to,
+      subject,
+      html: htmlTemplate,
+      attachments,
+    });
 
-    // Verifica se o checkoutId é válido antes de prosseguir
-    if (!checkoutId) {
-      console.error(
-        "Erro: checkoutId não foi fornecido para atualizar sentEmails"
-      );
-      return; // Sai do método sem tentar atualizar
-    }
-
-    console.log(
-      `Tentando atualizar sentEmails para o checkoutId: ${checkoutId}`
+    await this.incrementEmailCount(1);
+    logger.info(
+      `Email de confirmação enviado para ${to}. Total enviado hoje: ${
+        stats.totalSent + 1
+      }`
     );
 
-    try {
-      const checkout = await EmailRepository.fetchCheckoutByTransactionId(
-        checkoutId
-      );
-      if (!checkout) {
-        console.error(
-          `Checkout com transactionId ${checkoutId} não encontrado`
-        );
-        return;
-      }
+    await CheckoutRepository.updateParticipant(checkoutId, participantIndex, {
+      qrRawData,
+      validated: { "2025-05-31": false, "2025-06-01": false },
+    });
 
-      const updatedSentEmails = [
-        ...(checkout.sentEmails || []),
-        "confirmationPayment",
-      ];
-
-      // Usa o ID real do documento (checkout.id) para atualizar
-      await EmailRepository.updateCheckout(checkout.id, {
-        sentEmails: updatedSentEmails,
-      });
-
-      console.log(
-        `Email de confirmação enviado e flag "confirmationPayment" adicionada ao checkout ${checkout.id} (transactionId: ${checkoutId})`
-      );
-    } catch (error) {
-      console.error(
-        `Erro ao atualizar sentEmails para o transactionId ${checkoutId}: ${error.message}`
-      );
-    }
-  }
-
-  async generateEmailTemplate(status, theme) {
-    const xaiResponse = await axios.post(
-      "https://api.x.ai/v1/chat/completions",
-      {
-        messages: [
-          {
-            role: "system",
-            content:
-              "Você é um assistente que gera templates de email. Crie um assunto e um corpo de email com base no status e tema fornecidos. Use {{nome}} como placeholder para o nome do destinatário. Retorne o resultado no formato: 'Subject: [assunto]\nBody: [corpo]'.",
-          },
-          {
-            role: "user",
-            content: `Gere um template de email para o status "${status}" com o tema "${theme}".`,
-          },
-        ],
-        model: "grok-2-latest",
-        stream: false,
-        temperature: 0,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.XAI_API_KEY}`,
-        },
-      }
-    );
-
-    const generatedContent = xaiResponse.data.choices[0].message.content;
-    const [subjectLine, ...bodyLines] = generatedContent.split("\n");
-    const subject = subjectLine.replace("Subject: ", "").trim();
-    const body = bodyLines.join("\n").replace("Body: ", "").trim();
-
-    return { subject, body };
-  }
-
-  async sendTemplateImmediately(templateId) {
-    await this.processAutomaticEmails([templateId]);
-  }
-
-  async createContactList(name, description) {
-    const listData = {
-      name,
-      description: description || "",
-      contacts: [],
-      createdAt: new Date().toISOString(),
-    };
-    const id = await EmailRepository.createContactList(listData);
-    return { id, ...listData };
-  }
-
-  async addContactToList(listId, email) {
-    await EmailRepository.addContactToList(listId, email);
-  }
-
-  async sendQRCodesForApprovedCheckouts() {
-    if (this.isProcessing) {
-      logger.info("Processamento já em andamento, ignorando nova execução.");
-      return;
-    }
-
-    this.isProcessing = true;
-    logger.info("Iniciando envio de QR codes para checkouts aprovados...");
-
-    const processingCheckouts = new Set();
-
-    try {
-      const checkouts = await EmailRepository.fetchCheckouts();
-      const approvedCheckouts = checkouts.filter(
-        (c) => c.status.toLowerCase() === "approved"
-      );
-      logger.info(
-        `Encontrados ${approvedCheckouts.length} checkouts aprovados`
+    await fs
+      .unlink(pdfPath)
+      .catch((err) =>
+        console.error(`Erro ao remover ${pdfPath}: ${err.message}`)
       );
 
-      // Carrega o template simples uma vez
-      const templatePath = path.join(
-        __dirname,
-        "../templates/emailTemplateSimple.html"
-      );
-      const htmlTemplate = await fs.readFile(templatePath, "utf-8");
-
-      for (const checkout of approvedCheckouts) {
-        if (checkout.qrCodesSent || processingCheckouts.has(checkout.id)) {
-          logger.info(
-            `QR codes já enviados ou em processamento para checkout ${checkout.id}`
-          );
-          continue;
-        }
-
-        processingCheckouts.add(checkout.id);
-
-        const emailSet = new Set();
-        const recipients = checkout.participants
-          .map((p, index) => {
-            if (emailSet.has(p.email)) {
-              logger.warn(
-                `E-mail duplicado detectado: ${p.email} no checkout ${checkout.id}`
-              );
-              return null;
-            }
-            emailSet.add(p.email);
-            return {
-              email: p.email,
-              checkoutId: checkout.id,
-              participantName: p.name,
-              participantIndex: index,
-            };
-          })
-          .filter((r) => r !== null);
-
-        for (const recipient of recipients) {
-          logger.info(`Processando QR codes para ${recipient.email}`);
-
-          // Preenche o template com conteúdo personalizado
-          const html = htmlTemplate
-            .replace("{{nome}}", recipient.participantName || "Participante")
-            .replace(
-              "{{title}}",
-              "Seu Passaporte para o Congresso Autismo MA 2025"
-            )
-            .replace(
-              "{{body}}",
-              "Seja bem-vindo a terceira edição do congresso de autismo e neurodiversidade em são luís- MA.<br><br>" +
-                "<strong>Importante: Esteja atento as regras de natureza obrigatória com respeito ao uso das credenciais e utilização do crachá de identifi cação, que será disponibilizado no dia do evento:</strong><br><br>" +
-                "<p>1- O QR-code tem a única função de fornecer a liberação da sua entrada no congresso. Para cada dia uma autorização de QR-code diferente.</p><br>" +
-                "<p>2- O uso do crachá é obrigatório. Portanto, é de inteira responsabilidade do inscrito o zelo para com a sua identifi cação. Pois, a equipe de fi scalização será aconselhada a não autorizar a permanência de inscritos que se apresentarem sem o uso de seu crachá.</p><br>" +
-                "<p>Em caso de dúvidas, fique a vontade para entrar em contato com a nossa equipe de suporte pelos canais de atendimento (e-mail, telefones).</p><br>" +
-                "<strong>Os ingressos estão em anexo.</strong><br>" +
-                "Cordialmente, a comissão organizadora.<br><br>"
-            );
-
-          let attachments = [];
-          try {
-            const { qrCodes, qrRawData } =
-              await CredentialService.generateQRCodesForParticipant(
-                recipient.checkoutId,
-                recipient.participantIndex,
-                recipient.participantName
-              );
-            logger.info(
-              `QR codes gerados para ${recipient.email}: ${JSON.stringify(
-                qrCodes
-              )}`
-            );
-
-            const pdfPath = await generateTicketPDF(recipient, qrCodes);
-            attachments.push({
-              filename: `ingressos_${recipient.participantName}.pdf`,
-              path: pdfPath,
-              contentType: "application/pdf",
-            });
-
-            const participantUpdate = {
-              qrRawData,
-              validated: { "2025-05-31": false, "2025-06-01": false },
-            };
-            await EmailRepository.updateParticipant(
-              checkout.id,
-              recipient.participantIndex,
-              participantUpdate
-            );
-            logger.info(`Participante atualizado no checkout ${checkout.id}`);
-
-            await this.sendEmail({
-              from: emailAccounts[0].user,
-              to: recipient.email,
-              subject: "Seu Passaporte para o Congresso Autismo MA 2025",
-              html,
-              attachments,
-            });
-
-            await EmailRepository.updateCheckout(checkout.id, {
-              qrCodesSent: true,
-            });
-            logger.info(
-              `QR codes enviados para ${recipient.email} (checkout ${checkout.id})`
-            );
-          } catch (error) {
-            logger.error(
-              `Erro ao processar ${recipient.email} (checkout ${checkout.id}): ${error.message}`
-            );
-          } finally {
-            if (attachments.length > 0) {
-              await fs
-                .unlink(attachments[0].path)
-                .catch((err) =>
-                  err.code !== "ENOENT"
-                    ? logger.error(`Erro ao remover arquivo: ${err.message}`)
-                    : null
-                );
-            }
-          }
-        }
-      }
-    } catch (error) {
-      logger.error(`Erro geral ao enviar QR codes: ${error.message}`);
-      throw error;
-    } finally {
-      this.isProcessing = false;
-      logger.info("Processamento de QR codes finalizado");
-    }
+    return { success: true, message: "Email enviado com sucesso" };
   }
 
   async processAutomaticEmails(templateIds = null) {
     if (this.isProcessing) {
-      console.log("Processamento já em andamento, ignorando nova execução.");
+      logger.info("Processamento já em andamento, ignorando.");
       return;
     }
 
     this.isProcessing = true;
-    console.log("Processando emails automáticos...");
+    logger.info("Processando emails automáticos...");
 
     try {
-      const templates = await EmailRepository.fetchEmailTemplates();
-      const checkouts = await EmailRepository.fetchCheckouts();
+      const stats = await this.getEmailStats();
+      const templates = await this.getAllTemplates();
       const filteredTemplates = templateIds
-        ? templates.filter((t) => templateIds.includes(t.id))
-        : templates;
+        ? templates.filter((t) => t.statusFilter && templateIds.includes(t.id))
+        : templates.filter((t) => t.statusFilter && t.progress < 100);
 
-      // primeira parte
-      const approvedCheckouts = checkouts.filter(
-        (c) => c.status.toLowerCase() === "approved"
-      );
-
-      for (const checkout of approvedCheckouts) {
-        if (
-          !checkout.sentEmails ||
-          !checkout.sentEmails.includes("confirmationPayment")
-        ) {
-          const firstParticipant = checkout.participants[0];
-          const emailData = {
-            checkoutId: checkout.transactionId,
-            from: emailAccounts[0].user,
-            to: firstParticipant.email,
-            subject: "Confirmação de Pagamento - Congresso Autismo MA 2025",
-            data: {
-              name: firstParticipant.name,
-              transactionId: checkout.paymentId,
-              fullTickets: checkout.orderDetails.fullTickets || 0,
-              valueTicketsAll: checkout.orderDetails.valueTicketsAll || "0.00",
-              halfTickets: checkout.orderDetails.halfTickets || 0,
-              installments:
-                checkout.paymentDetails.creditCard?.installments || 1,
-              valueTicketsHalf:
-                checkout.orderDetails.valueTicketsHalf || "0.00",
-              total: checkout.totalAmount || "0.00",
-              coupon: checkout.orderDetails.coupon || "",
-              discount: checkout.orderDetails.discount || "0.00",
-            },
-          };
-
-          try {
-            await this.sendEmailConfirmationPayment(emailData);
-            console.log(
-              `Email de confirmação enviado para ${firstParticipant.email} do checkout ${checkout.transactionId}`
-            );
-          } catch (error) {
-            console.error(
-              `Erro ao enviar email de confirmação para ${firstParticipant.email}: ${error.message}`
-            );
-          }
-        }
-      }
-
-      // segunda parte
-      const templatePath = path.join(
-        __dirname,
-        "../templates/emailTemplateSimple.html"
-      );
-      const htmlTemplate = await fs.readFile(templatePath, "utf-8");
+      const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+      const batchSize = 50;
+      let accountIndex = 0;
 
       for (const template of filteredTemplates) {
-        const recipients = [];
-        checkouts
-          .filter(
-            (c) =>
-              c.status.toLowerCase() === template.statusFilter.toLowerCase()
-          )
-          .forEach((c) => {
-            if (!c.sentEmails?.includes(template.id)) {
-              if (template.statusFilter.toLowerCase() === "approved") {
-                const emailSet = new Set();
-                c.participants.forEach((p, index) => {
-                  if (emailSet.has(p.email)) {
-                    console.warn(
-                      `E-mail duplicado detectado: ${p.email} no checkout ${c.id}`
-                    );
-                    return;
-                  }
-                  emailSet.add(p.email);
-                  recipients.push({
-                    email: p.email,
-                    checkoutId: c.id,
-                    participantName: p.name,
-                    participantIndex: index,
-                  });
-                });
-              } else {
-                recipients.push({
-                  email: c.participants[0].email,
-                  checkoutId: c.id,
-                  participantName: c.participants[0].name,
-                  participantIndex: 0,
-                });
-              }
-            }
-          });
-
-        if (recipients.length === 0) {
-          console.log(
-            `Nenhum novo destinatário para o template ${template.id}`
-          );
+        const checkouts =
+          await CheckoutRepository.fetchCheckoutsNeedingTemplate(template.id);
+        if (checkouts.length === 0) {
+          logger.info(`Nenhum checkout pendente para ${template.id}`);
           continue;
         }
 
-        const emailsPerAccount = Math.ceil(
-          recipients.length / emailAccounts.length
-        );
-        let sentCount = 0;
+        const recipients = checkouts.map((c) => ({
+          email: c.participants[0].email,
+          checkoutId: c.id,
+          participantName: c.participants[0].name,
+          participantIndex: 0,
+          allParticipants:
+            template.statusFilter === "approved"
+              ? c.participants
+              : [c.participants[0]],
+        }));
 
-        for (const account of emailAccounts) {
-          const batch = recipients.slice(
-            sentCount,
-            sentCount + emailsPerAccount
+        for (let i = 0; i < recipients.length; i += batchSize) {
+          const batch = recipients.slice(i, i + batchSize);
+          const remainingEmails = stats.available - stats.totalSent;
+          if (batch.length > remainingEmails) {
+            logger.info(
+              `Não há emails suficientes para o batch. Restam: ${remainingEmails}`
+            );
+            break;
+          }
+
+          const account = emailAccounts[accountIndex % emailAccounts.length];
+          const templatePath = path.join(
+            __dirname,
+            "../templates/emailTemplateSimple.html"
           );
-          if (!batch.length) break;
+          const htmlTemplate = await fs.readFile(templatePath, "utf-8");
 
           for (const recipient of batch) {
-            let html = htmlTemplate
-              .replace("{{nome}}", recipient.participantName || "Participante")
-              .replace("{{title}}", template.title)
-              .replace("{{body}}", template.body)
-              .replace("{{subject}}", template.subject);
+            const participantsToSend = recipient.allParticipants;
+            for (const participant of participantsToSend) {
+              const currentStats = await this.getEmailStats();
+              if (currentStats.available <= 0) {
+                logger.info("Limite diário atingido durante o processamento.");
+                return;
+              }
 
-            let attachments = [];
-            if (
-              template.includeQRCodes &&
-              template.statusFilter.toLowerCase() === "approved"
-            ) {
-              const { qrCodes, qrRawData } =
-                await CredentialService.generateQRCodesForParticipant(
-                  recipient.checkoutId,
-                  recipient.participantIndex,
-                  recipient.participantName
+              let html = htmlTemplate
+                .replace(/{{nome}}/g, participant.name || "Participante")
+                .replace(/{{title}}/g, template.title || "")
+                .replace(/{{body}}/g, template.body || "")
+                .replace(/{{subject}}/g, template.subject || "");
+
+              let attachments = [];
+              if (template.includeQRCodes) {
+                const participantIndex =
+                  recipient.allParticipants.indexOf(participant);
+                const { qrCodes, qrRawData } =
+                  await CredentialService.generateQRCodesForParticipant(
+                    recipient.checkoutId,
+                    participantIndex,
+                    participant.name
+                  );
+                const pdfPath = await generateTicketPDF(
+                  {
+                    checkoutId: recipient.checkoutId,
+                    participantName: participant.name,
+                  },
+                  qrCodes
                 );
+                attachments.push({
+                  filename: `ingresso_${participant.name}.pdf`,
+                  path: pdfPath,
+                  contentType: "application/pdf",
+                });
+                await CheckoutRepository.updateParticipant(
+                  recipient.checkoutId,
+                  participantIndex,
+                  {
+                    qrRawData,
+                    validated: { "2025-05-31": false, "2025-06-01": false },
+                  }
+                );
+              }
 
-              const pdfPath = await generateTicketPDF(recipient, qrCodes);
-              attachments.push({
-                filename: `ingressos_${recipient.participantName}.pdf`,
-                path: pdfPath,
-                contentType: "application/pdf",
+              await this.sendEmail({
+                from: account.user,
+                to: participant.email,
+                subject: template.subject,
+                html,
+                attachments,
               });
 
-              const participantUpdate = {
-                qrRawData,
-                validated: { "2025-05-31": false, "2025-06-01": false },
-              };
-              await EmailRepository.updateParticipant(
-                recipient.checkoutId,
-                recipient.participantIndex,
-                participantUpdate
+              template.sentCount = (template.sentCount || 0) + 1;
+              template.progress = Math.round(
+                (template.sentCount / template.totalTarget) * 100
               );
+              await this.updateTemplate(template.id, {
+                sentCount: template.sentCount,
+                progress: template.progress,
+              });
+
+              if (attachments.length > 0) {
+                await fs
+                  .unlink(attachments[0].path)
+                  .catch((err) =>
+                    logger.error(
+                      `Erro ao remover ${attachments[0].path}: ${err.message}`
+                    )
+                  );
+              }
             }
 
-            await this.sendEmail({
-              from: account.user,
-              to: recipient.email,
-              subject: template.subject,
-              html,
-              attachments,
+            await CheckoutRepository.updateCheckout(recipient.checkoutId, {
+              pendingEmails: arrayRemove(template.id),
+              sentEmails: arrayUnion(template.id),
             });
-            console.log(`Email automático enviado para ${recipient.email}`);
-
-            const updatedSentEmails = [
-              ...(checkouts.find((c) => c.id === recipient.checkoutId)
-                .sentEmails || []),
-              template.id,
-            ];
-            await EmailRepository.updateCheckout(recipient.checkoutId, {
-              sentEmails: updatedSentEmails,
-            });
-
-            if (attachments.length > 0) {
-              await fs
-                .unlink(attachments[0].path)
-                .catch((err) =>
-                  err.code !== "ENOENT"
-                    ? console.error("Erro ao remover arquivo:", err.message)
-                    : null
-                );
-            }
-
-            sentCount++;
           }
+
+          await delay(5000);
+          accountIndex++;
         }
       }
     } catch (error) {
-      console.error("Erro ao processar emails automáticos:", error.message);
+      logger.error(`Erro ao processar emails automáticos: ${error.message}`);
       throw error;
     } finally {
       this.isProcessing = false;
+      logger.info("Processamento concluído.");
     }
-  }
-
-  startQRCodeService() {
-    console.log("Iniciando serviço de envio de QR codes...");
-    setInterval(() => this.sendQRCodesForApprovedCheckouts(), 1200000);
-  }
-
-  startEmailService() {
-    console.log("Iniciando serviço de emails automáticos...");
-    setInterval(() => this.processAutomaticEmails(), 900000);
   }
 }
 

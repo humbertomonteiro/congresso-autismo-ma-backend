@@ -7,63 +7,98 @@ const {
   updateDoc,
   addDoc,
 } = require("firebase/firestore");
+const logger = require("../logger");
 
 const db = firebase.db;
 
 class EmailRepository {
   async fetchEmailTemplates() {
-    const snapshot = await getDocs(collection(db, "emailTemplates"));
-    return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-  }
-
-  async fetchCheckouts() {
-    const snapshot = await getDocs(collection(db, "checkouts"));
-    return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-  }
-
-  async fetchCheckoutByTransactionId(transactionId) {
-    const snapshot = await getDocs(collection(db, "checkouts"));
-    const checkouts = snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    const checkout = checkouts.find((c) => c.transactionId === transactionId);
-    if (!checkout) {
-      throw new Error(
-        `Checkout com transactionId ${transactionId} não encontrado`
-      );
+    try {
+      const snapshot = await getDocs(collection(db, "emailTemplates"));
+      const templates = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      logger.info(`Fetched ${templates.length} email templates`);
+      return templates;
+    } catch (error) {
+      logger.error(`Error fetching email templates: ${error.message}`);
+      throw error;
     }
-    return checkout;
+  }
+
+  async updateTemplate(templateId, data) {
+    try {
+      const templateRef = doc(db, "emailTemplates", templateId);
+      await updateDoc(templateRef, data);
+      logger.info(
+        `Updated template ${templateId} with: ${JSON.stringify(data)}`
+      );
+    } catch (error) {
+      logger.error(`Error updating template ${templateId}: ${error.message}`);
+      throw error;
+    }
   }
 
   async updateCheckout(checkoutId, data) {
-    const checkoutRef = doc(db, "checkouts", checkoutId);
-    await updateDoc(checkoutRef, data);
+    try {
+      const checkoutRef = doc(db, "checkouts", checkoutId);
+      await updateDoc(checkoutRef, data);
+      logger.info(`Updated checkout ${checkoutId}`);
+    } catch (error) {
+      logger.error(`Error updating checkout ${checkoutId}: ${error.message}`);
+      throw error;
+    }
   }
 
   async updateParticipant(checkoutId, participantIndex, data) {
-    const checkoutRef = doc(db, "checkouts", checkoutId);
-    const checkoutSnap = await getDoc(checkoutRef);
-    const checkoutData = checkoutSnap.data();
-    checkoutData.participants[participantIndex] = {
-      ...checkoutData.participants[participantIndex],
-      ...data,
-    };
-    await updateDoc(checkoutRef, { participants: checkoutData.participants });
+    try {
+      const checkoutRef = doc(db, "checkouts", checkoutId);
+      const checkoutSnap = await getDoc(checkoutRef);
+      if (!checkoutSnap.exists()) {
+        throw new Error(`Checkout ${checkoutId} not found`);
+      }
+      const checkoutData = checkoutSnap.data();
+      checkoutData.participants[participantIndex] = {
+        ...checkoutData.participants[participantIndex],
+        ...data,
+      };
+      await updateDoc(checkoutRef, { participants: checkoutData.participants });
+      logger.info(
+        `Updated participant ${participantIndex} in checkout ${checkoutId}`
+      );
+    } catch (error) {
+      logger.error(
+        `Error updating participant ${participantIndex} in checkout ${checkoutId}: ${error.message}`
+      );
+      throw error;
+    }
   }
 
   async createContactList(listData) {
-    const docRef = await addDoc(collection(db, "contactLists"), listData);
-    return docRef.id;
+    try {
+      const docRef = await addDoc(collection(db, "contactLists"), listData);
+      logger.info(`Created new contact list with ID: ${docRef.id}`);
+      return docRef.id;
+    } catch (error) {
+      logger.error(`Error creating contact list: ${error.message}`);
+      throw error;
+    }
   }
 
   async addContactToList(listId, email) {
-    const listRef = doc(db, "contactLists", listId);
-    const listDoc = await getDoc(listRef);
-    if (!listDoc.exists()) throw new Error("Lista não encontrada.");
-    const listData = listDoc.data();
-    const updatedContacts = [...(listData.contacts || []), email];
-    await updateDoc(listRef, { contacts: updatedContacts });
+    try {
+      const listRef = doc(db, "contactLists", listId);
+      const listDoc = await getDoc(listRef);
+      if (!listDoc.exists()) throw new Error("Lista não encontrada.");
+      const listData = listDoc.data();
+      const updatedContacts = [...(listData.contacts || []), email];
+      await updateDoc(listRef, { contacts: updatedContacts });
+      logger.info(`Added email ${email} to contact list ${listId}`);
+    } catch (error) {
+      logger.error(`Error adding contact to list ${listId}: ${error.message}`);
+      throw error;
+    }
   }
 }
 

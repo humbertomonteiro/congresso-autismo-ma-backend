@@ -1,5 +1,7 @@
 const CheckoutRepository = require("../repositories/CheckoutRepository");
 const BancoDoBrasilService = require("./BancoDoBrasilService");
+const EmailService = require("../services/EmailService"); // Adicionado
+
 class CheckoutService {
   constructor() {
     this.basePrice = 499;
@@ -25,8 +27,8 @@ class CheckoutService {
 
     if (coupon === "grupo" && ticketQuantity >= 5) {
       discount = (ticketQuantity - halfTickets) * 50;
-    } else if (coupon === "teste-cartao") {
-      discount = 498;
+    } else if (coupon === "terapeuta") {
+      discount = 50;
     } else if (coupon && coupon !== "grupo") {
       throw new Error("Cupom inválido.");
     }
@@ -146,7 +148,8 @@ class CheckoutService {
           console.log(
             `[CheckoutService] Checkout ${id} (${paymentMethod}) expirado`
           );
-          await CheckoutRepository.updateCheckoutStatus(id, "error");
+          await CheckoutRepository.updateCheckoutStatus(id, "error", null);
+          await CheckoutRepository.resetAndUpdatePendingEmails(id, "error"); // Adicionado aqui
           continue;
         }
 
@@ -155,8 +158,7 @@ class CheckoutService {
           if (paymentMethod === "pix") {
             newStatus = await BancoDoBrasilService.getPixStatus(paymentId);
           } else if (paymentMethod === "boleto") {
-            // Usa o paymentId completo, sem cortar
-            const boletoNumber = paymentId; // Ajustado: removido slice(-10)
+            const boletoNumber = paymentId;
             console.log(
               `[CheckoutService] Usando boletoNumber: ${boletoNumber}`
             );
@@ -173,7 +175,14 @@ class CheckoutService {
           console.log(
             `[CheckoutService] Status do checkout ${id} (${paymentMethod}): ${newStatus}`
           );
-          await CheckoutRepository.updateCheckoutStatus(id, newStatus);
+          await CheckoutRepository.updateCheckoutStatus(
+            id,
+            newStatus,
+            newStatus === "approved"
+              ? EmailService.sendEmailConfirmationPayment
+              : null
+          );
+          await CheckoutRepository.resetAndUpdatePendingEmails(id, newStatus); // Adicionado aqui
         } catch (error) {
           console.error(
             `[CheckoutService] Erro ao verificar checkout ${id} (${paymentMethod}): ${error.message}`
@@ -227,7 +236,8 @@ class CheckoutService {
         console.log(
           `[CheckoutService] Checkout ${id} (${paymentMethod}) expirado`
         );
-        await CheckoutRepository.updateCheckoutStatus(id, "error");
+        await CheckoutRepository.updateCheckoutStatus(id, "error", null);
+        await CheckoutRepository.resetAndUpdatePendingEmails(id, "error"); // Adicionado aqui
         return { status: "error" };
       }
 
@@ -235,8 +245,7 @@ class CheckoutService {
       if (paymentMethod === "pix") {
         newStatus = await BancoDoBrasilService.getPixStatus(paymentId);
       } else if (paymentMethod === "boleto") {
-        // Usa o paymentId completo, sem cortar
-        const boletoNumber = paymentId; // Ajustado: removido slice(-10)
+        const boletoNumber = paymentId;
         console.log(`[CheckoutService] Usando boletoNumber: ${boletoNumber}`);
         newStatus = await BancoDoBrasilService.getBoletoStatus(boletoNumber);
       } else {
@@ -246,7 +255,14 @@ class CheckoutService {
       console.log(
         `[CheckoutService] Status do checkout ${id} (${paymentMethod}): ${newStatus}`
       );
-      await CheckoutRepository.updateCheckoutStatus(id, newStatus);
+      await CheckoutRepository.updateCheckoutStatus(
+        id,
+        newStatus,
+        newStatus === "approved"
+          ? EmailService.sendEmailConfirmationPayment
+          : null
+      );
+      await CheckoutRepository.resetAndUpdatePendingEmails(id, newStatus); // Adicionado aqui
       return { status: newStatus };
     } catch (error) {
       console.error(

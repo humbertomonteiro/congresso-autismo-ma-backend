@@ -150,13 +150,24 @@ class CieloService {
         },
         document: participants[0].document || "",
         sentEmails: [],
+        qrCodesSent: false,
+        payer: {
+          name: payer.name,
+          document: payer.document,
+          documentType: payer.documentType,
+        },
       };
 
       // Salvar no Firebase
-      await CheckoutRepository.saveCheckout(checkoutData);
+      const checkoutId = await CheckoutRepository.saveCheckout(checkoutData);
+      // Adicionar todos os pendingEmails
+      await CheckoutRepository.addAllTemplatesToPendingEmails(
+        checkoutId,
+        checkoutData.status
+      );
 
       console.log("Response sendo retornado:", {
-        paymentId: creditResponse.paymentId,
+        paymentId: checkoutId,
         transactionId: paymentData.MerchantOrderId,
         status: customStatus,
         message:
@@ -168,6 +179,7 @@ class CieloService {
 
       return {
         paymentId: creditResponse.paymentId,
+        checkoutId: checkoutId,
         transactionId: paymentData.MerchantOrderId,
         status: customStatus,
         message:
@@ -225,10 +237,23 @@ class CieloService {
         },
         sentEmails: [],
         errorLog: error.message,
+        qrCodesSent: false,
+        payer: {
+          name: payer?.name || "N/A",
+          document: payer?.document || "N/A",
+          documentType: payer?.documentType || "cpf",
+        },
       };
 
-      await CheckoutRepository.saveCheckout(errorCheckoutData);
-      throw error; // Propagar erro para o controller
+      const checkoutId = await CheckoutRepository.saveCheckout(
+        errorCheckoutData
+      );
+      // Adicionar todos os pendingEmails
+      await CheckoutRepository.addAllTemplatesToPendingEmails(
+        checkoutId,
+        errorCheckoutData.status
+      );
+      throw error;
     }
   }
 

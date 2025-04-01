@@ -5,29 +5,21 @@ const config = require("./config");
 const paymentRoutes = require("./routes/paymentRoutes");
 const emailRoutes = require("./routes/emailRoutes");
 const credentialRoutes = require("./routes/credentialRoutes");
-const emailService = require("./services/EmailService");
 const responseMiddleware = require("./middleware/response");
-const CheckoutService = require("./services/CheckoutService");
-const cron = require("node-cron");
+const path = require("path");
+const { cleanupBoletos } = require("./jobs/cleanup");
+const { verifyPendingPayments } = require("./jobs/verifyPayments");
 
 dotenv.config();
 
 const app = express();
 
-// const corsOptions = {
-//   origin: ["http://localhost:5173", "https://congressoautismoma.com.br"],
-//   methods: ["GET", "POST", "PUT", "DELETE"],
-//   allowedHeaders: ["Content-Type", "Authorization"],
-//   credentials: true,
-// };
-
 app.use(cors());
-// app.use(cors(corsOptions));
-// app.options("*", cors(corsOptions));
-
 app.use(express.json());
-
 app.use(responseMiddleware);
+
+const boletoDir = path.join(__dirname, "temp");
+app.use("/boletos", express.static(boletoDir));
 
 // Rota de saúde
 app.get("/", (req, res) => {
@@ -38,17 +30,8 @@ app.use("/api/payments", paymentRoutes);
 app.use("/api/email", emailRoutes);
 app.use("/api/credentials", credentialRoutes);
 
-emailService.startEmailService();
-emailService.startQRCodeService();
-
-cron.schedule("0 */6 * * *", () => {
-  console.log(
-    "[Server] Executando verificação automática de pagamentos pendentes..."
-  );
-  CheckoutService.verifyAllPendingPayments().catch((error) =>
-    console.error("[Server] Erro na verificação automática:", error.message)
-  );
-});
+cleanupBoletos();
+verifyPendingPayments();
 
 app.use((err, req, res, next) => {
   console.error("Erro no servidor:", err.stack);

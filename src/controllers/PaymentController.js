@@ -4,8 +4,7 @@ const CieloService = require("../services/CieloService");
 const BancoDoBrasilService = require("../services/BancoDoBrasilService");
 const CheckoutRepository = require("../repositories/CheckoutRepository");
 const fs = require("fs");
-
-const { toZonedTime } = require("date-fns-tz");
+const path = require("path");
 
 const processCreditPayment = async (req, res) => {
   const {
@@ -40,6 +39,7 @@ const processCreditPayment = async (req, res) => {
 
     res.sendResponse(200, true, result.message, {
       paymentId: result.paymentId,
+      checkoutId: result.checkoutId,
       status: result.status,
       totalAmount: totals.total,
       transactionId: result.transactionId,
@@ -68,55 +68,17 @@ const processPixPayment = async (req, res) => {
       coupon
     );
 
-    const paymentData = {
-      MerchantOrderId: `ORDER_${Date.now()}`,
-      Customer: {
-        Name: participants[0].name,
-        Identity: participants[0].document.replace(/\D/g, ""),
-        IdentityType: participants[0].documentType,
-      },
-      Amount: totals.totalInCents,
-    };
-
     const pixResponse = await BancoDoBrasilService.createPixPayment(
-      paymentData.Amount,
-      paymentData.Customer
+      totals.totalInCents,
+      { Name: participants[0].name, Identity: participants[0].document }
     );
-
-    const checkoutData = {
-      transactionId: paymentData.MerchantOrderId,
-      timestamp: new Date().toISOString(),
-      status: "pending",
-      paymentMethod: "pix",
-      totalAmount: totals.total,
-      eventName: "Congresso Autismo MA 2025",
-      participants,
-      paymentId: pixResponse.txId,
-      orderDetails: {
-        ...totals,
-        ticketQuantity,
-        fullTickets: ticketQuantity - halfTickets,
-        halfTickets,
-        coupon: coupon || null,
-      },
-      paymentDetails: {
-        pix: {
-          qrCodeString: pixResponse.qrCode,
-          qrCodeLink: pixResponse.qrCodeLink,
-          expirationDate: pixResponse.expirationDate,
-        },
-      },
-      document: participants[0].document || "",
-      sentEmails: [],
-    };
-
-    await CheckoutRepository.saveCheckout(checkoutData);
 
     res.sendResponse(
       200,
       true,
       "Pix gerado com sucesso, aguardando pagamento",
       {
+        checkoutId: pixResponse.checkoutId,
         paymentId: pixResponse.txId,
         qrCodeString: pixResponse.qrCode,
         qrCodeLink: pixResponse.qrCodeLink,
@@ -125,38 +87,6 @@ const processPixPayment = async (req, res) => {
     );
   } catch (error) {
     console.error("Erro ao processar Pix:", error.message);
-
-    const totals = CheckoutService.calculateTotal(
-      ticketQuantity,
-      halfTickets,
-      coupon
-    );
-    const errorCheckoutData = {
-      transactionId: `ORDER_${Date.now()}`,
-      timestamp: new Date().toISOString(),
-      status: "error",
-      paymentMethod: "pix",
-      totalAmount: totals?.total || "0.00",
-      eventName: "Congresso Autismo MA 2025",
-      participants: participants || [],
-      paymentId: null,
-      orderDetails: {
-        ticketQuantity,
-        fullTickets: ticketQuantity - halfTickets,
-        halfTickets,
-        coupon: coupon || null,
-        valueTicketsAll: totals?.valueTicketsAll || "0.00",
-        valueTicketsHalf: totals?.valueTicketsHalf || "0.00",
-        discount: totals?.discount || "0.00",
-        total: totals?.total || "0.00",
-      },
-      paymentDetails: { pix: null },
-      sentEmails: [],
-      document: participants?.[0]?.document || "",
-      errorLog: error.message,
-    };
-
-    await CheckoutRepository.saveCheckout(errorCheckoutData);
     res.sendResponse(500, false, "Erro ao gerar Pix", null, error.message);
   }
 };
@@ -177,21 +107,9 @@ const processBoletoPayment = async (req, res) => {
       throw new Error("Documento do pagador é obrigatório.");
     }
 
-    const now = new Date();
-    const brasiliaTime = toZonedTime(now, "America/Sao_Paulo");
-
-    const paymentData = {
-      MerchantOrderId: `ORDER_${Date.now()}`,
-      Customer: {
-        Name: payer.name,
-        Identity: payer.document.replace(/\D/g, ""),
-      },
-      Amount: totals.totalInCents,
-    };
-
     const boletoResponse = await BancoDoBrasilService.createBoletoPayment(
-      paymentData.Amount,
-      paymentData.Customer,
+      totals.totalInCents,
+      { Name: payer.name, Identity: payer.document },
       payer,
       ticketQuantity,
       halfTickets,
@@ -199,95 +117,27 @@ const processBoletoPayment = async (req, res) => {
       participants
     );
 
-    const checkoutData = {
-      transactionId: paymentData.MerchantOrderId,
-      timestamp: brasiliaTime.toISOString(),
-      status: "pending",
-      paymentMethod: "boleto",
-      totalAmount: totals.total,
-      eventName: "Congresso Autismo MA 2025",
-      participants,
-      paymentId: boletoResponse.numeroBoleto,
-      orderDetails: {
-        ...totals,
-        ticketQuantity,
-        fullTickets: ticketQuantity - halfTickets,
-        halfTickets,
-        coupon: coupon || null,
-      },
-      paymentDetails: {
-        boleto: {
-          boletoUrl: boletoResponse.boletoUrl,
-          qrCodePix: boletoResponse.qrCodePix,
-          address: payer,
-          pdfFilePath: boletoResponse.boletoFile,
-          dataVencimento: boletoResponse.dataVencimento,
-        },
-      },
-      document: payer.document || "",
-      sentEmails: [],
-    };
-
-    await CheckoutRepository.saveCheckout(checkoutData);
-
     if (!fs.existsSync(boletoResponse.boletoFile)) {
       throw new Error(
         `Arquivo PDF não encontrado: ${boletoResponse.boletoFile}`
       );
     }
 
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader(
-      "Content-Disposition",
-      `attachment; filename=boleto_${boletoResponse.numeroBoleto}.pdf`
-    );
-    res.setHeader("x-payment-id", boletoResponse.numeroBoleto);
-    const fileStream = fs.createReadStream(boletoResponse.boletoFile);
-    fileStream.pipe(res);
+    const boletoFileName = path.basename(boletoResponse.boletoFile);
+    const boletoUrl = `${req.protocol}://${req.get(
+      "host"
+    )}/boletos/${boletoFileName}`;
 
-    fileStream.on("end", () => {
-      fs.unlink(boletoResponse.boletoFile, (err) => {
-        if (err) console.error("Erro ao remover o PDF:", err);
-      });
-    });
-
-    fileStream.on("error", (err) => {
-      throw err;
+    res.status(200).json({
+      success: true,
+      paymentId: boletoResponse.numeroBoleto,
+      checkoutId: boletoResponse.checkoutId,
+      boletoUrl: boletoUrl,
+      linhaDigitavel: boletoResponse.boletoUrl,
+      qrCodePix: boletoResponse.qrCodePix || null,
     });
   } catch (error) {
     console.error("Erro ao processar boleto:", error.message);
-
-    const totals = CheckoutService.calculateTotal(
-      ticketQuantity,
-      halfTickets,
-      coupon
-    );
-    const errorCheckoutData = {
-      transactionId: `ORDER_${Date.now()}`,
-      timestamp: new Date().toISOString(),
-      status: "error",
-      paymentMethod: "boleto",
-      totalAmount: totals?.total || "0.00",
-      eventName: "Congresso Autismo MA 2025",
-      participants: participants || [],
-      paymentId: null,
-      orderDetails: {
-        ticketQuantity,
-        fullTickets: ticketQuantity - halfTickets,
-        halfTickets,
-        coupon: coupon || null,
-        valueTicketsAll: totals?.valueTicketsAll || "0.00",
-        valueTicketsHalf: totals?.valueTicketsHalf || "0.00",
-        discount: totals?.discount || "0.00",
-        total: totals?.total || "0.00",
-      },
-      paymentDetails: { boleto: payer || null },
-      sentEmails: [],
-      document: payer.document || "",
-      errorLog: error.message,
-    };
-
-    await CheckoutRepository.saveCheckout(errorCheckoutData);
     res.sendResponse(500, false, "Erro ao gerar boleto", null, error.message);
   }
 };
@@ -391,6 +241,35 @@ const verifyAllPayments = async (req, res) => {
   }
 };
 
+const addAllTemplatesToPendingEmails = async (req, res) => {
+  try {
+    const { checkoutId, status } = req.body;
+    const result = await CheckoutRepository.addAllTemplatesToPendingEmails(
+      checkoutId,
+      status
+    );
+
+    res.sendResponse(
+      200,
+      true,
+      "Templates adicionados à fila de e-mails pendentes",
+      result
+    );
+  } catch (error) {
+    console.error(
+      "[PaymentController] Erro ao adicionar templates à fila de e-mails:",
+      error.message
+    );
+    res.sendResponse(
+      500,
+      false,
+      "Erro ao adicionar templates à fila de e-mails",
+      null,
+      error.message
+    );
+  }
+};
+
 module.exports = {
   processCreditPayment,
   processPixPayment,
@@ -400,4 +279,5 @@ module.exports = {
   fetchCieloSales,
   verifyPayment,
   verifyAllPayments,
+  addAllTemplatesToPendingEmails,
 };
