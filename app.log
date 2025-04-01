@@ -11623,3 +11623,5 @@
 2025-04-01T14:52:44.299Z [INFO]: Carregados 0 templates do Firestore
 2025-04-01T14:52:44.303Z [INFO]: Stats carregados do Firestore: totalSent=2
 2025-04-01T14:52:44.304Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2025-04-01T17:21:38.299Z [INFO]: Fetched 0 active templates for status pending
+2025-04-01T17:21:38.302Z [INFO]: No active templates found for status pending in checkout 8ONDNjKApCQcU2t5JXau
