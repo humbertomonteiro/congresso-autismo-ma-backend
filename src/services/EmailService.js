@@ -225,7 +225,7 @@ class EmailService {
   }
 
   async sendEmailConfirmationPayment(emailData) {
-    const { checkoutId, from, to, subject, data } = emailData;
+    const { checkoutId, from, to, subject, participantIndex, data } = emailData;
 
     const stats = await this.getEmailStats();
     if (stats.available <= 0) {
@@ -239,34 +239,68 @@ class EmailService {
     }
     const checkoutData = checkoutSnap.data();
 
-    const participant = checkoutData.participants.find((p) => p.email === to);
-    if (!participant) {
-      throw new Error(
-        `Participante com email ${to} não encontrado no checkout ${checkoutId}`
-      );
-    }
-    const participantIndex = checkoutData.participants.indexOf(participant);
+    // Determina o participante a processar
+    let participant;
+    let participantIdx;
 
+    if (
+      participantIndex !== undefined &&
+      participantIndex >= 0 &&
+      participantIndex < checkoutData.participants.length
+    ) {
+      // Envio individual baseado no índice (usado no ModalCheckoutDetails)
+      participant = checkoutData.participants[participantIndex];
+      participantIdx = participantIndex;
+      if (participant.email !== to) {
+        logger.warn(
+          `Email fornecido (${to}) não corresponde ao email do participante no índice ${participantIndex} (${participant.email})`
+        );
+      }
+    } else {
+      // Padrão: busca pelo email 'to' (compatível com usePaymentForm.js)
+      participant = checkoutData.participants.find((p) => p.email === to);
+      if (!participant) {
+        throw new Error(
+          `Participante com email ${to} não encontrado no checkout ${checkoutId}`
+        );
+      }
+      participantIdx = checkoutData.participants.indexOf(participant);
+    }
+
+    // Verifica se o participante já tem QR codes (evita duplicatas)
+    if (
+      participant.qrRawData &&
+      participant.qrRawData["2025-05-31"] &&
+      participant.qrRawData["2025-06-01"]
+    ) {
+      logger.info(
+        `Participante ${participant.email} (índice ${participantIdx}) já possui QR codes. Ignorando envio.`
+      );
+      return { success: false, message: "Participante já possui QR codes" };
+    }
+
+    // Gera dois QR codes para o participante
     const { qrCodes, qrRawData } =
       await CredentialService.generateQRCodesForParticipant(
         checkoutId,
-        participantIndex,
+        participantIdx,
         participant.name
       );
 
+    // Gera o PDF com o nome do participante
     const pdfPath = await generateTicketPDF(
-      { ...data, participantName: participant.name },
+      { ...data, participantName: participant.name || "Participante" },
       qrCodes
     );
     const attachments = [
       {
-        filename: `ingresso_${participant.name}.pdf`,
+        filename: `ingresso_${participant.name || "Participante"}.pdf`,
         path: pdfPath,
         contentType: "application/pdf",
       },
     ];
 
-    // Construir o corpo do email com o template antigo
+    // Construir o corpo do email com o template
     const templatePath = path.join(
       __dirname,
       "../templates/emailTemplate.html"
@@ -296,10 +330,10 @@ class EmailService {
       );
     }
 
-    // Enviar o email
+    // Envia o email
     await this.sendEmail({
       from,
-      to,
+      to: participant.email,
       subject,
       html: htmlTemplate,
       attachments,
@@ -307,16 +341,20 @@ class EmailService {
 
     await this.incrementEmailCount(1);
     logger.info(
-      `Email de confirmação enviado para ${to}. Total enviado hoje: ${
+      `Email de confirmação enviado para ${
+        participant.email
+      } (participante ${participantIdx}). Total enviado hoje: ${
         stats.totalSent + 1
       }`
     );
 
-    await CheckoutRepository.updateParticipant(checkoutId, participantIndex, {
+    // Salva os QR codes no Firebase
+    await CheckoutRepository.updateParticipant(checkoutId, participantIdx, {
       qrRawData,
       validated: { "2025-05-31": false, "2025-06-01": false },
     });
 
+    // Remove o PDF temporário
     await fs
       .unlink(pdfPath)
       .catch((err) =>
