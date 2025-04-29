@@ -11992,3 +11992,6 @@
 2025-04-09T12:18:57.681Z [INFO]: Email enviado de congressoautismoma@gmail.com para bertohf5@gmail.com. Total enviado hoje: 69
 2025-04-09T12:18:57.838Z [INFO]: Email de confirmação enviado para bertohf5@gmail.com (participante 0). Total enviado hoje: 69
 2025-04-09T12:18:58.479Z [INFO]: Updated participant 0 in checkout JHFNaiBLKkgRJzgkQXTL
+2025-04-24T15:03:46.500Z [INFO]: Fetched 53 checkouts with filters: {"paymentMethod":"boleto"}
+2025-04-24T15:06:25.586Z [INFO]: Fetched 53 checkouts with filters: {"paymentMethod":"boleto"}
+2025-04-24T15:07:07.770Z [INFO]: Fetched 53 checkouts with filters: {"paymentMethod":"boleto"}

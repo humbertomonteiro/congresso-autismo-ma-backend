@@ -399,11 +399,11 @@ class BancoDoBrasilService {
   async getBoletoStatus(numeroBoleto) {
     const token = await this.getAccessToken();
     const boletoStatusEndpoint = `${this.apiBaseUrl}/boletos/${numeroBoleto}?gw-dev-app-key=${config.bancoDoBrasil.developerApiKey}&numeroConvenio=${config.bancoDoBrasil.numeroConvenio}`;
-    console.log(
-      "[BB Service] Consultando status do boleto:",
-      boletoStatusEndpoint
-    );
-    console.log("[BB Service] Token usado:", token);
+    // console.log(
+    //   "[BB Service] Consultando status do boleto:",
+    //   boletoStatusEndpoint
+    // );
+    // console.log("[BB Service] Token usado:", token);
 
     try {
       const response = await axios.get(boletoStatusEndpoint, {
@@ -419,9 +419,13 @@ class BancoDoBrasilService {
         1: "pending",
         6: "approved",
         5: "error",
+        7: "error",
         8: "error",
       };
-      return statusMap[response.data.codigoEstadoTituloCobranca] || "error";
+      return statusMap[response.data.codigoEstadoTituloCobranca] || "pending";
+      // console.log(
+      //   `Número do boleto: ${response.data.numeroBoleto} - Código estado: ${response.data.codigoEstadoTituloCobranca}`
+      // );
     } catch (error) {
       console.error("[BB Service] Erro ao consultar boleto:", {
         status: error.response?.status,

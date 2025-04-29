@@ -32,14 +32,14 @@ class CheckoutRepository {
         id: doc.id,
         ...doc.data(),
       }));
-      logger.info(
-        `Fetched ${checkouts.length} checkouts with filters: ${JSON.stringify(
-          filters
-        )}`
-      );
+      // logger.info(
+      //   `Fetched ${checkouts.length} checkouts with filters: ${JSON.stringify(
+      //     filters
+      //   )}`
+      // );
       return checkouts;
     } catch (error) {
-      logger.error(`Error fetching checkouts: ${error.message}`);
+      logger.error(`[Error fetching checkouts]: ${error.message}`);
       throw error;
     }
   }

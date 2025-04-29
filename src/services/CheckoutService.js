@@ -141,7 +141,7 @@ class CheckoutService {
           paymentMethod === "boleto" &&
           paymentDetails.boleto?.dataVencimento
         ) {
-          isExpired = new Date(paymentDetails.boleto.dataVencimento) < now;
+          isExpired = new Date(paymentDetails.boleto.dataVencimento) + 5 < now;
         }
 
         if (isExpired) {
@@ -179,10 +179,10 @@ class CheckoutService {
             id,
             newStatus,
             newStatus === "approved"
-              ? EmailService.sendEmailConfirmationPayment
+              ? EmailService.sendEmailConfirmationPayment.bind(EmailService)
               : null
           );
-          await CheckoutRepository.resetAndUpdatePendingEmails(id, newStatus); // Adicionado aqui
+          await CheckoutRepository.resetAndUpdatePendingEmails(id, newStatus);
         } catch (error) {
           console.error(
             `[CheckoutService] Erro ao verificar checkout ${id} (${paymentMethod}): ${error.message}`
