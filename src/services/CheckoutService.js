@@ -29,6 +29,8 @@ class CheckoutService {
       discount = (ticketQuantity - halfTickets) * 50;
     } else if (coupon === "terapeuta") {
       discount = 50;
+    } else if (coupon === "desconto") {
+      discount = 50;
     } else if (coupon && coupon !== "grupo") {
       throw new Error("Cupom inválido.");
     }
