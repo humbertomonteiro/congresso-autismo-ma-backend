@@ -147,9 +147,10 @@ class CheckoutRepository {
 
       const emailResponses = [];
       for (const participant of checkoutData.participants || []) {
+        console.log(`[DEBUG] Enviando e-mail para: ${participant.email}`);
         const emailData = {
           checkoutId: checkoutId,
-          from: process.env.EMAIL_FROM,
+          from: process.env.EMAIL_USER_1,
           to: participant.email,
           subject: "Confirmação de Pagamento - Congresso Autismo MA 2025",
           data: {

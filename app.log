@@ -11995,3 +11995,40 @@
 2025-04-24T15:03:46.500Z [INFO]: Fetched 53 checkouts with filters: {"paymentMethod":"boleto"}
 2025-04-24T15:06:25.586Z [INFO]: Fetched 53 checkouts with filters: {"paymentMethod":"boleto"}
 2025-04-24T15:07:07.770Z [INFO]: Fetched 53 checkouts with filters: {"paymentMethod":"boleto"}
+2025-04-30T17:38:07.771Z [INFO]: Fetched 0 active templates for status approved
+2025-04-30T17:38:07.782Z [INFO]: No active templates found for status approved in checkout DsTkvCoxKGWStrbfslyA
+2025-04-30T17:38:07.995Z [INFO]: Stats inicializados no Firestore: totalSent=0
+2025-04-30T17:38:07.996Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=0, available=2800, availableForTemplates=2300
+2025-04-30T17:38:14.180Z [INFO]: Stats carregados do Firestore: totalSent=0
+2025-04-30T17:38:14.181Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=0, available=2800, availableForTemplates=2300
+2025-04-30T17:38:20.266Z [INFO]: Email enviado de congressoautismoma@gmail.com para bertohf5@gmail.com. Total enviado hoje: 1
+2025-04-30T17:38:20.446Z [INFO]: Email de confirmação enviado para bertohf5@gmail.com (participante 0). Total enviado hoje: 1
+2025-04-30T17:38:20.642Z [INFO]: Updated participant 0 in checkout DsTkvCoxKGWStrbfslyA
+2025-04-30T17:50:28.667Z [INFO]: Stats carregados do Firestore: totalSent=2
+2025-04-30T17:50:28.671Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2025-04-30T17:50:34.928Z [INFO]: Stats carregados do Firestore: totalSent=2
+2025-04-30T17:50:34.929Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2025-04-30T17:50:41.060Z [INFO]: Email enviado de congressoautismoma@gmail.com para ribbeiro.fernanda@gmail.com. Total enviado hoje: 3
+2025-04-30T17:50:41.221Z [INFO]: Email de confirmação enviado para ribbeiro.fernanda@gmail.com (participante 0). Total enviado hoje: 3
+2025-04-30T17:50:41.416Z [INFO]: Updated participant 0 in checkout Qks0vVvnBC1mrFdwoj7p
+2025-04-30T17:51:31.969Z [INFO]: Stats carregados do Firestore: totalSent=4
+2025-04-30T17:51:31.970Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=4, available=2796, availableForTemplates=2296
+2025-04-30T17:51:35.251Z [INFO]: Stats carregados do Firestore: totalSent=4
+2025-04-30T17:51:35.252Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=4, available=2796, availableForTemplates=2296
+2025-04-30T17:51:40.504Z [INFO]: Email enviado de congressoautismoma@gmail.com para leydepinheiro86@gmail.com. Total enviado hoje: 5
+2025-04-30T17:51:40.663Z [INFO]: Email de confirmação enviado para leydepinheiro86@gmail.com (participante 0). Total enviado hoje: 5
+2025-04-30T17:51:40.836Z [INFO]: Updated participant 0 in checkout EPHzvxKhdIBW56zzoKFt
+2025-04-30T18:22:24.556Z [INFO]: Fetched 0 active templates for status pending
+2025-04-30T18:22:24.558Z [INFO]: No active templates found for status pending in checkout bBmeapnuQ7LEaJ3CrME8
+2025-04-30T18:23:02.416Z [INFO]: Fetched 0 active templates for status pending
+2025-04-30T18:23:02.417Z [INFO]: No active templates found for status pending in checkout gpd9OyJ29dFMBwchnVQj
+2025-04-30T18:25:18.770Z [INFO]: Fetched 0 active templates for status error
+2025-04-30T18:25:18.771Z [INFO]: No active templates found for status error in checkout Ky2ys5Rzse9HmLcpH4j3
+2025-04-30T18:26:01.917Z [INFO]: Fetched 0 active templates for status error
+2025-04-30T18:26:01.918Z [INFO]: No active templates found for status error in checkout jzSSSKL707VdoK8IJfWj
+2025-04-30T18:27:00.174Z [INFO]: Fetched 0 active templates for status error
+2025-04-30T18:27:00.175Z [INFO]: No active templates found for status error in checkout SCr2SjWXv5P3UapR6Ehq
+2025-05-05T16:25:33.454Z [INFO]: Fetched 0 active templates for status pending
+2025-05-05T16:25:33.457Z [INFO]: No active templates found for status pending in checkout vj5x7E41tEdoA8CTi33W
+2025-05-05T17:55:35.125Z [INFO]: Fetched 0 active templates for status error
+2025-05-05T17:55:35.129Z [INFO]: No active templates found for status error in checkout cX4xWjrNSltEdJMw6uTV
