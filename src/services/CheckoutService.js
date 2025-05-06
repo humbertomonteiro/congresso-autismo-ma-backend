@@ -102,19 +102,19 @@ class CheckoutService {
   }
 
   validateBoleto(boletoData) {
-    const { street, addressNumber, district, zipCode, city, state } =
-      boletoData;
-    if (!street || !addressNumber || !district || !zipCode || !city || !state) {
-      throw new Error(
-        "Todos os campos de endereço são obrigatórios para boleto."
-      );
-    }
-    if (!/^\d{8}$/.test(zipCode.replace(/\D/g, ""))) {
-      throw new Error("CEP inválido.");
-    }
-    if (!/^[A-Z]{2}$/.test(state)) {
-      throw new Error("Estado deve ser uma sigla de 2 letras (ex.: SP).");
-    }
+    // const { street, addressNumber, district, zipCode, city, state } =
+    //   boletoData;
+    // if (!street || !addressNumber || !district || !zipCode || !city || !state) {
+    //   throw new Error(
+    //     "Todos os campos de endereço são obrigatórios para boleto."
+    //   );
+    // }
+    // if (!/^\d{8}$/.test(zipCode.replace(/\D/g, ""))) {
+    //   throw new Error("CEP inválido.");
+    // }
+    // if (!/^[A-Z]{2}$/.test(state)) {
+    //   throw new Error("Estado deve ser uma sigla de 2 letras (ex.: SP).");
+    // }
     return true;
   }
 

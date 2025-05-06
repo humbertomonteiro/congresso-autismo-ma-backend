@@ -254,14 +254,14 @@ class BancoDoBrasilService {
           tipoInscricao,
           numeroInscricao: cleanIdentity,
           nome: customer.Name.toUpperCase(),
-          endereco: `${payer.street.toUpperCase()} N ${
-            payer.addressNumber || ""
-          }`,
-          cep: cepSemHifen,
-          cidade: payer.city.toUpperCase(),
-          bairro: payer.district.toUpperCase(),
-          uf: payer.state.toUpperCase(),
-          telefone: payer.phone || "",
+          // endereco: `${payer.street.toUpperCase()} N ${
+          //   payer.addressNumber || ""
+          // }`,
+          // cep: cepSemHifen,
+          // cidade: payer.city.toUpperCase(),
+          // bairro: payer.district.toUpperCase(),
+          // uf: payer.state.toUpperCase(),
+          // telefone: payer.phone || "",
         },
         beneficiarioFinal: {
           tipoInscricao: 2,
