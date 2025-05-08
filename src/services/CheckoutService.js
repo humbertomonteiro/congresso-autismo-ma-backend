@@ -31,6 +31,10 @@ class CheckoutService {
       discount = 50;
     } else if (coupon === "desconto") {
       discount = 50;
+    } else if (coupon === "maira") {
+      const allTickets = ticketQuantity - halfTickets;
+
+      discount = allTickets * 149 + halfTickets * 49;
     } else if (coupon && coupon !== "grupo") {
       throw new Error("Cupom inválido.");
     }

@@ -12034,3 +12034,6 @@
 2025-05-05T17:55:35.129Z [INFO]: No active templates found for status error in checkout cX4xWjrNSltEdJMw6uTV
 2025-05-06T20:12:21.017Z [INFO]: Fetched 0 active templates for status pending
 2025-05-06T20:12:21.020Z [INFO]: No active templates found for status pending in checkout Vrd622VnbctLWNzn4pT3
+2025-05-08T21:21:19.583Z [INFO]: Carregados 0 templates do Firestore
+2025-05-08T21:21:19.588Z [INFO]: Stats carregados do Firestore: totalSent=58
+2025-05-08T21:21:19.589Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=58, available=2742, availableForTemplates=2242
