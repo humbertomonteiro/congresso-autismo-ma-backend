@@ -34,7 +34,7 @@ class CheckoutService {
     } else if (coupon === "maira") {
       const allTickets = ticketQuantity - halfTickets;
 
-      discount = allTickets * 149 + halfTickets * 49;
+      discount = allTickets * 150 + halfTickets * 50;
     } else if (coupon && coupon !== "grupo") {
       throw new Error("Cupom inválido.");
     }
