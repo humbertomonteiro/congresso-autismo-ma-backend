@@ -94,7 +94,9 @@ class CheckoutService {
       throw new Error("Número do cartão inválido.");
     }
     if (!/^\d{2}\/\d{4}$/.test(maturity)) {
-      throw new Error("Data de vencimento inválida (formato MM/YYYY).");
+      throw new Error(
+        "Data de vencimento inválida (formato MM/AAAA). Ex: 05/2028"
+      );
     }
     if (!/^\d{3,4}$/.test(cardCode)) {
       throw new Error("Código de segurança inválido.");
@@ -151,7 +153,7 @@ class CheckoutService {
           paymentMethod === "boleto" &&
           paymentDetails.boleto?.dataVencimento
         ) {
-          isExpired = new Date(paymentDetails.boleto.dataVencimento) + 5 < now;
+          isExpired = new Date(paymentDetails.boleto.dataVencimento) < now;
         }
 
         if (isExpired) {

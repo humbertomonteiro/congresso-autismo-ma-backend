@@ -333,7 +333,7 @@ class BancoDoBrasilService {
         qrCodePix: boletoResponse.qrCode?.url,
         numeroBoleto: boletoResponse.numero,
         boletoFile: boletoFilePath,
-        dataVencimento: addDays(today, 3).toISOString(),
+        dataVencimento: addDays(today, 1).toISOString(),
       };
     } catch (error) {
       console.error(
