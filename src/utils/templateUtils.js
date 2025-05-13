@@ -186,7 +186,7 @@ const generateBoletoPDF = async (
     .replace(/{{NUMERO_BOLETO}}/g, response.numero || "Não disponível")
     .replace(
       /{{DATA_VENCIMENTO}}/g,
-      formatDate(new Date(Date.now() + 3 * 24 * 60 * 60 * 1000))
+      formatDate(new Date(Date.now() + 1 * 24 * 60 * 60 * 1000))
     )
     .replace(/{{DATA_EMISSAO}}/g, formatDate(new Date()))
     .replace(/{{DATA_PROCESSAMENTO}}/g, new Date().toLocaleDateString("pt-BR"))
