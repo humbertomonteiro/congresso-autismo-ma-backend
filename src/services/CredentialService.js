@@ -67,23 +67,28 @@ class CredentialService {
       let parsedData;
       try {
         parsedData = JSON.parse(qrData);
+        console.log("Dados parseados:", parsedData);
       } catch (parseError) {
         console.error("Erro ao parsear qrData:", parseError.message);
         throw new Error("Formato de QR Code inválido");
       }
 
       const { checkoutId, participantId, date, signature } = parsedData;
-      console.log("Dados parseados:", {
-        checkoutId,
-        participantId,
-        date,
-        signature,
-      });
+      console.log("Chave secreta usada:", secret);
+      // console.log("Dados parseados:", {
+      //   checkoutId,
+      //   participantId,
+      //   date,
+      //   signature,
+      // });
 
       const expectedSignature = crypto
         .createHmac("sha256", secret)
         .update(`${checkoutId}-${participantId.split("-")[1]}-${date}`)
         .digest("hex");
+
+      console.log("Assinatura recebida:", signature);
+      console.log("Assinatura esperada:", expectedSignature);
       if (signature !== expectedSignature) {
         throw new Error("Assinatura inválida no QR Code.");
       }
@@ -97,6 +102,7 @@ class CredentialService {
       const checkout = checkoutSnap.data();
       const participantIndex = parseInt(participantId.split("-")[1], 10);
       const participant = checkout.participants[participantIndex];
+      console.log("Dados do participante:", participant);
 
       if (
         !participant ||
@@ -106,10 +112,18 @@ class CredentialService {
         throw new Error("QR Code inválido ou não encontrado.");
       }
 
-      const isValid = participant.qrRawData[date] === qrData;
+      const storedData = JSON.parse(participant.qrRawData[date]);
+      const isValid =
+        storedData.checkoutId === parsedData.checkoutId &&
+        storedData.participantId === parsedData.participantId &&
+        storedData.participantName === parsedData.participantName &&
+        storedData.eventName === parsedData.eventName &&
+        storedData.date === parsedData.date &&
+        storedData.signature === parsedData.signature;
+
       if (!isValid) {
-        console.log("QR esperado:", participant.qrRawData[date]);
-        console.log("QR recebido:", qrData);
+        console.log("QR esperado:", storedData);
+        console.log("QR recebido:", parsedData);
         throw new Error("QR Code inválido.");
       }
 
