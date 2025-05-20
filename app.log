@@ -12587,3 +12587,200 @@
 2025-05-14T19:41:58.097Z [INFO]: Email enviado de congressoautismoma@gmail.com para bertohf5@gmail.com. Total enviado hoje: 67
 2025-05-14T19:41:58.258Z [INFO]: Email de confirmação enviado para bertohf5@gmail.com (participante 0). Total enviado hoje: 67
 2025-05-14T19:41:58.438Z [INFO]: Updated participant 0 in checkout bV3CkFtkXBFguwPmbDRX
+2025-05-15T14:01:54.598Z [INFO]: Fetched 0 active templates for status approved
+2025-05-15T14:01:54.600Z [INFO]: No active templates found for status approved in checkout SI61C7PU7roym5saYiW1
+2025-05-15T14:01:54.680Z [INFO]: Stats carregados do Firestore: totalSent=16
+2025-05-15T14:01:54.681Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=16, available=2784, availableForTemplates=2284
+2025-05-15T14:01:59.266Z [INFO]: Stats carregados do Firestore: totalSent=16
+2025-05-15T14:01:59.266Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=16, available=2784, availableForTemplates=2284
+2025-05-15T14:02:06.233Z [INFO]: Email enviado de congressoautismoma@gmail.com para bertohf5@gmail.com. Total enviado hoje: 17
+2025-05-15T14:02:06.444Z [INFO]: Email de confirmação enviado para bertohf5@gmail.com (participante 0). Total enviado hoje: 17
+2025-05-15T14:02:06.626Z [INFO]: Updated participant 0 in checkout SI61C7PU7roym5saYiW1
+2025-05-15T14:21:48.991Z [INFO]: Stats carregados do Firestore: totalSent=20
+2025-05-15T14:21:48.993Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=20, available=2780, availableForTemplates=2280
+2025-05-15T14:21:48.995Z [INFO]: Carregados 0 templates do Firestore
+2025-05-15T14:22:12.756Z [INFO]: Carregados 0 templates do Firestore
+2025-05-15T14:22:12.759Z [INFO]: Stats carregados do Firestore: totalSent=20
+2025-05-15T14:22:12.759Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=20, available=2780, availableForTemplates=2280
+2025-05-15T14:31:51.782Z [INFO]: Fetched 0 active templates for status approved
+2025-05-15T14:31:51.783Z [INFO]: No active templates found for status approved in checkout 8rxMtTYqnFhPP32HSSr2
+2025-05-15T14:31:51.856Z [INFO]: Stats carregados do Firestore: totalSent=20
+2025-05-15T14:31:51.857Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=20, available=2780, availableForTemplates=2280
+2025-05-15T14:31:58.626Z [INFO]: Stats carregados do Firestore: totalSent=20
+2025-05-15T14:31:58.627Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=20, available=2780, availableForTemplates=2280
+2025-05-15T14:32:05.796Z [INFO]: Email enviado de congressoautismoma2@gmail.com para bertohf5@gmail.com. Total enviado hoje: 21
+2025-05-15T14:32:05.931Z [INFO]: Email de confirmação enviado para bertohf5@gmail.com (participante 0). Total enviado hoje: 21
+2025-05-15T14:32:06.082Z [INFO]: Updated participant 0 in checkout 8rxMtTYqnFhPP32HSSr2
+2025-05-15T14:32:07.386Z [INFO]: Fetched 0 active templates for status error
+2025-05-15T14:32:07.387Z [INFO]: No active templates found for status error in checkout 2wQSnMl1sQUZXJgMhw1G
+2025-05-15T14:42:58.229Z [INFO]: Fetched 0 active templates for status approved
+2025-05-15T14:42:58.230Z [INFO]: No active templates found for status approved in checkout FcDZfO2kWMHaT7ATSGTU
+2025-05-15T14:42:58.313Z [INFO]: Stats carregados do Firestore: totalSent=22
+2025-05-15T14:42:58.313Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=22, available=2778, availableForTemplates=2278
+2025-05-15T14:43:03.603Z [INFO]: Stats carregados do Firestore: totalSent=22
+2025-05-15T14:43:03.606Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=22, available=2778, availableForTemplates=2278
+2025-05-15T14:43:10.720Z [INFO]: Email enviado de congressoautismoma2@gmail.com para bertohf5@gmail.com. Total enviado hoje: 23
+2025-05-15T14:43:11.487Z [INFO]: Email de confirmação enviado para bertohf5@gmail.com (participante 0). Total enviado hoje: 23
+2025-05-15T14:43:12.745Z [INFO]: Updated participant 0 in checkout FcDZfO2kWMHaT7ATSGTU
+2025-05-15T14:47:10.090Z [INFO]: Stats carregados do Firestore: totalSent=26
+2025-05-15T14:47:10.090Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=26, available=2774, availableForTemplates=2274
+2025-05-15T14:47:10.092Z [INFO]: Carregados 0 templates do Firestore
+2025-05-15T14:47:20.104Z [INFO]: Stats carregados do Firestore: totalSent=28
+2025-05-15T14:47:20.109Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=28, available=2772, availableForTemplates=2272
+2025-05-15T14:47:20.114Z [INFO]: Carregados 0 templates do Firestore
+2025-05-15T15:00:36.737Z [INFO]: Fetched 0 active templates for status error
+2025-05-15T15:00:36.737Z [INFO]: No active templates found for status error in checkout mhKth2VMMVWnIaVD3pbA
+2025-05-15T15:23:05.526Z [INFO]: Carregados 0 templates do Firestore
+2025-05-15T15:23:05.527Z [INFO]: Stats carregados do Firestore: totalSent=30
+2025-05-15T15:23:05.528Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=30, available=2770, availableForTemplates=2270
+2025-05-15T15:23:35.146Z [INFO]: Carregados 0 templates do Firestore
+2025-05-15T15:23:35.149Z [INFO]: Stats carregados do Firestore: totalSent=30
+2025-05-15T15:23:35.149Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=30, available=2770, availableForTemplates=2270
+2025-05-15T15:23:45.195Z [INFO]: Stats carregados do Firestore: totalSent=30
+2025-05-15T15:23:45.196Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=30, available=2770, availableForTemplates=2270
+2025-05-15T15:23:45.198Z [INFO]: Carregados 0 templates do Firestore
+2025-05-15T15:23:55.928Z [INFO]: Stats carregados do Firestore: totalSent=30
+2025-05-15T15:23:55.929Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=30, available=2770, availableForTemplates=2270
+2025-05-15T15:23:55.930Z [INFO]: Carregados 0 templates do Firestore
+2025-05-15T15:24:05.926Z [INFO]: Stats carregados do Firestore: totalSent=30
+2025-05-15T15:24:05.927Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=30, available=2770, availableForTemplates=2270
+2025-05-15T15:24:05.930Z [INFO]: Carregados 0 templates do Firestore
+2025-05-15T15:24:15.923Z [INFO]: Stats carregados do Firestore: totalSent=30
+2025-05-15T15:24:15.924Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=30, available=2770, availableForTemplates=2270
+2025-05-15T15:24:15.928Z [INFO]: Carregados 0 templates do Firestore
+2025-05-15T15:24:25.931Z [INFO]: Stats carregados do Firestore: totalSent=30
+2025-05-15T15:24:25.932Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=30, available=2770, availableForTemplates=2270
+2025-05-15T15:24:25.935Z [INFO]: Carregados 0 templates do Firestore
+2025-05-15T15:24:35.926Z [INFO]: Stats carregados do Firestore: totalSent=30
+2025-05-15T15:24:35.927Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=30, available=2770, availableForTemplates=2270
+2025-05-15T15:24:35.929Z [INFO]: Carregados 0 templates do Firestore
+2025-05-15T15:24:45.903Z [INFO]: Stats carregados do Firestore: totalSent=30
+2025-05-15T15:24:45.903Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=30, available=2770, availableForTemplates=2270
+2025-05-15T15:24:45.904Z [INFO]: Carregados 0 templates do Firestore
+2025-05-15T15:24:53.379Z [INFO]: Carregados 0 templates do Firestore
+2025-05-15T15:24:53.380Z [INFO]: Stats carregados do Firestore: totalSent=30
+2025-05-15T15:24:53.381Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=30, available=2770, availableForTemplates=2270
+2025-05-15T15:24:57.929Z [INFO]: Carregados 0 templates do Firestore
+2025-05-15T15:24:57.932Z [INFO]: Stats carregados do Firestore: totalSent=30
+2025-05-15T15:24:57.934Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=30, available=2770, availableForTemplates=2270
+2025-05-15T15:25:08.984Z [INFO]: Stats carregados do Firestore: totalSent=30
+2025-05-15T15:25:08.985Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=30, available=2770, availableForTemplates=2270
+2025-05-15T15:25:08.988Z [INFO]: Carregados 0 templates do Firestore
+2025-05-15T15:25:17.944Z [INFO]: Stats carregados do Firestore: totalSent=30
+2025-05-15T15:25:17.945Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=30, available=2770, availableForTemplates=2270
+2025-05-15T15:25:17.946Z [INFO]: Carregados 0 templates do Firestore
+2025-05-15T15:25:28.917Z [INFO]: Stats carregados do Firestore: totalSent=30
+2025-05-15T15:25:28.918Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=30, available=2770, availableForTemplates=2270
+2025-05-15T15:25:28.919Z [INFO]: Carregados 0 templates do Firestore
+2025-05-15T15:25:38.939Z [INFO]: Stats carregados do Firestore: totalSent=30
+2025-05-15T15:25:38.940Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=30, available=2770, availableForTemplates=2270
+2025-05-15T15:25:38.943Z [INFO]: Carregados 0 templates do Firestore
+2025-05-15T15:25:48.930Z [INFO]: Stats carregados do Firestore: totalSent=30
+2025-05-15T15:25:48.931Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=30, available=2770, availableForTemplates=2270
+2025-05-15T15:25:48.933Z [INFO]: Carregados 0 templates do Firestore
+2025-05-15T15:25:58.954Z [INFO]: Stats carregados do Firestore: totalSent=30
+2025-05-15T15:25:58.955Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=30, available=2770, availableForTemplates=2270
+2025-05-15T15:25:58.957Z [INFO]: Carregados 0 templates do Firestore
+2025-05-15T15:26:08.937Z [INFO]: Stats carregados do Firestore: totalSent=30
+2025-05-15T15:26:08.938Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=30, available=2770, availableForTemplates=2270
+2025-05-15T15:26:08.940Z [INFO]: Carregados 0 templates do Firestore
+2025-05-15T15:37:26.945Z [INFO]: Carregados 0 templates do Firestore
+2025-05-15T15:37:26.947Z [INFO]: Stats carregados do Firestore: totalSent=30
+2025-05-15T15:37:26.947Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=30, available=2770, availableForTemplates=2270
+2025-05-15T15:37:37.913Z [INFO]: Stats carregados do Firestore: totalSent=30
+2025-05-15T15:37:37.914Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=30, available=2770, availableForTemplates=2270
+2025-05-15T15:37:37.931Z [INFO]: Carregados 0 templates do Firestore
+2025-05-15T15:37:47.924Z [INFO]: Stats carregados do Firestore: totalSent=30
+2025-05-15T15:37:47.925Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=30, available=2770, availableForTemplates=2270
+2025-05-15T15:37:47.927Z [INFO]: Carregados 0 templates do Firestore
+2025-05-15T15:37:56.950Z [INFO]: Stats carregados do Firestore: totalSent=30
+2025-05-15T15:37:56.951Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=30, available=2770, availableForTemplates=2270
+2025-05-15T15:37:56.953Z [INFO]: Carregados 0 templates do Firestore
+2025-05-15T15:38:08.055Z [INFO]: Stats carregados do Firestore: totalSent=30
+2025-05-15T15:38:08.056Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=30, available=2770, availableForTemplates=2270
+2025-05-15T15:38:08.059Z [INFO]: Carregados 0 templates do Firestore
+2025-05-15T15:38:17.928Z [INFO]: Stats carregados do Firestore: totalSent=30
+2025-05-15T15:38:17.928Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=30, available=2770, availableForTemplates=2270
+2025-05-15T15:38:17.929Z [INFO]: Carregados 0 templates do Firestore
+2025-05-15T15:59:10.235Z [INFO]: Carregados 0 templates do Firestore
+2025-05-15T15:59:10.238Z [INFO]: Stats carregados do Firestore: totalSent=30
+2025-05-15T15:59:10.238Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=30, available=2770, availableForTemplates=2270
+2025-05-15T16:17:59.723Z [INFO]: Contando checkouts com qrCodesSent: false...
+2025-05-15T16:18:11.467Z [INFO]: Total de checkouts pendentes: 666
+2025-05-15T16:18:11.467Z [INFO]: Total de participantes para enviar e-mails: 754
+2025-05-15T16:18:11.469Z [INFO]: Detalhes:
+2025-05-15T16:23:01.386Z [INFO]: Iniciando teste de envio de emails para até 2 checkouts...
+2025-05-15T16:23:01.388Z [ERROR]: Erro geral no teste de envio de emails: EmailService.getAvailableEmailAccounts is not a function
+2025-05-15T16:24:03.320Z [INFO]: Iniciando teste de envio de emails para até 2 checkouts...
+2025-05-15T16:24:03.321Z [ERROR]: Erro geral no teste de envio de emails: EmailService.getAvailableEmailAccounts is not a function
+2025-05-15T16:24:23.952Z [INFO]: Iniciando teste de envio de emails para até 2 checkouts...
+2025-05-15T16:24:24.369Z [INFO]: Encontrados 2 checkouts para teste.
+2025-05-15T16:24:24.370Z [INFO]: Testando checkout 02uyCD3bHKebRDlRSRG5...
+2025-05-15T16:24:24.457Z [INFO]: Stats carregados do Firestore: totalSent=30
+2025-05-15T16:24:24.459Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=30, available=2770, availableForTemplates=2270
+2025-05-15T16:24:24.461Z [INFO]: Enviando email de teste para pamelarafa30@gmail.com (participante 0)...
+2025-05-15T16:24:24.560Z [INFO]: Stats carregados do Firestore: totalSent=30
+2025-05-15T16:24:24.560Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=30, available=2770, availableForTemplates=2270
+2025-05-15T16:24:24.685Z [INFO]: Participante pamelarafa30@gmail.com (índice 0) já possui QR codes. Ignorando envio.
+2025-05-15T16:24:24.686Z [WARN]: Email de teste não enviado para pamelarafa30@gmail.com: Participante já possui QR codes
+2025-05-15T16:24:25.905Z [INFO]: Checkout 02uyCD3bHKebRDlRSRG5 marcado como qrCodesSent: true (teste).
+2025-05-15T16:24:25.908Z [INFO]: Testando checkout 0Mb0dt5Kdssd04yNSvA0...
+2025-05-15T16:24:26.000Z [INFO]: Stats carregados do Firestore: totalSent=30
+2025-05-15T16:24:26.001Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=30, available=2770, availableForTemplates=2270
+2025-05-15T16:24:26.002Z [INFO]: Enviando email de teste para pm.asp@hotmail.com (participante 0)...
+2025-05-15T16:24:26.057Z [INFO]: Stats carregados do Firestore: totalSent=30
+2025-05-15T16:24:26.057Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=30, available=2770, availableForTemplates=2270
+2025-05-15T16:24:26.127Z [INFO]: Participante pm.asp@hotmail.com (índice 0) já possui QR codes. Ignorando envio.
+2025-05-15T16:24:26.127Z [WARN]: Email de teste não enviado para pm.asp@hotmail.com: Participante já possui QR codes
+2025-05-15T16:24:27.235Z [INFO]: Checkout 0Mb0dt5Kdssd04yNSvA0 marcado como qrCodesSent: true (teste).
+2025-05-15T16:24:27.236Z [INFO]: Teste concluído. Total de emails enviados: 0
+2025-05-20T13:06:42.555Z [INFO]: Stats carregados do Firestore: totalSent=64
+2025-05-20T13:06:42.560Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=64, available=2736, availableForTemplates=2236
+2025-05-20T13:06:42.649Z [INFO]: Participante 123cristnadja@gmail.com (índice 0) já possui QR codes. Ignorando envio.
+2025-05-20T13:15:38.247Z [INFO]: Fetched 0 active templates for status approved
+2025-05-20T13:15:38.248Z [INFO]: No active templates found for status approved in checkout 2zjBZirRE0M84x4xdt1o
+2025-05-20T13:15:38.332Z [INFO]: Stats carregados do Firestore: totalSent=64
+2025-05-20T13:15:38.333Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=64, available=2736, availableForTemplates=2236
+2025-05-20T13:15:47.139Z [INFO]: Stats carregados do Firestore: totalSent=64
+2025-05-20T13:15:47.139Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=64, available=2736, availableForTemplates=2236
+2025-05-20T13:15:53.118Z [INFO]: Email enviado de congressoautismoma@gmail.com para bertohf5@gmail.com. Total enviado hoje: 65
+2025-05-20T13:15:53.296Z [INFO]: Email de confirmação enviado para bertohf5@gmail.com (participante 0). Total enviado hoje: 65
+2025-05-20T13:15:53.471Z [INFO]: Updated participant 0 in checkout 2zjBZirRE0M84x4xdt1o
+2025-05-20T13:15:53.567Z [INFO]: Stats carregados do Firestore: totalSent=66
+2025-05-20T13:15:53.568Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=66, available=2734, availableForTemplates=2234
+2025-05-20T13:15:53.632Z [INFO]: Participante bertohf5@gmail.com (índice 0) já possui QR codes. Ignorando envio.
+2025-05-20T13:19:10.430Z [INFO]: Fetched 0 active templates for status approved
+2025-05-20T13:19:10.432Z [INFO]: No active templates found for status approved in checkout VVLsxBXDKTlIvKyignac
+2025-05-20T13:19:10.547Z [INFO]: Stats carregados do Firestore: totalSent=66
+2025-05-20T13:19:10.548Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=66, available=2734, availableForTemplates=2234
+2025-05-20T13:19:15.753Z [INFO]: Stats carregados do Firestore: totalSent=66
+2025-05-20T13:19:15.754Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=66, available=2734, availableForTemplates=2234
+2025-05-20T13:19:21.214Z [INFO]: Email enviado de congressoautismoma@gmail.com para bertohf5@gmail.com. Total enviado hoje: 67
+2025-05-20T13:19:21.429Z [INFO]: Email de confirmação enviado para bertohf5@gmail.com (participante 0). Total enviado hoje: 67
+2025-05-20T13:19:21.656Z [INFO]: Updated participant 0 in checkout VVLsxBXDKTlIvKyignac
+2025-05-20T13:19:26.456Z [INFO]: Stats carregados do Firestore: totalSent=68
+2025-05-20T13:19:26.458Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=68, available=2732, availableForTemplates=2232
+2025-05-20T13:19:32.429Z [INFO]: Email enviado de congressoautismoma@gmail.com para bertohf5@gmail.com. Total enviado hoje: 69
+2025-05-20T13:19:32.610Z [INFO]: Email de confirmação enviado para bertohf5@gmail.com (participante 1). Total enviado hoje: 68
+2025-05-20T13:19:32.814Z [INFO]: Updated participant 1 in checkout VVLsxBXDKTlIvKyignac
+2025-05-20T13:19:32.918Z [INFO]: Stats carregados do Firestore: totalSent=70
+2025-05-20T13:19:32.919Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=70, available=2730, availableForTemplates=2230
+2025-05-20T13:19:33.000Z [INFO]: Participante bertohf5@gmail.com (índice 0) já possui QR codes. Ignorando envio.
+2025-05-20T13:19:33.002Z [INFO]: Participante bertohf5@gmail.com (índice 1) já possui QR codes. Ignorando envio.
+2025-05-20T13:21:10.686Z [INFO]: Stats carregados do Firestore: totalSent=70
+2025-05-20T13:21:10.687Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=70, available=2730, availableForTemplates=2230
+2025-05-20T13:21:10.788Z [INFO]: Participante bertohf5@gmail.com (índice 0) já possui QR codes. Ignorando envio.
+2025-05-20T13:21:13.834Z [INFO]: Stats carregados do Firestore: totalSent=70
+2025-05-20T13:21:13.835Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=70, available=2730, availableForTemplates=2230
+2025-05-20T13:21:19.926Z [INFO]: Email enviado de congressoautismoma@gmail.com para bertohf5@gmail.com. Total enviado hoje: 71
+2025-05-20T13:21:20.073Z [INFO]: Email de confirmação enviado para bertohf5@gmail.com (participante 1). Total enviado hoje: 72
+2025-05-20T13:21:20.347Z [INFO]: Updated participant 1 in checkout 2zjBZirRE0M84x4xdt1o
+2025-05-20T13:23:23.208Z [INFO]: Fetched 0 active templates for status approved
+2025-05-20T13:23:23.209Z [INFO]: No active templates found for status approved in checkout 5tSrV7UkC1ujbr6oaFQ9
+2025-05-20T13:23:23.323Z [INFO]: Stats carregados do Firestore: totalSent=72
+2025-05-20T13:23:23.323Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=72, available=2728, availableForTemplates=2228
+2025-05-20T13:23:26.655Z [INFO]: Stats carregados do Firestore: totalSent=72
+2025-05-20T13:23:26.656Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=72, available=2728, availableForTemplates=2228
+2025-05-20T13:23:32.401Z [INFO]: Email enviado de congressoautismoma@gmail.com para bertohf5@gmail.com. Total enviado hoje: 73
+2025-05-20T13:23:32.540Z [INFO]: Email de confirmação enviado para bertohf5@gmail.com (participante 0). Total enviado hoje: 73
+2025-05-20T13:23:32.710Z [INFO]: Updated participant 0 in checkout 5tSrV7UkC1ujbr6oaFQ9

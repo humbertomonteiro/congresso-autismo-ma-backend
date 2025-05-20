@@ -224,6 +224,146 @@ class EmailService {
     return { templateId };
   }
 
+  // async sendEmailConfirmationPayment(emailData) {
+  //   const { checkoutId, from, to, subject, participantIndex, data } = emailData;
+
+  //   const stats = await this.getEmailStats();
+  //   if (stats.available <= 0) {
+  //     throw new Error("Limite diário total de emails atingido.");
+  //   }
+
+  //   const checkoutRef = doc(db, "checkouts", checkoutId);
+  //   const checkoutSnap = await getDoc(checkoutRef);
+  //   if (!checkoutSnap.exists()) {
+  //     throw new Error(`Checkout ${checkoutId} não encontrado`);
+  //   }
+  //   const checkoutData = checkoutSnap.data();
+
+  //   // Determina o participante a processar
+  //   let participant;
+  //   let participantIdx;
+
+  //   if (
+  //     participantIndex !== undefined &&
+  //     participantIndex >= 0 &&
+  //     participantIndex < checkoutData.participants.length
+  //   ) {
+  //     // Envio individual baseado no índice (usado no ModalCheckoutDetails)
+  //     participant = checkoutData.participants[participantIndex];
+  //     participantIdx = participantIndex;
+  //     if (participant.email !== to) {
+  //       logger.warn(
+  //         `Email fornecido (${to}) não corresponde ao email do participante no índice ${participantIndex} (${participant.email})`
+  //       );
+  //     }
+  //   } else {
+  //     // Padrão: busca pelo email 'to' (compatível com usePaymentForm.js)
+  //     participant = checkoutData.participants.find((p) => p.email === to);
+  //     if (!participant) {
+  //       throw new Error(
+  //         `Participante com email ${to} não encontrado no checkout ${checkoutId}`
+  //       );
+  //     }
+  //     participantIdx = checkoutData.participants.indexOf(participant);
+  //   }
+
+  //   // Verifica se o participante já tem QR codes (evita duplicatas)
+  //   if (
+  //     participant.qrRawData &&
+  //     participant.qrRawData["2025-05-31"] &&
+  //     participant.qrRawData["2025-06-01"]
+  //   ) {
+  //     logger.info(
+  //       `Participante ${participant.email} (índice ${participantIdx}) já possui QR codes. Ignorando envio.`
+  //     );
+  //     return { success: false, message: "Participante já possui QR codes" };
+  //   }
+
+  //   // Gera dois QR codes para o participante
+  //   const { qrCodes, qrRawData } =
+  //     await CredentialService.generateQRCodesForParticipant(
+  //       checkoutId,
+  //       participantIdx,
+  //       participant.name
+  //     );
+
+  //   // Gera o PDF com o nome do participante
+  //   const pdfPath = await generateTicketPDF(
+  //     { ...data, participantName: participant.name || "Participante" },
+  //     qrCodes
+  //   );
+  //   const attachments = [
+  //     {
+  //       filename: `ingresso_${participant.name || "Participante"}.pdf`,
+  //       path: pdfPath,
+  //       contentType: "application/pdf",
+  //     },
+  //   ];
+
+  //   // Construir o corpo do email com o template
+  //   const templatePath = path.join(
+  //     __dirname,
+  //     "../templates/emailTemplate.html"
+  //   );
+  //   let htmlTemplate = await fs.readFile(templatePath, "utf-8");
+
+  //   htmlTemplate = htmlTemplate
+  //     .replace("{{nome}}", participant.name || "Participante")
+  //     .replace("{{transactionId}}", data.transactionId || "N/A")
+  //     .replace("{{fullTickets}}", data.fullTickets || 0)
+  //     .replace("{{valueTicketsAll}}", data.valueTicketsAll || "0.00")
+  //     .replace("{{halfTickets}}", data.halfTickets || 0)
+  //     .replace("{{installments}}", data.installments || 1)
+  //     .replace("{{valueTicketsHalf}}", data.valueTicketsHalf || "0.00")
+  //     .replace("{{total}}", data.total || "0.00");
+
+  //   if (data.discount && data.coupon) {
+  //     htmlTemplate = htmlTemplate
+  //       .replace("{{#if discount}}", "")
+  //       .replace("{{/if}}", "")
+  //       .replace("{{coupon}}", data.coupon)
+  //       .replace("{{discount}}", data.discount);
+  //   } else {
+  //     htmlTemplate = htmlTemplate.replace(
+  //       /{{#if discount}}[\s\S]*?{{\/if}}/g,
+  //       ""
+  //     );
+  //   }
+
+  //   // Envia o email
+  //   await this.sendEmail({
+  //     from,
+  //     to: participant.email,
+  //     subject,
+  //     html: htmlTemplate,
+  //     attachments,
+  //   });
+
+  //   await this.incrementEmailCount(1);
+  //   logger.info(
+  //     `Email de confirmação enviado para ${
+  //       participant.email
+  //     } (participante ${participantIdx}). Total enviado hoje: ${
+  //       stats.totalSent + 1
+  //     }`
+  //   );
+
+  //   // Salva os QR codes no Firebase
+  //   await CheckoutRepository.updateParticipant(checkoutId, participantIdx, {
+  //     qrRawData,
+  //     validated: { "2025-05-31": false, "2025-06-01": false },
+  //   });
+
+  //   // Remove o PDF temporário
+  //   await fs
+  //     .unlink(pdfPath)
+  //     .catch((err) =>
+  //       console.error(`Erro ao remover ${pdfPath}: ${err.message}`)
+  //     );
+
+  //   return { success: true, message: "Email enviado com sucesso" };
+  // }
+
   async sendEmailConfirmationPayment(emailData) {
     const { checkoutId, from, to, subject, participantIndex, data } = emailData;
 
@@ -239,131 +379,300 @@ class EmailService {
     }
     const checkoutData = checkoutSnap.data();
 
-    // Determina o participante a processar
-    let participant;
-    let participantIdx;
-
+    // Determina os participantes a processar
+    let participantsToProcess = [];
     if (
       participantIndex !== undefined &&
       participantIndex >= 0 &&
       participantIndex < checkoutData.participants.length
     ) {
-      // Envio individual baseado no índice (usado no ModalCheckoutDetails)
-      participant = checkoutData.participants[participantIndex];
-      participantIdx = participantIndex;
+      // Envio individual baseado no índice
+      const participant = checkoutData.participants[participantIndex];
       if (participant.email !== to) {
         logger.warn(
           `Email fornecido (${to}) não corresponde ao email do participante no índice ${participantIndex} (${participant.email})`
         );
       }
+      participantsToProcess.push({
+        participant,
+        participantIdx: participantIndex,
+      });
     } else {
-      // Padrão: busca pelo email 'to' (compatível com usePaymentForm.js)
-      participant = checkoutData.participants.find((p) => p.email === to);
-      if (!participant) {
+      // Busca todos os participantes com o email 'to'
+      checkoutData.participants.forEach((participant, idx) => {
+        if (participant.email === to) {
+          participantsToProcess.push({ participant, participantIdx: idx });
+        }
+      });
+      if (participantsToProcess.length === 0) {
         throw new Error(
-          `Participante com email ${to} não encontrado no checkout ${checkoutId}`
+          `Nenhum participante com email ${to} encontrado no checkout ${checkoutId}`
         );
       }
-      participantIdx = checkoutData.participants.indexOf(participant);
     }
 
-    // Verifica se o participante já tem QR codes (evita duplicatas)
-    if (
-      participant.qrRawData &&
-      participant.qrRawData["2025-05-31"] &&
-      participant.qrRawData["2025-06-01"]
-    ) {
-      logger.info(
-        `Participante ${participant.email} (índice ${participantIdx}) já possui QR codes. Ignorando envio.`
+    const results = [];
+    for (const { participant, participantIdx } of participantsToProcess) {
+      // Verifica se o participante já tem QR codes
+      if (
+        participant.qrRawData &&
+        participant.qrRawData["2025-05-31"] &&
+        participant.qrRawData["2025-06-01"]
+      ) {
+        logger.info(
+          `Participante ${participant.email} (índice ${participantIdx}) já possui QR codes. Ignorando envio.`
+        );
+        results.push({
+          success: false,
+          message: `Participante ${participant.name} já possui QR codes`,
+          participantIdx,
+        });
+        continue;
+      }
+
+      // Gera dois QR codes para o participante
+      const { qrCodes, qrRawData } =
+        await CredentialService.generateQRCodesForParticipant(
+          checkoutId,
+          participantIdx,
+          participant.name
+        );
+
+      // Gera o PDF com o nome do participante
+      const pdfPath = await generateTicketPDF(
+        { ...data, participantName: participant.name || "Participante" },
+        qrCodes
       );
-      return { success: false, message: "Participante já possui QR codes" };
-    }
+      const attachments = [
+        {
+          filename: `ingresso_${participant.name || "Participante"}.pdf`,
+          path: pdfPath,
+          contentType: "application/pdf",
+        },
+      ];
 
-    // Gera dois QR codes para o participante
-    const { qrCodes, qrRawData } =
-      await CredentialService.generateQRCodesForParticipant(
-        checkoutId,
-        participantIdx,
-        participant.name
+      // Construir o corpo do email com o template
+      const templatePath = path.join(
+        __dirname,
+        "../templates/emailTemplate.html"
       );
+      let htmlTemplate = await fs.readFile(templatePath, "utf-8");
 
-    // Gera o PDF com o nome do participante
-    const pdfPath = await generateTicketPDF(
-      { ...data, participantName: participant.name || "Participante" },
-      qrCodes
-    );
-    const attachments = [
-      {
-        filename: `ingresso_${participant.name || "Participante"}.pdf`,
-        path: pdfPath,
-        contentType: "application/pdf",
-      },
-    ];
-
-    // Construir o corpo do email com o template
-    const templatePath = path.join(
-      __dirname,
-      "../templates/emailTemplate.html"
-    );
-    let htmlTemplate = await fs.readFile(templatePath, "utf-8");
-
-    htmlTemplate = htmlTemplate
-      .replace("{{nome}}", participant.name || "Participante")
-      .replace("{{transactionId}}", data.transactionId || "N/A")
-      .replace("{{fullTickets}}", data.fullTickets || 0)
-      .replace("{{valueTicketsAll}}", data.valueTicketsAll || "0.00")
-      .replace("{{halfTickets}}", data.halfTickets || 0)
-      .replace("{{installments}}", data.installments || 1)
-      .replace("{{valueTicketsHalf}}", data.valueTicketsHalf || "0.00")
-      .replace("{{total}}", data.total || "0.00");
-
-    if (data.discount && data.coupon) {
       htmlTemplate = htmlTemplate
-        .replace("{{#if discount}}", "")
-        .replace("{{/if}}", "")
-        .replace("{{coupon}}", data.coupon)
-        .replace("{{discount}}", data.discount);
-    } else {
-      htmlTemplate = htmlTemplate.replace(
-        /{{#if discount}}[\s\S]*?{{\/if}}/g,
-        ""
+        .replace("{{nome}}", participant.name || "Participante")
+        .replace("{{transactionId}}", data.transactionId || "N/A")
+        .replace("{{fullTickets}}", data.fullTickets || 0)
+        .replace("{{valueTicketsAll}}", data.valueTicketsAll || "0.00")
+        .replace("{{halfTickets}}", data.halfTickets || 0)
+        .replace("{{installments}}", data.installments || 1)
+        .replace("{{valueTicketsHalf}}", data.valueTicketsHalf || "0.00")
+        .replace("{{total}}", data.total || "0.00");
+
+      if (data.discount && data.coupon) {
+        htmlTemplate = htmlTemplate
+          .replace("{{#if discount}}", "")
+          .replace("{{/if}}", "")
+          .replace("{{coupon}}", data.coupon)
+          .replace("{{discount}}", data.discount);
+      } else {
+        htmlTemplate = htmlTemplate.replace(
+          /{{#if discount}}[\s\S]*?{{\/if}}/g,
+          ""
+        );
+      }
+
+      // Envia o email
+      await this.sendEmail({
+        from,
+        to: participant.email,
+        subject,
+        html: htmlTemplate,
+        attachments,
+      });
+
+      await this.incrementEmailCount(1);
+      logger.info(
+        `Email de confirmação enviado para ${
+          participant.email
+        } (participante ${participantIdx}). Total enviado hoje: ${
+          stats.totalSent + results.length + 1
+        }`
       );
+
+      // Salva os QR codes no Firebase
+      await CheckoutRepository.updateParticipant(checkoutId, participantIdx, {
+        qrRawData,
+        validated: { "2025-05-31": false, "2025-06-01": false },
+      });
+
+      // Remove o PDF temporário
+      await fs
+        .unlink(pdfPath)
+        .catch((err) =>
+          console.error(`Erro ao remover ${pdfPath}: ${err.message}`)
+        );
+
+      results.push({
+        success: true,
+        message: `Email enviado com sucesso para ${participant.name}`,
+        participantIdx,
+      });
     }
 
-    // Envia o email
-    await this.sendEmail({
-      from,
-      to: participant.email,
-      subject,
-      html: htmlTemplate,
-      attachments,
-    });
-
-    await this.incrementEmailCount(1);
-    logger.info(
-      `Email de confirmação enviado para ${
-        participant.email
-      } (participante ${participantIdx}). Total enviado hoje: ${
-        stats.totalSent + 1
-      }`
-    );
-
-    // Salva os QR codes no Firebase
-    await CheckoutRepository.updateParticipant(checkoutId, participantIdx, {
-      qrRawData,
-      validated: { "2025-05-31": false, "2025-06-01": false },
-    });
-
-    // Remove o PDF temporário
-    await fs
-      .unlink(pdfPath)
-      .catch((err) =>
-        console.error(`Erro ao remover ${pdfPath}: ${err.message}`)
-      );
-
-    return { success: true, message: "Email enviado com sucesso" };
+    return results.length === 1
+      ? results[0]
+      : { success: true, message: "Emails enviados com sucesso", results };
   }
 
+  // async processAutomaticEmails(templateIds = null) {
+  //   if (this.isProcessing) {
+  //     logger.info("Processamento já em andamento, ignorando.");
+  //     return;
+  //   }
+
+  //   this.isProcessing = true;
+  //   logger.info("Processando emails automáticos...");
+
+  //   try {
+  //     const stats = await this.getEmailStats();
+  //     const templates = await this.getAllTemplates();
+  //     const filteredTemplates = templateIds
+  //       ? templates.filter((t) => t.statusFilter && templateIds.includes(t.id))
+  //       : templates.filter((t) => t.statusFilter && t.progress < 100);
+
+  //     const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  //     const batchSize = 50;
+  //     let accountIndex = 0;
+
+  //     for (const template of filteredTemplates) {
+  //       const checkouts =
+  //         await CheckoutRepository.fetchCheckoutsNeedingTemplate(template.id);
+  //       if (checkouts.length === 0) {
+  //         logger.info(`Nenhum checkout pendente para ${template.id}`);
+  //         continue;
+  //       }
+
+  //       const recipients = checkouts.map((c) => ({
+  //         email: c.participants[0].email,
+  //         checkoutId: c.id,
+  //         participantName: c.participants[0].name,
+  //         participantIndex: 0,
+  //         allParticipants:
+  //           template.statusFilter === "approved"
+  //             ? c.participants
+  //             : [c.participants[0]],
+  //       }));
+
+  //       for (let i = 0; i < recipients.length; i += batchSize) {
+  //         const batch = recipients.slice(i, i + batchSize);
+  //         const remainingEmails = stats.available - stats.totalSent;
+  //         if (batch.length > remainingEmails) {
+  //           logger.info(
+  //             `Não há emails suficientes para o batch. Restam: ${remainingEmails}`
+  //           );
+  //           break;
+  //         }
+
+  //         const account = emailAccounts[accountIndex % emailAccounts.length];
+  //         const templatePath = path.join(
+  //           __dirname,
+  //           "../templates/emailTemplateSimple.html"
+  //         );
+  //         const htmlTemplate = await fs.readFile(templatePath, "utf-8");
+
+  //         for (const recipient of batch) {
+  //           const participantsToSend = recipient.allParticipants;
+  //           for (const participant of participantsToSend) {
+  //             const currentStats = await this.getEmailStats();
+  //             if (currentStats.available <= 0) {
+  //               logger.info("Limite diário atingido durante o processamento.");
+  //               return;
+  //             }
+
+  //             let html = htmlTemplate
+  //               .replace(/{{nome}}/g, participant.name || "Participante")
+  //               .replace(/{{title}}/g, template.title || "")
+  //               .replace(/{{body}}/g, template.body || "")
+  //               .replace(/{{subject}}/g, template.subject || "");
+
+  //             let attachments = [];
+  //             if (template.includeQRCodes) {
+  //               const participantIndex =
+  //                 recipient.allParticipants.indexOf(participant);
+  //               const { qrCodes, qrRawData } =
+  //                 await CredentialService.generateQRCodesForParticipant(
+  //                   recipient.checkoutId,
+  //                   participantIndex,
+  //                   participant.name
+  //                 );
+  //               const pdfPath = await generateTicketPDF(
+  //                 {
+  //                   checkoutId: recipient.checkoutId,
+  //                   participantName: participant.name,
+  //                 },
+  //                 qrCodes
+  //               );
+  //               attachments.push({
+  //                 filename: `ingresso_${participant.name}.pdf`,
+  //                 path: pdfPath,
+  //                 contentType: "application/pdf",
+  //               });
+  //               await CheckoutRepository.updateParticipant(
+  //                 recipient.checkoutId,
+  //                 participantIndex,
+  //                 {
+  //                   qrRawData,
+  //                   validated: { "2025-05-31": false, "2025-06-01": false },
+  //                 }
+  //               );
+  //             }
+
+  //             await this.sendEmail({
+  //               from: account.user,
+  //               to: participant.email,
+  //               subject: template.subject,
+  //               html,
+  //               attachments,
+  //             });
+
+  //             template.sentCount = (template.sentCount || 0) + 1;
+  //             template.progress = Math.round(
+  //               (template.sentCount / template.totalTarget) * 100
+  //             );
+  //             await this.updateTemplate(template.id, {
+  //               sentCount: template.sentCount,
+  //               progress: template.progress,
+  //             });
+
+  //             if (attachments.length > 0) {
+  //               await fs
+  //                 .unlink(attachments[0].path)
+  //                 .catch((err) =>
+  //                   logger.error(
+  //                     `Erro ao remover ${attachments[0].path}: ${err.message}`
+  //                   )
+  //                 );
+  //             }
+  //           }
+
+  //           await CheckoutRepository.updateCheckout(recipient.checkoutId, {
+  //             pendingEmails: arrayRemove(template.id),
+  //             sentEmails: arrayUnion(template.id),
+  //           });
+  //         }
+
+  //         await delay(5000);
+  //         accountIndex++;
+  //       }
+  //     }
+  //   } catch (error) {
+  //     logger.error(`Erro ao processar emails automáticos: ${error.message}`);
+  //     throw error;
+  //   } finally {
+  //     this.isProcessing = false;
+  //     logger.info("Processamento concluído.");
+  //   }
+  // }
   async processAutomaticEmails(templateIds = null) {
     if (this.isProcessing) {
       logger.info("Processamento já em andamento, ignorando.");
@@ -392,16 +701,23 @@ class EmailService {
           continue;
         }
 
-        const recipients = checkouts.map((c) => ({
-          email: c.participants[0].email,
-          checkoutId: c.id,
-          participantName: c.participants[0].name,
-          participantIndex: 0,
-          allParticipants:
+        // Ajuste: Criar lista de destinatários considerando todos os participantes
+        const recipients = [];
+        for (const checkout of checkouts) {
+          const participantsToSend =
             template.statusFilter === "approved"
-              ? c.participants
-              : [c.participants[0]],
-        }));
+              ? checkout.participants
+              : [checkout.participants[0]];
+          participantsToSend.forEach((participant, participantIndex) => {
+            recipients.push({
+              email: participant.email,
+              checkoutId: checkout.id,
+              participantName: participant.name,
+              participantIndex,
+              allParticipants: participantsToSend,
+            });
+          });
+        }
 
         for (let i = 0; i < recipients.length; i += batchSize) {
           const batch = recipients.slice(i, i + batchSize);
@@ -421,84 +737,99 @@ class EmailService {
           const htmlTemplate = await fs.readFile(templatePath, "utf-8");
 
           for (const recipient of batch) {
-            const participantsToSend = recipient.allParticipants;
-            for (const participant of participantsToSend) {
-              const currentStats = await this.getEmailStats();
-              if (currentStats.available <= 0) {
-                logger.info("Limite diário atingido durante o processamento.");
-                return;
-              }
-
-              let html = htmlTemplate
-                .replace(/{{nome}}/g, participant.name || "Participante")
-                .replace(/{{title}}/g, template.title || "")
-                .replace(/{{body}}/g, template.body || "")
-                .replace(/{{subject}}/g, template.subject || "");
-
-              let attachments = [];
-              if (template.includeQRCodes) {
-                const participantIndex =
-                  recipient.allParticipants.indexOf(participant);
-                const { qrCodes, qrRawData } =
-                  await CredentialService.generateQRCodesForParticipant(
-                    recipient.checkoutId,
-                    participantIndex,
-                    participant.name
-                  );
-                const pdfPath = await generateTicketPDF(
-                  {
-                    checkoutId: recipient.checkoutId,
-                    participantName: participant.name,
-                  },
-                  qrCodes
-                );
-                attachments.push({
-                  filename: `ingresso_${participant.name}.pdf`,
-                  path: pdfPath,
-                  contentType: "application/pdf",
-                });
-                await CheckoutRepository.updateParticipant(
-                  recipient.checkoutId,
-                  participantIndex,
-                  {
-                    qrRawData,
-                    validated: { "2025-05-31": false, "2025-06-01": false },
-                  }
-                );
-              }
-
-              await this.sendEmail({
-                from: account.user,
-                to: participant.email,
-                subject: template.subject,
-                html,
-                attachments,
-              });
-
-              template.sentCount = (template.sentCount || 0) + 1;
-              template.progress = Math.round(
-                (template.sentCount / template.totalTarget) * 100
-              );
-              await this.updateTemplate(template.id, {
-                sentCount: template.sentCount,
-                progress: template.progress,
-              });
-
-              if (attachments.length > 0) {
-                await fs
-                  .unlink(attachments[0].path)
-                  .catch((err) =>
-                    logger.error(
-                      `Erro ao remover ${attachments[0].path}: ${err.message}`
-                    )
-                  );
-              }
+            const currentStats = await this.getEmailStats();
+            if (currentStats.available <= 0) {
+              logger.info("Limite diário atingido durante o processamento.");
+              return;
             }
 
-            await CheckoutRepository.updateCheckout(recipient.checkoutId, {
-              pendingEmails: arrayRemove(template.id),
-              sentEmails: arrayUnion(template.id),
+            const participant =
+              recipient.allParticipants[recipient.participantIndex];
+            let html = htmlTemplate
+              .replace(/{{nome}}/g, participant.name || "Participante")
+              .replace(/{{title}}/g, template.title || "")
+              .replace(/{{body}}/g, template.body || "")
+              .replace(/{{subject}}/g, template.subject || "");
+
+            let attachments = [];
+            if (template.includeQRCodes) {
+              // Verifica se o participante já tem QR codes
+              if (
+                participant.qrRawData &&
+                participant.qrRawData["2025-05-31"] &&
+                participant.qrRawData["2025-06-01"]
+              ) {
+                logger.info(
+                  `Participante ${participant.email} (índice ${recipient.participantIndex}) já possui QR codes. Ignorando envio.`
+                );
+                continue;
+              }
+
+              const { qrCodes, qrRawData } =
+                await CredentialService.generateQRCodesForParticipant(
+                  recipient.checkoutId,
+                  recipient.participantIndex,
+                  participant.name
+                );
+              const pdfPath = await generateTicketPDF(
+                {
+                  checkoutId: recipient.checkoutId,
+                  participantName: participant.name,
+                },
+                qrCodes
+              );
+              attachments.push({
+                filename: `ingresso_${participant.name}.pdf`,
+                path: pdfPath,
+                contentType: "application/pdf",
+              });
+              await CheckoutRepository.updateParticipant(
+                recipient.checkoutId,
+                recipient.participantIndex,
+                {
+                  qrRawData,
+                  validated: { "2025-05-31": false, "2025-06-01": false },
+                }
+              );
+            }
+
+            await this.sendEmail({
+              from: account.user,
+              to: participant.email,
+              subject: template.subject,
+              html,
+              attachments,
             });
+
+            template.sentCount = (template.sentCount || 0) + 1;
+            template.progress = Math.round(
+              (template.sentCount / template.totalTarget) * 100
+            );
+            await this.updateTemplate(template.id, {
+              sentCount: template.sentCount,
+              progress: template.progress,
+            });
+
+            if (attachments.length > 0) {
+              await fs
+                .unlink(attachments[0].path)
+                .catch((err) =>
+                  logger.error(
+                    `Erro ao remover ${attachments[0].path}: ${err.message}`
+                  )
+                );
+            }
+
+            // Atualiza o checkout apenas após processar todos os participantes
+            if (
+              recipient.participantIndex ===
+              recipient.allParticipants.length - 1
+            ) {
+              await CheckoutRepository.updateCheckout(recipient.checkoutId, {
+                pendingEmails: arrayRemove(template.id),
+                sentEmails: arrayUnion(template.id),
+              });
+            }
           }
 
           await delay(5000);

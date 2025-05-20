@@ -3,9 +3,12 @@ const config = require("../config"); // Ajustado para nova estrutura
 const { doc, getDoc, updateDoc } = require("firebase/firestore");
 const QRCode = require("qrcode");
 const crypto = require("crypto");
-require("dotenv").config();
+const dotenv = require("dotenv");
 
-const secret = process.env.QR_SECRET || "sua-chave-secreta";
+// Carrega variáveis de ambiente
+dotenv.config();
+
+const secret = process.env.QR_SECRET;
 const EVENT_NAME = "Congresso Autismo MA 2025";
 const EVENT_DATES = ["2025-05-31", "2025-06-01"];
 
