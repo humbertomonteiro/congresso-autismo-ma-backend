@@ -5,7 +5,7 @@ const bwipjs = require("bwip-js");
 const QRCode = require("qrcode");
 const config = require("../config");
 
-const BASE_PRICE = 499.0;
+const BASE_PRICE = 549.0;
 const HALF_PRICE = 399.0;
 
 const calculateTotal = (ticketQuantity, halfTickets, coupon) => {

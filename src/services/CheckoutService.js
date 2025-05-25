@@ -4,7 +4,7 @@ const EmailService = require("../services/EmailService"); // Adicionado
 
 class CheckoutService {
   constructor() {
-    this.basePrice = 499;
+    this.basePrice = 549;
     this.halfPrice = 399;
   }
 
@@ -215,69 +215,72 @@ class CheckoutService {
   }
 
   async verifyPaymentById(paymentId) {
-    console.log(
-      `[CheckoutService] Verificando pagamento específico: ${paymentId}`
-    );
+    // console.log(
+    //   `[CheckoutService] Verificando pagamento específico: ${paymentId}`
+    // );
 
     try {
-      const checkouts = await CheckoutRepository.getPendingCheckouts();
-      const checkout = checkouts.find((c) => c.paymentId === paymentId);
+      const statusBoleto = BancoDoBrasilService.getBoletoStatus(paymentId);
+      console.log("Status dos boletos:", statusBoleto);
 
-      if (!checkout) {
-        console.log(
-          `[CheckoutService] Checkout com paymentId ${paymentId} não encontrado ou não está pendente`
-        );
-        return { status: "not_found" };
-      }
+      // const checkouts = await CheckoutRepository.getPendingCheckouts();
+      // const checkout = checkouts.find((c) => c.paymentId === paymentId);
 
-      const { id, paymentMethod, paymentDetails } = checkout;
-      console.log(
-        `[CheckoutService] Checkout encontrado - ID: ${id}, método: ${paymentMethod}`
-      );
-      const now = new Date();
+      // if (!checkout) {
+      //   console.log(
+      //     `[CheckoutService] Checkout com paymentId ${paymentId} não encontrado ou não está pendente`
+      //   );
+      //   return { status: "not_found" };
+      // }
 
-      let isExpired = false;
-      if (paymentMethod === "pix" && paymentDetails.pix?.expirationDate) {
-        isExpired = new Date(paymentDetails.pix.expirationDate) < now;
-      } else if (
-        paymentMethod === "boleto" &&
-        paymentDetails.boleto?.dataVencimento
-      ) {
-        isExpired = new Date(paymentDetails.boleto.dataVencimento) < now;
-      }
+      // const { id, paymentMethod, paymentDetails } = checkout;
+      // console.log(
+      //   `[CheckoutService] Checkout encontrado - ID: ${id}, método: ${paymentMethod}`
+      // );
+      // const now = new Date();
 
-      if (isExpired) {
-        console.log(
-          `[CheckoutService] Checkout ${id} (${paymentMethod}) expirado`
-        );
-        await CheckoutRepository.updateCheckoutStatus(id, "error", null);
-        await CheckoutRepository.resetAndUpdatePendingEmails(id, "error"); // Adicionado aqui
-        return { status: "error" };
-      }
+      // let isExpired = false;
+      // if (paymentMethod === "pix" && paymentDetails.pix?.expirationDate) {
+      //   isExpired = new Date(paymentDetails.pix.expirationDate) < now;
+      // } else if (
+      //   paymentMethod === "boleto" &&
+      //   paymentDetails.boleto?.dataVencimento
+      // ) {
+      //   isExpired = new Date(paymentDetails.boleto.dataVencimento) < now;
+      // }
 
-      let newStatus;
-      if (paymentMethod === "pix") {
-        newStatus = await BancoDoBrasilService.getPixStatus(paymentId);
-      } else if (paymentMethod === "boleto") {
-        const boletoNumber = paymentId;
-        console.log(`[CheckoutService] Usando boletoNumber: ${boletoNumber}`);
-        newStatus = await BancoDoBrasilService.getBoletoStatus(boletoNumber);
-      } else {
-        throw new Error(`Método de pagamento desconhecido: ${paymentMethod}`);
-      }
+      // if (isExpired) {
+      //   console.log(
+      //     `[CheckoutService] Checkout ${id} (${paymentMethod}) expirado`
+      //   );
+      //   await CheckoutRepository.updateCheckoutStatus(id, "error", null);
+      //   await CheckoutRepository.resetAndUpdatePendingEmails(id, "error"); // Adicionado aqui
+      //   return { status: "error" };
+      // }
 
-      console.log(
-        `[CheckoutService] Status do checkout ${id} (${paymentMethod}): ${newStatus}`
-      );
-      await CheckoutRepository.updateCheckoutStatus(
-        id,
-        newStatus,
-        newStatus === "approved"
-          ? EmailService.sendEmailConfirmationPayment
-          : null
-      );
-      await CheckoutRepository.resetAndUpdatePendingEmails(id, newStatus); // Adicionado aqui
-      return { status: newStatus };
+      // let newStatus;
+      // if (paymentMethod === "pix") {
+      //   newStatus = await BancoDoBrasilService.getPixStatus(paymentId);
+      // } else if (paymentMethod === "boleto") {
+      //   const boletoNumber = paymentId;
+      //   console.log(`[CheckoutService] Usando boletoNumber: ${boletoNumber}`);
+      //   newStatus = await BancoDoBrasilService.getBoletoStatus(boletoNumber);
+      // } else {
+      //   throw new Error(`Método de pagamento desconhecido: ${paymentMethod}`);
+      // }
+
+      // console.log(
+      //   `[CheckoutService] Status do checkout ${id} (${paymentMethod}): ${newStatus}`
+      // );
+      // await CheckoutRepository.updateCheckoutStatus(
+      //   id,
+      //   newStatus,
+      //   newStatus === "approved"
+      //     ? EmailService.sendEmailConfirmationPayment
+      //     : null
+      // );
+      // await CheckoutRepository.resetAndUpdatePendingEmails(id, newStatus); // Adicionado aqui
+      // return { status: newStatus };
     } catch (error) {
       console.error(
         `[CheckoutService] Erro ao verificar pagamento ${paymentId}: ${error.message}`

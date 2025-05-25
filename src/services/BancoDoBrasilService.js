@@ -17,7 +17,7 @@ class BancoDoBrasilService {
       // pfx: fs.readFileSync(config.bancoDoBrasil.certificadoPfx),
       // passphrase: config.bancoDoBrasil.certificadoSenha,
     });
-    this.basePrice = 499;
+    this.basePrice = 549;
     this.halfPrice = 399;
   }
 
@@ -414,7 +414,11 @@ class BancoDoBrasilService {
         httpsAgent: this.agent,
       });
 
-      console.log("[BB Service] Resposta do status do boleto:", response.data);
+      console.log(
+        "[BB Service] Resposta do status do boleto:",
+        response.data.codigoEstadoTituloCobranca,
+        response.data.nomeSacadoCobranca
+      );
       const statusMap = {
         1: "pending",
         6: "approved",

@@ -12784,3 +12784,26 @@
 2025-05-20T13:23:32.401Z [INFO]: Email enviado de congressoautismoma@gmail.com para bertohf5@gmail.com. Total enviado hoje: 73
 2025-05-20T13:23:32.540Z [INFO]: Email de confirmação enviado para bertohf5@gmail.com (participante 0). Total enviado hoje: 73
 2025-05-20T13:23:32.710Z [INFO]: Updated participant 0 in checkout 5tSrV7UkC1ujbr6oaFQ9
+2025-05-25T17:47:37.455Z [INFO]: Fetched 0 active templates for status approved
+2025-05-25T17:47:37.457Z [INFO]: No active templates found for status approved in checkout 0W7DWftMhZMEXHfkUNxL
+2025-05-25T17:47:37.552Z [INFO]: Stats carregados do Firestore: totalSent=56
+2025-05-25T17:47:37.552Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=56, available=2744, availableForTemplates=2244
+2025-05-25T17:47:46.960Z [INFO]: Stats carregados do Firestore: totalSent=56
+2025-05-25T17:47:46.961Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=56, available=2744, availableForTemplates=2244
+2025-05-25T17:47:52.156Z [INFO]: Email enviado de congressoautismoma@gmail.com para bertohf5@gmail.com. Total enviado hoje: 57
+2025-05-25T17:47:52.307Z [INFO]: Email de confirmação enviado para bertohf5@gmail.com (participante 0). Total enviado hoje: 57
+2025-05-25T17:47:52.489Z [INFO]: Updated participant 0 in checkout 0W7DWftMhZMEXHfkUNxL
+2025-05-25T17:49:39.180Z [INFO]: Fetched 0 active templates for status pending
+2025-05-25T17:49:39.180Z [INFO]: No active templates found for status pending in checkout Bh50EUGUP4ubOxm9yKw3
+2025-05-25T17:56:59.509Z [INFO]: Fetched 0 active templates for status pending
+2025-05-25T17:56:59.512Z [INFO]: No active templates found for status pending in checkout Jdzkor89EsfMxtMArscq
+2025-05-25T21:00:07.564Z [INFO]: Fetched 0 active templates for status pending
+2025-05-25T21:00:07.565Z [INFO]: No active templates found for status pending in checkout Jdzkor89EsfMxtMArscq
+2025-05-25T21:01:13.764Z [INFO]: Fetched 0 active templates for status pending
+2025-05-25T21:01:13.766Z [INFO]: No active templates found for status pending in checkout Jdzkor89EsfMxtMArscq
+2025-05-25T21:03:12.686Z [INFO]: Carregados 0 templates do Firestore
+2025-05-25T21:03:12.689Z [INFO]: Stats carregados do Firestore: totalSent=78
+2025-05-25T21:03:12.690Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=78, available=2722, availableForTemplates=2222
+2025-05-25T21:06:16.564Z [INFO]: Carregados 0 templates do Firestore
+2025-05-25T21:06:16.566Z [INFO]: Stats carregados do Firestore: totalSent=78
+2025-05-25T21:06:16.567Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=78, available=2722, availableForTemplates=2222
