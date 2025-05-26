@@ -32,15 +32,32 @@ class CheckoutService {
     } else if (coupon === "desconto") {
       discount = 50;
     } else if (coupon === "maira") {
-      const allTickets = ticketQuantity - halfTickets;
+      const valueTicket = 350;
 
-      discount = allTickets * 149 + halfTickets * 49;
+      const resultDiscontAllTickets = this.basePrice - valueTicket;
+      const resultDiscontHalfTickets = this.halfPrice - valueTicket;
+
+      discount =
+        fullTickets * resultDiscontAllTickets +
+        halfTickets * resultDiscontHalfTickets;
     } else if (coupon === "vania") {
-      const allTickets = ticketQuantity - halfTickets;
+      const valueTicket = 349.9;
 
-      discount = allTickets * 149.1 + halfTickets * 49.1;
-    } else if (!halfTickets && coupon === "vivian") {
-      discount = 173.1;
+      const resultDiscontAllTickets = this.basePrice - valueTicket;
+      const resultDiscontHalfTickets = this.halfPrice - valueTicket;
+
+      discount =
+        fullTickets * resultDiscontAllTickets +
+        halfTickets * resultDiscontHalfTickets;
+    } else if (coupon === "vivian") {
+      const valueTicket = 325.9;
+
+      const resultDiscontAllTickets = this.basePrice - valueTicket;
+      const resultDiscontHalfTickets = this.halfPrice - valueTicket;
+
+      discount =
+        fullTickets * resultDiscontAllTickets +
+        halfTickets * resultDiscontHalfTickets;
     } else if (coupon === "prevenda") {
       const allTickets = ticketQuantity - halfTickets;
 

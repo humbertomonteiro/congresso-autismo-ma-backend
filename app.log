@@ -16030,3 +16030,17 @@
 2025-05-26T12:41:48.780Z [INFO]: Stats carregados do Firestore: totalSent=58
 2025-05-26T12:41:48.780Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=58, available=2742, availableForTemplates=2242
 2025-05-26T12:41:48.782Z [INFO]: Carregados 0 templates do Firestore
+2025-05-26T15:00:18.381Z [INFO]: Fetched 0 active templates for status error
+2025-05-26T15:00:18.388Z [INFO]: No active templates found for status error in checkout kD3RE9PYm7pjt3MZhLoZ
+2025-05-26T19:07:29.001Z [INFO]: Fetched 0 active templates for status approved
+2025-05-26T19:07:29.004Z [INFO]: No active templates found for status approved in checkout c73SDTJtYcspNxNrHKlm
+2025-05-26T19:07:29.110Z [INFO]: Stats carregados do Firestore: totalSent=102
+2025-05-26T19:07:29.111Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=102, available=2698, availableForTemplates=2198
+2025-05-26T19:07:36.855Z [INFO]: Stats carregados do Firestore: totalSent=102
+2025-05-26T19:07:36.856Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=102, available=2698, availableForTemplates=2198
+2025-05-26T19:07:42.991Z [INFO]: Email enviado de congressoautismoma@gmail.com para bertohf5@gmail.com. Total enviado hoje: 103
+2025-05-26T19:07:43.210Z [INFO]: Email de confirmação enviado para bertohf5@gmail.com (participante 0). Total enviado hoje: 103
+2025-05-26T19:07:43.483Z [INFO]: Updated participant 0 in checkout c73SDTJtYcspNxNrHKlm
+2025-05-26T19:26:57.760Z [INFO]: Carregados 0 templates do Firestore
+2025-05-26T19:26:57.766Z [INFO]: Stats carregados do Firestore: totalSent=104
+2025-05-26T19:26:57.766Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=104, available=2696, availableForTemplates=2196
