@@ -26,7 +26,7 @@ const calculateTotal = (ticketQuantity, halfTickets, coupon) => {
   let discount = 0;
 
   if (coupon === "grupo" && ticketQuantity >= 5) {
-    discount = (ticketQuantity - halfTickets) * 50;
+    discount = (ticketQuantity - halfTickets) * 100;
   } else if (coupon === "terapeuta") {
     discount = 50;
   } else if (coupon && coupon !== "grupo") {

@@ -26,7 +26,7 @@ class CheckoutService {
     let discount = 0;
 
     if (coupon === "grupo" && ticketQuantity >= 5) {
-      discount = (ticketQuantity - halfTickets) * 50;
+      discount = (ticketQuantity - halfTickets) * 100;
     } else if (coupon === "terapeuta") {
       discount = 50;
     } else if (coupon === "desconto") {
@@ -41,6 +41,10 @@ class CheckoutService {
       discount = allTickets * 149.1 + halfTickets * 49.1;
     } else if (!halfTickets && coupon === "vivian") {
       discount = 173.1;
+    } else if (coupon === "prevenda") {
+      const allTickets = ticketQuantity - halfTickets;
+
+      discount = allTickets * 50;
     } else if (coupon && coupon !== "grupo") {
       throw new Error("Cupom inválido.");
     }

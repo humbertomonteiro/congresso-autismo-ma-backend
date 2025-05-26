@@ -5,6 +5,7 @@ const CheckoutRepository = require("../repositories/CheckoutRepository");
 const CredentialService = require("./CredentialService");
 const fs = require("fs").promises;
 const path = require("path");
+const QRCode = require("qrcode");
 const { generateTicketPDF } = require("../utils/templateUtils");
 const {
   arrayRemove,
@@ -680,34 +681,46 @@ class EmailService {
     }
 
     this.isProcessing = true;
-    logger.info("Processando emails automáticos...");
+    logger.info("Iniciando processamento de e-mails automáticos");
 
     try {
       const stats = await this.getEmailStats();
+      logger.info(`Estatísticas de e-mail: ${JSON.stringify(stats)}`);
       const templates = await this.getAllTemplates();
+      logger.info(`Total de templates carregados: ${templates.length}`);
       const filteredTemplates = templateIds
         ? templates.filter((t) => t.statusFilter && templateIds.includes(t.id))
         : templates.filter((t) => t.statusFilter && t.progress < 100);
+      logger.info(
+        `Templates a processar: ${filteredTemplates
+          .map((t) => t.id)
+          .join(", ")}`
+      );
 
       const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
       const batchSize = 50;
       let accountIndex = 0;
 
       for (const template of filteredTemplates) {
+        logger.info(
+          `Processando template ${template.id} com statusFilter ${template.statusFilter}, includeQRCodes: ${template.includeQRCodes}`
+        );
         const checkouts =
           await CheckoutRepository.fetchCheckoutsNeedingTemplate(template.id);
+        logger.info(
+          `Checkouts pendentes para template ${template.id}: ${checkouts.length}`
+        );
         if (checkouts.length === 0) {
           logger.info(`Nenhum checkout pendente para ${template.id}`);
           continue;
         }
 
-        // Ajuste: Criar lista de destinatários considerando todos os participantes
         const recipients = [];
         for (const checkout of checkouts) {
-          const participantsToSend =
-            template.statusFilter === "approved"
-              ? checkout.participants
-              : [checkout.participants[0]];
+          const participantsToSend = checkout.participants;
+          logger.info(
+            `Checkout ${checkout.id} tem ${participantsToSend.length} participantes para enviar`
+          );
           participantsToSend.forEach((participant, participantIndex) => {
             recipients.push({
               email: participant.email,
@@ -718,33 +731,44 @@ class EmailService {
             });
           });
         }
+        logger.info(
+          `Total de destinatários para template ${template.id}: ${recipients.length}`
+        );
 
         for (let i = 0; i < recipients.length; i += batchSize) {
           const batch = recipients.slice(i, i + batchSize);
-          const remainingEmails = stats.available - stats.totalSent;
+          logger.info(`Processando lote de ${batch.length} destinatários`);
+          const currentStats = await this.getEmailStats();
+          const remainingEmails = currentStats.available;
           if (batch.length > remainingEmails) {
-            logger.info(
-              `Não há emails suficientes para o batch. Restam: ${remainingEmails}`
+            logger.error(
+              `Não há e-mails suficientes para o lote. Restam: ${remainingEmails}`
             );
             break;
           }
 
           const account = emailAccounts[accountIndex % emailAccounts.length];
+          logger.info(`Usando conta de e-mail: ${account.user}`);
           const templatePath = path.join(
             __dirname,
             "../templates/emailTemplateSimple.html"
           );
           const htmlTemplate = await fs.readFile(templatePath, "utf-8");
+          logger.info(`Template HTML carregado de: ${templatePath}`);
 
           for (const recipient of batch) {
-            const currentStats = await this.getEmailStats();
+            logger.info(`Estatísticas atuais: ${JSON.stringify(currentStats)}`);
             if (currentStats.available <= 0) {
-              logger.info("Limite diário atingido durante o processamento.");
+              logger.error("Limite diário atingido durante o processamento");
               return;
             }
 
             const participant =
               recipient.allParticipants[recipient.participantIndex];
+            logger.info(
+              `Processando e-mail para ${participant.email} (índice ${recipient.participantIndex})`
+            );
+
             let html = htmlTemplate
               .replace(/{{nome}}/g, participant.name || "Participante")
               .replace(/{{title}}/g, template.title || "")
@@ -753,53 +777,112 @@ class EmailService {
 
             let attachments = [];
             if (template.includeQRCodes) {
-              // Verifica se o participante já tem QR codes
+              logger.info(`Preparando QR codes para ${participant.email}`);
+              let qrCodesData = [];
+
               if (
                 participant.qrRawData &&
                 participant.qrRawData["2025-05-31"] &&
                 participant.qrRawData["2025-06-01"]
               ) {
                 logger.info(
-                  `Participante ${participant.email} (índice ${recipient.participantIndex}) já possui QR codes. Ignorando envio.`
+                  `Usando QR codes existentes para ${participant.email}`
                 );
-                continue;
+
+                try {
+                  const qrCode1 = await QRCode.toDataURL(
+                    participant.qrRawData["2025-05-31"]
+                  );
+                  const qrCode2 = await QRCode.toDataURL(
+                    participant.qrRawData["2025-06-01"]
+                  );
+                  qrCodesData = [qrCode1, qrCode2];
+                  logger.info(
+                    `QR codes convertidos para imagens: ${participant.email}`
+                  );
+                } catch (error) {
+                  logger.error(
+                    `Erro ao gerar QR codes a partir dos dados existentes: ${error.message}`
+                  );
+                  throw error;
+                }
+                // qrCodesData = [
+                //   participant.qrRawData["2025-05-31"],
+                //   participant.qrRawData["2025-06-01"],
+                // ];
+                // logger.info(
+                //   `Dados de QR Code preparados para ${participant.email}`
+                // );
+              } else {
+                logger.info(`Gerando novos QR codes para ${participant.email}`);
+                try {
+                  const result =
+                    await CredentialService.generateQRCodesForParticipant(
+                      recipient.checkoutId,
+                      recipient.participantIndex,
+                      participant.name
+                    );
+                  qrCodesData = [
+                    result.qrCodes[0], // Usar as imagens geradas diretamente
+                    result.qrCodes[1],
+                  ];
+                  await CheckoutRepository.updateParticipant(
+                    recipient.checkoutId,
+                    recipient.participantIndex,
+                    {
+                      qrRawData: result.qrRawData,
+                      validated: { "2025-05-31": false, "2025-06-01": false },
+                    }
+                  );
+                } catch (error) {
+                  logger.error(`Erro ao gerar QR codes: ${error.message}`);
+                  throw error;
+                }
               }
 
-              const { qrCodes, qrRawData } =
-                await CredentialService.generateQRCodesForParticipant(
-                  recipient.checkoutId,
-                  recipient.participantIndex,
-                  participant.name
+              try {
+                const safeParticipantName = (
+                  participant.name || "Participante"
+                ).replace(/\s/g, "_");
+                logger.info(
+                  `Gerando PDF para ${participant.email} com ${qrCodesData.length} QR codes`
                 );
-              const pdfPath = await generateTicketPDF(
-                {
-                  checkoutId: recipient.checkoutId,
-                  participantName: participant.name,
-                },
-                qrCodes
-              );
-              attachments.push({
-                filename: `ingresso_${participant.name}.pdf`,
-                path: pdfPath,
-                contentType: "application/pdf",
-              });
-              await CheckoutRepository.updateParticipant(
-                recipient.checkoutId,
-                recipient.participantIndex,
-                {
-                  qrRawData,
-                  validated: { "2025-05-31": false, "2025-06-01": false },
-                }
-              );
+                const pdfPath = await generateTicketPDF(
+                  {
+                    checkoutId: recipient.checkoutId,
+                    participantName: safeParticipantName,
+                  },
+                  qrCodesData
+                );
+                logger.info(`PDF gerado em: ${pdfPath}`);
+                attachments.push({
+                  filename: `ingresso_${safeParticipantName}.pdf`,
+                  path: pdfPath,
+                  contentType: "application/pdf",
+                });
+              } catch (error) {
+                logger.error(
+                  `Erro ao gerar PDF para ${participant.email}: ${error.message}`
+                );
+                throw error;
+              }
             }
 
-            await this.sendEmail({
-              from: account.user,
-              to: participant.email,
-              subject: template.subject,
-              html,
-              attachments,
-            });
+            try {
+              await this.sendEmail({
+                from: account.user,
+                to: participant.email,
+                subject: template.subject,
+                html,
+                attachments,
+              });
+              logger.info(`E-mail enviado para ${participant.email}`);
+            } catch (error) {
+              logger.error(
+                `Erro ao enviar e-mail para ${participant.email}: ${error.message}`
+              );
+              throw error;
+            }
 
             template.sentCount = (template.sentCount || 0) + 1;
             template.progress = Math.round(
@@ -809,6 +892,9 @@ class EmailService {
               sentCount: template.sentCount,
               progress: template.progress,
             });
+            logger.info(
+              `Template ${template.id} atualizado: sentCount=${template.sentCount}, progress=${template.progress}`
+            );
 
             if (attachments.length > 0) {
               await fs
@@ -818,9 +904,9 @@ class EmailService {
                     `Erro ao remover ${attachments[0].path}: ${err.message}`
                   )
                 );
+              logger.info(`PDF temporário removido: ${attachments[0].path}`);
             }
 
-            // Atualiza o checkout apenas após processar todos os participantes
             if (
               recipient.participantIndex ===
               recipient.allParticipants.length - 1
@@ -829,19 +915,23 @@ class EmailService {
                 pendingEmails: arrayRemove(template.id),
                 sentEmails: arrayUnion(template.id),
               });
+              logger.info(
+                `Checkout ${recipient.checkoutId} atualizado: template ${template.id} movido de pendingEmails para sentEmails`
+              );
             }
           }
 
           await delay(5000);
+          logger.info(`Aguardando 5 segundos antes do próximo lote`);
           accountIndex++;
         }
       }
     } catch (error) {
-      logger.error(`Erro ao processar emails automáticos: ${error.message}`);
+      logger.error(`Erro ao processar e-mails automáticos: ${error.message}`);
       throw error;
     } finally {
       this.isProcessing = false;
-      logger.info("Processamento concluído.");
+      logger.info("Processamento de e-mails automáticos concluído");
     }
   }
 }
