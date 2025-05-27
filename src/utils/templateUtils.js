@@ -109,7 +109,8 @@ const generateBoletoPDF = async (
   ticketQuantity,
   halfTickets,
   coupon,
-  participants
+  participants,
+  dataVencimento
 ) => {
   const calculation = calculateTotal(ticketQuantity, halfTickets, coupon);
   const fullTickets = ticketQuantity - halfTickets;
@@ -184,10 +185,11 @@ const generateBoletoPDF = async (
       }`
     )
     .replace(/{{NUMERO_BOLETO}}/g, response.numero || "Não disponível")
-    .replace(
-      /{{DATA_VENCIMENTO}}/g,
-      formatDate(new Date(Date.now() + 1 * 24 * 60 * 60 * 1000))
-    )
+    // .replace(
+    //   /{{DATA_VENCIMENTO}}/g,
+    //   formatDate(new Date(Date.now() + 1 * 24 * 60 * 60 * 1000))
+    // )
+    .replace(/{{DATA_VENCIMENTO}}/g, formatDate(new Date(dataVencimento)))
     .replace(/{{DATA_EMISSAO}}/g, formatDate(new Date()))
     .replace(/{{DATA_PROCESSAMENTO}}/g, new Date().toLocaleDateString("pt-BR"))
     .replace(/{{VALOR}}/g, calculation.total)

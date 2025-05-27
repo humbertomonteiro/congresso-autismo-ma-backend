@@ -236,7 +236,8 @@ class BancoDoBrasilService {
         ),
         codigoModalidade: 1,
         dataEmissao: this.formatDate(today),
-        dataVencimento: this.formatDate(addDays(today, 1)),
+        // dataVencimento: this.formatDate(addDays(today, 1)),
+        dataVencimento: this.formatDate(today),
         valorOriginal: (amount / 100).toFixed(2),
         valorAbatimento: 0,
         indicadorAceiteTituloVencido: "N",
@@ -285,7 +286,7 @@ class BancoDoBrasilService {
         halfTickets,
         coupon,
         participants,
-        CheckoutService
+        today
       );
 
       const totals = this.calculateTotal(ticketQuantity, halfTickets, coupon);
@@ -312,7 +313,8 @@ class BancoDoBrasilService {
             qrCodePix: boletoResponse.qrCode?.url,
             address: payer,
             pdfFilePath: boletoFilePath,
-            dataVencimento: addDays(today, 1).toISOString(),
+            dataVencimento: today.toISOString(),
+            // dataVencimento: addDays(today, 1).toISOString(),
           },
         },
         document: customer.Identity || "",
@@ -333,7 +335,8 @@ class BancoDoBrasilService {
         qrCodePix: boletoResponse.qrCode?.url,
         numeroBoleto: boletoResponse.numero,
         boletoFile: boletoFilePath,
-        dataVencimento: addDays(today, 1).toISOString(),
+        dataVencimento: today.toISOString(),
+        // dataVencimento: addDays(today, 1).toISOString(),
       };
     } catch (error) {
       console.error(
@@ -374,7 +377,8 @@ class BancoDoBrasilService {
                 qrCodePix: boletoResponse.qrCode?.url,
                 address: payer,
                 pdfFilePath: null,
-                dataVencimento: addDays(today, 1).toISOString(),
+                dataVencimento: today.toISOString(),
+                // dataVencimento: addDays(today, 1).toISOString(),
               }
             : null,
         },

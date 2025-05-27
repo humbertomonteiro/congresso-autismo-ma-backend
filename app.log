@@ -16044,3 +16044,15 @@
 2025-05-26T19:26:57.760Z [INFO]: Carregados 0 templates do Firestore
 2025-05-26T19:26:57.766Z [INFO]: Stats carregados do Firestore: totalSent=104
 2025-05-26T19:26:57.766Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=104, available=2696, availableForTemplates=2196
+2025-05-27T16:57:19.859Z [INFO]: Fetched 0 active templates for status pending
+2025-05-27T16:57:19.862Z [INFO]: No active templates found for status pending in checkout jionSkzIWeH7rWCR6avp
+2025-05-27T17:03:42.735Z [INFO]: Fetched 0 active templates for status pending
+2025-05-27T17:03:42.740Z [INFO]: No active templates found for status pending in checkout Ubo62waBtqgbsFo5exL9
+2025-05-27T17:06:49.705Z [INFO]: Fetched 0 active templates for status pending
+2025-05-27T17:06:49.708Z [INFO]: No active templates found for status pending in checkout iY9pVoQJIJPeWGQxUgv1
+2025-05-27T17:07:24.594Z [INFO]: Fetched 0 active templates for status error
+2025-05-27T17:07:24.595Z [INFO]: No active templates found for status error in checkout Ubo62waBtqgbsFo5exL9
+2025-05-27T17:07:28.675Z [INFO]: Fetched 0 active templates for status error
+2025-05-27T17:07:28.676Z [INFO]: No active templates found for status error in checkout iY9pVoQJIJPeWGQxUgv1
+2025-05-27T17:07:29.648Z [INFO]: Fetched 0 active templates for status error
+2025-05-27T17:07:29.649Z [INFO]: No active templates found for status error in checkout jionSkzIWeH7rWCR6avp
