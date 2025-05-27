@@ -21,8 +21,21 @@ class BancoDoBrasilService {
     this.halfPrice = 399;
   }
 
+  // formatDate(date) {
+  //   return format(date, "dd.MM.yyyy");
+  // }
+
   formatDate(date) {
-    return format(date, "dd.MM.yyyy");
+    if (!(date instanceof Date) || isNaN(date)) {
+      console.warn(
+        "Data inválida fornecida para formatDate, usando data atual."
+      );
+      date = toZonedTime(new Date(), "America/Sao_Paulo");
+    }
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}.${month}.${year}`;
   }
 
   calculateTotal(ticketQuantity, halfTickets, coupon) {
@@ -223,10 +236,21 @@ class BancoDoBrasilService {
       const numeroTituloCliente = `000${config.bancoDoBrasil.numeroConvenio}${numeroControle}`;
       const cepSemHifen = payer.zipCode.replace(/[^0-9]/g, "");
 
-      const now = new Date();
-      const today = toZonedTime(now, "America/Sao_Paulo");
+      // const now = new Date();
+      // const today = toZonedTime(now, "America/Sao_Paulo");
+      const now = toZonedTime(new Date(), "America/Sao_Paulo");
+      const today = now;
       const cleanIdentity = customer.Identity.replace(/\D/g, "");
       const tipoInscricao = cleanIdentity.length === 11 ? 1 : 2;
+
+      // Verificar horário para definir a data de vencimento
+      const hour = today.getHours();
+      const dataVencimento = hour >= 21 ? addDays(today, 1) : today;
+      console.log(
+        `[BancoDoBrasilService] Data de vencimento: ${this.formatDate(
+          dataVencimento
+        )}, Horário atual: ${hour}:00`
+      );
 
       const payload = {
         numeroConvenio: parseInt(config.bancoDoBrasil.numeroConvenio),
@@ -237,7 +261,7 @@ class BancoDoBrasilService {
         codigoModalidade: 1,
         dataEmissao: this.formatDate(today),
         // dataVencimento: this.formatDate(addDays(today, 1)),
-        dataVencimento: this.formatDate(today),
+        dataVencimento: this.formatDate(dataVencimento),
         valorOriginal: (amount / 100).toFixed(2),
         valorAbatimento: 0,
         indicadorAceiteTituloVencido: "N",
@@ -286,14 +310,16 @@ class BancoDoBrasilService {
         halfTickets,
         coupon,
         participants,
-        today
+        dataVencimento
       );
 
       const totals = this.calculateTotal(ticketQuantity, halfTickets, coupon);
 
       const checkoutData = {
         transactionId: numeroTituloCliente,
-        timestamp: today.toISOString(),
+        timestamp: format(today, "yyyy-MM-dd'T'HH:mm:ssXXX", {
+          timeZone: "America/Sao_Paulo",
+        }),
         status: "pending",
         paymentMethod: "boleto",
         totalAmount: totals.total,
@@ -313,7 +339,7 @@ class BancoDoBrasilService {
             qrCodePix: boletoResponse.qrCode?.url,
             address: payer,
             pdfFilePath: boletoFilePath,
-            dataVencimento: today.toISOString(),
+            dataVencimento: this.formatDate(dataVencimento),
             // dataVencimento: addDays(today, 1).toISOString(),
           },
         },
@@ -335,7 +361,7 @@ class BancoDoBrasilService {
         qrCodePix: boletoResponse.qrCode?.url,
         numeroBoleto: boletoResponse.numero,
         boletoFile: boletoFilePath,
-        dataVencimento: today.toISOString(),
+        dataVencimento: this.formatDate(dataVencimento),
         // dataVencimento: addDays(today, 1).toISOString(),
       };
     } catch (error) {
@@ -347,7 +373,9 @@ class BancoDoBrasilService {
       const totals = this.calculateTotal(ticketQuantity, halfTickets, coupon);
       const errorCheckoutData = {
         transactionId: numeroTituloCliente || `ORDER_${Date.now()}`,
-        timestamp: today.toISOString(),
+        timestamp: format(today, "yyyy-MM-dd'T'HH:mm:ssXXX", {
+          timeZone: "America/Sao_Paulo",
+        }),
         status: "error",
         paymentMethod: "boleto",
         totalAmount: totals?.total || "0.00",
@@ -377,7 +405,7 @@ class BancoDoBrasilService {
                 qrCodePix: boletoResponse.qrCode?.url,
                 address: payer,
                 pdfFilePath: null,
-                dataVencimento: today.toISOString(),
+                dataVencimento: this.formatDate(dataVencimento),
                 // dataVencimento: addDays(today, 1).toISOString(),
               }
             : null,

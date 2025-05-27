@@ -1,6 +1,8 @@
 const CheckoutRepository = require("../repositories/CheckoutRepository");
 const BancoDoBrasilService = require("./BancoDoBrasilService");
 const EmailService = require("../services/EmailService"); // Adicionado
+const { toZonedTime, format } = require("date-fns-tz");
+const { startOfDay, endOfDay } = require("date-fns");
 
 class CheckoutService {
   constructor() {
@@ -167,7 +169,8 @@ class CheckoutService {
         console.log(
           `[CheckoutService] Processando checkout ${id} - paymentId: ${paymentId}, método: ${paymentMethod}`
         );
-        const now = new Date();
+        // const now = new Date();
+        const now = toZonedTime(new Date(), "America/Sao_Paulo");
 
         let isExpired = false;
         if (paymentMethod === "pix" && paymentDetails.pix?.expirationDate) {
@@ -176,7 +179,18 @@ class CheckoutService {
           paymentMethod === "boleto" &&
           paymentDetails.boleto?.dataVencimento
         ) {
-          isExpired = new Date(paymentDetails.boleto.dataVencimento) < now;
+          const vencimento = parse(
+            paymentDetails.boleto.dataVencimento,
+            "dd.MM.yyyy",
+            new Date(),
+            { timeZone: "America/Sao_Paulo" }
+          );
+          const vencimentoEndOfDay = endOfDay(vencimento);
+          isExpired = vencimentoEndOfDay < now;
+          console.log(
+            `[CheckoutService] Boleto ${id}: dataVencimento=${paymentDetails.boleto.dataVencimento}, vencimento=${vencimento}, vencimentoEndOfDay=${vencimentoEndOfDay}, now=${now}, isExpired=${isExpired}`
+          );
+          // isExpired = new Date(paymentDetails.boleto.dataVencimento) < now;
         }
 
         if (isExpired) {
