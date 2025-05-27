@@ -61,9 +61,16 @@ class CheckoutService {
         fullTickets * resultDiscontAllTickets +
         halfTickets * resultDiscontHalfTickets;
     } else if (coupon === "prevenda") {
-      const allTickets = ticketQuantity - halfTickets;
+      discount = fullTickets * 50;
+    } else if (coupon === "grupounico") {
+      const valueTicket = 449;
 
-      discount = allTickets * 50;
+      const resultDiscontAllTickets = this.basePrice - valueTicket;
+      const resultDiscontHalfTickets = this.halfPrice - valueTicket;
+
+      discount =
+        fullTickets * resultDiscontAllTickets +
+        halfTickets * resultDiscontHalfTickets;
     } else if (coupon && coupon !== "grupo") {
       throw new Error("Cupom inválido.");
     }
