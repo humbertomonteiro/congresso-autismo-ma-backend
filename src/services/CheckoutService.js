@@ -1,7 +1,7 @@
 const CheckoutRepository = require("../repositories/CheckoutRepository");
 const BancoDoBrasilService = require("./BancoDoBrasilService");
 const EmailService = require("../services/EmailService"); // Adicionado
-const { toZonedTime, format } = require("date-fns-tz");
+const { toZonedTime, format, parse } = require("date-fns-tz");
 const { startOfDay, endOfDay } = require("date-fns");
 
 class CheckoutService {
