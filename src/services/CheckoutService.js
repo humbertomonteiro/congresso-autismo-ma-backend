@@ -10,6 +10,17 @@ class CheckoutService {
     this.halfPrice = 399;
   }
 
+  calculateDiscount(fullTickets, halfTickets, valueTicket) {
+    const resultDiscontAllTickets = this.basePrice - valueTicket;
+    const resultDiscontHalfTickets = this.halfPrice - valueTicket;
+
+    const discount =
+      fullTickets * resultDiscontAllTickets +
+      halfTickets * resultDiscontHalfTickets;
+
+    return discount;
+  }
+
   calculateTotal(ticketQuantity, halfTickets, coupon) {
     if (!Number.isInteger(ticketQuantity) || ticketQuantity <= 0) {
       throw new Error("Quantidade de ingressos inválida.");
@@ -28,56 +39,23 @@ class CheckoutService {
     let discount = 0;
 
     if (coupon === "grupo" && ticketQuantity >= 5) {
-      const valueTicket = 649;
-
-      const resultDiscontAllTickets = this.basePrice - valueTicket;
-      const resultDiscontHalfTickets = this.halfPrice - valueTicket;
-
-      discount =
-        fullTickets * resultDiscontAllTickets +
-        halfTickets * resultDiscontHalfTickets;
+      discount = this.calculateDiscount(fullTickets, halfTickets, 649);
+    } else if (coupon === "grupo2") {
+      discount = this.calculateDiscount(fullTickets, halfTickets, 699);
     } else if (coupon === "terapeuta") {
       discount = 50;
     } else if (coupon === "desconto") {
       discount = 50;
     } else if (coupon === "maira") {
-      const valueTicket = 350;
-
-      const resultDiscontAllTickets = this.basePrice - valueTicket;
-      const resultDiscontHalfTickets = this.halfPrice - valueTicket;
-
-      discount =
-        fullTickets * resultDiscontAllTickets +
-        halfTickets * resultDiscontHalfTickets;
+      discount = this.calculateDiscount(fullTickets, halfTickets, 350);
     } else if (coupon === "vania") {
-      const valueTicket = 349.9;
-
-      const resultDiscontAllTickets = this.basePrice - valueTicket;
-      const resultDiscontHalfTickets = this.halfPrice - valueTicket;
-
-      discount =
-        fullTickets * resultDiscontAllTickets +
-        halfTickets * resultDiscontHalfTickets;
+      discount = this.calculateDiscount(fullTickets, halfTickets, 349.9);
     } else if (coupon === "vivian") {
-      const valueTicket = 325.9;
-
-      const resultDiscontAllTickets = this.basePrice - valueTicket;
-      const resultDiscontHalfTickets = this.halfPrice - valueTicket;
-
-      discount =
-        fullTickets * resultDiscontAllTickets +
-        halfTickets * resultDiscontHalfTickets;
+      discount = this.calculateDiscount(fullTickets, halfTickets, 325.9);
     } else if (coupon === "prevenda") {
       discount = fullTickets * 50;
     } else if (coupon === "grupounico") {
-      const valueTicket = 449;
-
-      const resultDiscontAllTickets = this.basePrice - valueTicket;
-      const resultDiscontHalfTickets = this.halfPrice - valueTicket;
-
-      discount =
-        fullTickets * resultDiscontAllTickets +
-        halfTickets * resultDiscontHalfTickets;
+      discount = this.calculateDiscount(fullTickets, halfTickets, 449);
     } else if (coupon && coupon !== "grupo") {
       throw new Error("Cupom inválido.");
     }
