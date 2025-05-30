@@ -17,7 +17,7 @@ class BancoDoBrasilService {
       // pfx: fs.readFileSync(config.bancoDoBrasil.certificadoPfx),
       // passphrase: config.bancoDoBrasil.certificadoSenha,
     });
-    this.basePrice = 549;
+    this.basePrice = 798;
     this.halfPrice = 399;
   }
 
@@ -56,7 +56,14 @@ class BancoDoBrasilService {
     let discount = 0;
 
     if (coupon === "grupo" && ticketQuantity >= 5) {
-      discount = (ticketQuantity - halfTickets) * 100;
+      const valueTicket = 649;
+
+      const resultDiscontAllTickets = this.basePrice - valueTicket;
+      const resultDiscontHalfTickets = this.halfPrice - valueTicket;
+
+      discount =
+        fullTickets * resultDiscontAllTickets +
+        halfTickets * resultDiscontHalfTickets;
     } else if (coupon === "terapeuta") {
       discount = 50;
     } else if (coupon && coupon !== "grupo") {

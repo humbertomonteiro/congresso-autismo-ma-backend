@@ -16058,3 +16058,330 @@
 2025-05-27T17:07:29.649Z [INFO]: No active templates found for status error in checkout jionSkzIWeH7rWCR6avp
 2025-05-27T18:13:34.690Z [INFO]: Fetched 0 active templates for status pending
 2025-05-27T18:13:34.694Z [INFO]: No active templates found for status pending in checkout FTaKBmtB547qnExSm4So
+2025-05-28T20:16:55.572Z [INFO]: Iniciando envio de emails de teste para checkouts com status 'test'
+2025-05-28T20:16:56.087Z [INFO]: Stats carregados do Firestore: totalSent=104
+2025-05-28T20:16:56.088Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=104, available=2696, availableForTemplates=2196
+2025-05-28T20:16:56.088Z [INFO]: Estatísticas de email: {"totalSent":104,"available":2696,"availableForTemplates":2196}
+2025-05-28T20:16:56.212Z [INFO]: Checkouts com status 'test' encontrados: 8
+2025-05-28T20:16:56.216Z [INFO]: Template carregado: D:\humberto\projetos_react\landing-pages\cuidar-mais\backend\src\templates\eventEmailTemplate.html
+2025-05-28T20:16:56.219Z [INFO]: Imagem do cronograma carregada: D:\humberto\projetos_react\landing-pages\cuidar-mais\backend\src\templates\assets\image.png
+2025-05-28T20:16:56.219Z [INFO]: Total de destinatários: 8
+2025-05-28T20:16:56.220Z [INFO]: Processando lote de 8 destinatários
+2025-05-28T20:16:56.328Z [INFO]: Stats carregados do Firestore: totalSent=104
+2025-05-28T20:16:56.329Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=104, available=2696, availableForTemplates=2196
+2025-05-28T20:16:56.330Z [INFO]: Usando conta de email: congressoautismoma@gmail.com
+2025-05-28T20:16:56.331Z [INFO]: Processando email para bertohf5@gmail.com (índice 0)
+2025-05-28T20:16:56.331Z [INFO]: Gerando novos QR codes para bertohf5@gmail.com
+2025-05-28T20:16:56.923Z [INFO]: Updated participant 0 in checkout 5M1FVThWeWFQst5D8TsB
+2025-05-28T20:16:56.924Z [INFO]: Novos QR codes salvos para bertohf5@gmail.com
+2025-05-28T20:16:56.995Z [INFO]: Stats carregados do Firestore: totalSent=104
+2025-05-28T20:16:56.996Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=104, available=2696, availableForTemplates=2196
+2025-05-28T20:17:06.698Z [INFO]: Email enviado de congressoautismoma@gmail.com para bertohf5@gmail.com. Total enviado hoje: 105
+2025-05-28T20:17:06.699Z [INFO]: Email enviado para bertohf5@gmail.com
+2025-05-28T20:17:06.852Z [INFO]: Updated participant 0 in checkout 5M1FVThWeWFQst5D8TsB
+2025-05-28T20:17:06.853Z [INFO]: Participante bertohf5@gmail.com atualizado com emailSent: true
+2025-05-28T20:17:06.995Z [INFO]: Processando email para bertohf5@gmail.com (índice 0)
+2025-05-28T20:17:06.995Z [INFO]: Gerando novos QR codes para bertohf5@gmail.com
+2025-05-28T20:17:07.440Z [INFO]: Updated participant 0 in checkout FTaKBmtB547qnExSm4So
+2025-05-28T20:17:07.441Z [INFO]: Novos QR codes salvos para bertohf5@gmail.com
+2025-05-28T20:17:07.516Z [INFO]: Stats carregados do Firestore: totalSent=106
+2025-05-28T20:17:07.517Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=106, available=2694, availableForTemplates=2194
+2025-05-28T20:17:16.299Z [INFO]: Email enviado de congressoautismoma@gmail.com para bertohf5@gmail.com. Total enviado hoje: 107
+2025-05-28T20:17:16.299Z [INFO]: Email enviado para bertohf5@gmail.com
+2025-05-28T20:17:16.463Z [INFO]: Updated participant 0 in checkout FTaKBmtB547qnExSm4So
+2025-05-28T20:17:16.463Z [INFO]: Participante bertohf5@gmail.com atualizado com emailSent: true
+2025-05-28T20:17:16.605Z [INFO]: Processando email para bertohf5@gmail.com (índice 0)
+2025-05-28T20:17:16.605Z [INFO]: Gerando novos QR codes para bertohf5@gmail.com
+2025-05-28T20:17:16.954Z [INFO]: Updated participant 0 in checkout IF4QYme6B9gTQe6ZKi0N
+2025-05-28T20:17:16.954Z [INFO]: Novos QR codes salvos para bertohf5@gmail.com
+2025-05-28T20:17:17.025Z [INFO]: Stats carregados do Firestore: totalSent=108
+2025-05-28T20:17:17.026Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=108, available=2692, availableForTemplates=2192
+2025-05-28T20:17:26.044Z [INFO]: Email enviado de congressoautismoma@gmail.com para bertohf5@gmail.com. Total enviado hoje: 109
+2025-05-28T20:17:26.045Z [INFO]: Email enviado para bertohf5@gmail.com
+2025-05-28T20:17:26.205Z [INFO]: Updated participant 0 in checkout IF4QYme6B9gTQe6ZKi0N
+2025-05-28T20:17:26.205Z [INFO]: Participante bertohf5@gmail.com atualizado com emailSent: true
+2025-05-28T20:17:26.330Z [INFO]: Processando email para bertohf5@gmail.com (índice 0)
+2025-05-28T20:17:26.331Z [INFO]: Gerando novos QR codes para bertohf5@gmail.com
+2025-05-28T20:17:26.685Z [INFO]: Updated participant 0 in checkout Ubo62waBtqgbsFo5exL9
+2025-05-28T20:17:26.685Z [INFO]: Novos QR codes salvos para bertohf5@gmail.com
+2025-05-28T20:17:26.750Z [INFO]: Stats carregados do Firestore: totalSent=110
+2025-05-28T20:17:26.750Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=110, available=2690, availableForTemplates=2190
+2025-05-28T20:17:35.819Z [INFO]: Email enviado de congressoautismoma@gmail.com para bertohf5@gmail.com. Total enviado hoje: 111
+2025-05-28T20:17:35.820Z [INFO]: Email enviado para bertohf5@gmail.com
+2025-05-28T20:17:35.965Z [INFO]: Updated participant 0 in checkout Ubo62waBtqgbsFo5exL9
+2025-05-28T20:17:35.965Z [INFO]: Participante bertohf5@gmail.com atualizado com emailSent: true
+2025-05-28T20:17:36.108Z [INFO]: Processando email para bertohf5@gmail.com (índice 0)
+2025-05-28T20:17:36.109Z [INFO]: Gerando novos QR codes para bertohf5@gmail.com
+2025-05-28T20:17:36.465Z [INFO]: Updated participant 0 in checkout WnfQ42l4GKor3tmI2pRt
+2025-05-28T20:17:36.465Z [INFO]: Novos QR codes salvos para bertohf5@gmail.com
+2025-05-28T20:17:36.528Z [INFO]: Stats carregados do Firestore: totalSent=112
+2025-05-28T20:17:36.528Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=112, available=2688, availableForTemplates=2188
+2025-05-28T20:17:45.544Z [INFO]: Email enviado de congressoautismoma@gmail.com para bertohf5@gmail.com. Total enviado hoje: 113
+2025-05-28T20:17:45.544Z [INFO]: Email enviado para bertohf5@gmail.com
+2025-05-28T20:17:45.680Z [INFO]: Updated participant 0 in checkout WnfQ42l4GKor3tmI2pRt
+2025-05-28T20:17:45.681Z [INFO]: Participante bertohf5@gmail.com atualizado com emailSent: true
+2025-05-28T20:17:45.822Z [INFO]: Processando email para bertohf5@gmail.com (índice 0)
+2025-05-28T20:17:45.822Z [INFO]: Gerando novos QR codes para bertohf5@gmail.com
+2025-05-28T20:17:46.156Z [INFO]: Updated participant 0 in checkout fKMsmUdlvpNmzD80Veju
+2025-05-28T20:17:46.157Z [INFO]: Novos QR codes salvos para bertohf5@gmail.com
+2025-05-28T20:17:46.230Z [INFO]: Stats carregados do Firestore: totalSent=114
+2025-05-28T20:17:46.231Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=114, available=2686, availableForTemplates=2186
+2025-05-28T20:17:56.065Z [INFO]: Email enviado de congressoautismoma@gmail.com para bertohf5@gmail.com. Total enviado hoje: 115
+2025-05-28T20:17:56.065Z [INFO]: Email enviado para bertohf5@gmail.com
+2025-05-28T20:17:56.211Z [INFO]: Updated participant 0 in checkout fKMsmUdlvpNmzD80Veju
+2025-05-28T20:17:56.212Z [INFO]: Participante bertohf5@gmail.com atualizado com emailSent: true
+2025-05-28T20:17:56.366Z [INFO]: Processando email para bertohf5@gmail.com (índice 0)
+2025-05-28T20:17:56.366Z [INFO]: Gerando novos QR codes para bertohf5@gmail.com
+2025-05-28T20:17:56.739Z [INFO]: Updated participant 0 in checkout iY9pVoQJIJPeWGQxUgv1
+2025-05-28T20:17:56.740Z [INFO]: Novos QR codes salvos para bertohf5@gmail.com
+2025-05-28T20:17:56.820Z [INFO]: Stats carregados do Firestore: totalSent=116
+2025-05-28T20:17:56.821Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=116, available=2684, availableForTemplates=2184
+2025-05-28T20:18:06.417Z [INFO]: Email enviado de congressoautismoma@gmail.com para bertohf5@gmail.com. Total enviado hoje: 117
+2025-05-28T20:18:06.418Z [INFO]: Email enviado para bertohf5@gmail.com
+2025-05-28T20:18:06.557Z [INFO]: Updated participant 0 in checkout iY9pVoQJIJPeWGQxUgv1
+2025-05-28T20:18:06.558Z [INFO]: Participante bertohf5@gmail.com atualizado com emailSent: true
+2025-05-28T20:18:06.691Z [INFO]: Processando email para bertohf5@gmail.com (índice 0)
+2025-05-28T20:18:06.691Z [INFO]: Gerando novos QR codes para bertohf5@gmail.com
+2025-05-28T20:18:07.051Z [INFO]: Updated participant 0 in checkout jionSkzIWeH7rWCR6avp
+2025-05-28T20:18:07.051Z [INFO]: Novos QR codes salvos para bertohf5@gmail.com
+2025-05-28T20:18:07.110Z [INFO]: Stats carregados do Firestore: totalSent=118
+2025-05-28T20:18:07.110Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=118, available=2682, availableForTemplates=2182
+2025-05-28T20:18:16.578Z [INFO]: Email enviado de congressoautismoma@gmail.com para bertohf5@gmail.com. Total enviado hoje: 119
+2025-05-28T20:18:16.579Z [INFO]: Email enviado para bertohf5@gmail.com
+2025-05-28T20:18:16.728Z [INFO]: Updated participant 0 in checkout jionSkzIWeH7rWCR6avp
+2025-05-28T20:18:16.729Z [INFO]: Participante bertohf5@gmail.com atualizado com emailSent: true
+2025-05-28T20:18:21.894Z [INFO]: Aguardando 5 segundos antes do próximo lote
+2025-05-28T20:18:21.895Z [INFO]: Processamento de emails de teste concluído
+2025-05-28T20:25:55.679Z [INFO]: Iniciando envio de emails de teste para checkouts com status 'test'
+2025-05-28T20:25:56.178Z [INFO]: Stats carregados do Firestore: totalSent=120
+2025-05-28T20:25:56.179Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=120, available=2680, availableForTemplates=2180
+2025-05-28T20:25:56.179Z [INFO]: Estatísticas de email: {"totalSent":120,"available":2680,"availableForTemplates":2180}
+2025-05-28T20:25:56.296Z [INFO]: Checkouts com status 'test' encontrados: 1
+2025-05-28T20:25:56.299Z [ERROR]: Erro ao carregar template: ENOENT: no such file or directory, open 'D:\humberto\projetos_react\landing-pages\cuidar-mais\backend\src\templates\event_email_template.html'
+2025-05-28T20:25:56.300Z [ERROR]: Erro ao processar emails de teste: Erro ao carregar template: ENOENT: no such file or directory, open 'D:\humberto\projetos_react\landing-pages\cuidar-mais\backend\src\templates\event_email_template.html'
+2025-05-28T20:25:56.300Z [INFO]: Processamento de emails de teste concluído
+2025-05-28T20:27:05.188Z [INFO]: Iniciando envio de emails de teste para checkouts com status 'test'
+2025-05-28T20:27:05.584Z [INFO]: Stats carregados do Firestore: totalSent=122
+2025-05-28T20:27:05.585Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=122, available=2678, availableForTemplates=2178
+2025-05-28T20:27:05.585Z [INFO]: Estatísticas de email: {"totalSent":122,"available":2678,"availableForTemplates":2178}
+2025-05-28T20:27:05.726Z [INFO]: Checkouts com status 'test' encontrados: 1
+2025-05-28T20:27:05.731Z [INFO]: Template carregado: D:\humberto\projetos_react\landing-pages\cuidar-mais\backend\src\templates\eventEmailTemplate.html
+2025-05-28T20:27:06.686Z [INFO]: Imagem do cronograma carregada: D:\humberto\projetos_react\landing-pages\cuidar-mais\backend\src\templates\assets\image.png
+2025-05-28T20:27:06.687Z [INFO]: Total de destinatários: 1
+2025-05-28T20:27:06.687Z [INFO]: Processando lote de 1 destinatários
+2025-05-28T20:27:06.811Z [INFO]: Stats carregados do Firestore: totalSent=122
+2025-05-28T20:27:06.811Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=122, available=2678, availableForTemplates=2178
+2025-05-28T20:27:06.812Z [INFO]: Usando conta de email: congressoautismoma@gmail.com
+2025-05-28T20:27:06.813Z [INFO]: Processando email para bertohf5@gmail.com (índice 0)
+2025-05-28T20:27:06.813Z [INFO]: Email já enviado para bertohf5@gmail.com. Ignorando.
+2025-05-28T20:27:11.816Z [INFO]: Aguardando 5 segundos antes do próximo lote
+2025-05-28T20:27:11.816Z [INFO]: Processamento de emails de teste concluído
+2025-05-28T20:29:21.918Z [INFO]: Iniciando envio de emails de teste para checkouts com status 'test'
+2025-05-28T20:29:22.347Z [INFO]: Stats carregados do Firestore: totalSent=126
+2025-05-28T20:29:22.348Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=126, available=2674, availableForTemplates=2174
+2025-05-28T20:29:22.348Z [INFO]: Estatísticas de email: {"totalSent":126,"available":2674,"availableForTemplates":2174}
+2025-05-28T20:29:22.451Z [INFO]: Checkouts com status 'test' encontrados: 1
+2025-05-28T20:29:22.453Z [INFO]: Template carregado: D:\humberto\projetos_react\landing-pages\cuidar-mais\backend\src\templates\eventEmailTemplate.html
+2025-05-28T20:29:22.455Z [INFO]: Imagem do cronograma carregada: D:\humberto\projetos_react\landing-pages\cuidar-mais\backend\src\templates\assets\image.png
+2025-05-28T20:29:22.456Z [INFO]: Total de destinatários: 1
+2025-05-28T20:29:22.456Z [INFO]: Processando lote de 1 destinatários
+2025-05-28T20:29:22.562Z [INFO]: Stats carregados do Firestore: totalSent=126
+2025-05-28T20:29:22.563Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=126, available=2674, availableForTemplates=2174
+2025-05-28T20:29:22.563Z [INFO]: Usando conta de email: congressoautismoma@gmail.com
+2025-05-28T20:29:22.564Z [INFO]: Processando email para bertohf5@gmail.com (índice 0)
+2025-05-28T20:29:22.565Z [INFO]: Verificando qrRawData para bertohf5@gmail.com: {"2025-06-01":"{\"checkoutId\":\"Ubo62waBtqgbsFo5exL9\",\"participantId\":\"Ubo62waBtqgbsFo5exL9-0\",\"participantName\":\"humberto monteiro araujo filho\",\"eventName\":\"Congresso Autismo MA 2025\",\"date\":\"2025-06-01\",\"signature\":\"64bcc94f2bd978dee4934d97ce2c9ecbf9ea184ef620b06cde68ed7fb04d8b2d\"}","2025-05-31":"{\"checkoutId\":\"Ubo62waBtqgbsFo5exL9\",\"participantId\":\"Ubo62waBtqgbsFo5exL9-0\",\"participantName\":\"humberto monteiro araujo filho\",\"eventName\":\"Congresso Autismo MA 2025\",\"date\":\"2025-05-31\",\"signature\":\"4131a0ab206df66a7c1d7da89ec8ad80d7d3b0ff026071ddf7ce24055768bd96\"}"}
+2025-05-28T20:29:22.566Z [INFO]: Usando QR codes existentes para bertohf5@gmail.com
+2025-05-28T20:29:22.698Z [INFO]: QR codes convertidos para base64: bertohf5@gmail.com
+2025-05-28T20:29:22.699Z [INFO]: Template preenchido para bertohf5@gmail.com
+2025-05-28T20:29:22.699Z [INFO]: QR codes adicionados como anexos inline para bertohf5@gmail.com
+2025-05-28T20:29:22.755Z [INFO]: Stats carregados do Firestore: totalSent=126
+2025-05-28T20:29:22.756Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=126, available=2674, availableForTemplates=2174
+2025-05-28T20:29:32.119Z [INFO]: Email enviado de congressoautismoma@gmail.com para bertohf5@gmail.com. Total enviado hoje: 127
+2025-05-28T20:29:32.120Z [INFO]: Email enviado para bertohf5@gmail.com
+2025-05-28T20:29:32.306Z [INFO]: Updated participant 0 in checkout Ubo62waBtqgbsFo5exL9
+2025-05-28T20:29:32.306Z [INFO]: Participante bertohf5@gmail.com atualizado com emailSent: true
+2025-05-28T20:29:37.459Z [INFO]: Aguardando 5 segundos antes do próximo lote
+2025-05-28T20:29:37.460Z [INFO]: Processamento de emails de teste concluído
+2025-05-28T20:33:56.959Z [INFO]: Iniciando envio de emails de teste para checkouts com status 'test'
+2025-05-28T20:33:57.375Z [INFO]: Stats carregados do Firestore: totalSent=128
+2025-05-28T20:33:57.376Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=128, available=2672, availableForTemplates=2172
+2025-05-28T20:33:57.376Z [INFO]: Estatísticas de email: {"totalSent":128,"available":2672,"availableForTemplates":2172}
+2025-05-28T20:33:57.476Z [INFO]: Checkouts com status 'test' encontrados: 1
+2025-05-28T20:33:57.479Z [INFO]: Template carregado: D:\humberto\projetos_react\landing-pages\cuidar-mais\backend\src\templates\eventEmailTemplate.html
+2025-05-28T20:33:57.481Z [INFO]: Imagem do cronograma carregada: D:\humberto\projetos_react\landing-pages\cuidar-mais\backend\src\templates\assets\image.png
+2025-05-28T20:33:57.482Z [INFO]: Total de destinatários: 1
+2025-05-28T20:33:57.482Z [INFO]: Processando lote de 1 destinatários
+2025-05-28T20:33:57.599Z [INFO]: Stats carregados do Firestore: totalSent=128
+2025-05-28T20:33:57.599Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=128, available=2672, availableForTemplates=2172
+2025-05-28T20:33:57.601Z [INFO]: Usando conta de email: congressoautismoma@gmail.com
+2025-05-28T20:33:57.601Z [INFO]: Processando email para humbertoaraf@gmail.com (índice 0)
+2025-05-28T20:33:57.601Z [INFO]: Verificando qrRawData para humbertoaraf@gmail.com: {"2025-05-31":"{\"checkoutId\":\"Ubo62waBtqgbsFo5exL9\",\"participantId\":\"Ubo62waBtqgbsFo5exL9-0\",\"participantName\":\"humberto monteiro araujo filho\",\"eventName\":\"Congresso Autismo MA 2025\",\"date\":\"2025-05-31\",\"signature\":\"4131a0ab206df66a7c1d7da89ec8ad80d7d3b0ff026071ddf7ce24055768bd96\"}","2025-06-01":"{\"checkoutId\":\"Ubo62waBtqgbsFo5exL9\",\"participantId\":\"Ubo62waBtqgbsFo5exL9-0\",\"participantName\":\"humberto monteiro araujo filho\",\"eventName\":\"Congresso Autismo MA 2025\",\"date\":\"2025-06-01\",\"signature\":\"64bcc94f2bd978dee4934d97ce2c9ecbf9ea184ef620b06cde68ed7fb04d8b2d\"}"}
+2025-05-28T20:33:57.602Z [INFO]: Usando QR codes existentes para humbertoaraf@gmail.com
+2025-05-28T20:33:57.740Z [INFO]: QR codes convertidos para base64: humbertoaraf@gmail.com
+2025-05-28T20:33:57.740Z [INFO]: Template preenchido para humbertoaraf@gmail.com
+2025-05-28T20:33:57.741Z [INFO]: QR codes adicionados como anexos inline para humbertoaraf@gmail.com
+2025-05-28T20:33:57.798Z [INFO]: Stats carregados do Firestore: totalSent=128
+2025-05-28T20:33:57.799Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=128, available=2672, availableForTemplates=2172
+2025-05-28T20:34:08.168Z [INFO]: Email enviado de congressoautismoma@gmail.com para humbertoaraf@gmail.com. Total enviado hoje: 129
+2025-05-28T20:34:08.169Z [INFO]: Email enviado para humbertoaraf@gmail.com
+2025-05-28T20:34:08.411Z [INFO]: Updated participant 0 in checkout Ubo62waBtqgbsFo5exL9
+2025-05-28T20:34:08.412Z [INFO]: Participante humbertoaraf@gmail.com atualizado com emailSent: true
+2025-05-28T20:34:13.577Z [INFO]: Aguardando 5 segundos antes do próximo lote
+2025-05-28T20:34:13.579Z [INFO]: Processamento de emails de teste concluído
+2025-05-28T20:45:35.270Z [INFO]: Iniciando envio de emails de teste para checkouts com status 'test'
+2025-05-28T20:45:35.691Z [INFO]: Stats carregados do Firestore: totalSent=130
+2025-05-28T20:45:35.691Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=130, available=2670, availableForTemplates=2170
+2025-05-28T20:45:35.692Z [INFO]: Estatísticas de email: {"totalSent":130,"available":2670,"availableForTemplates":2170}
+2025-05-28T20:45:35.805Z [INFO]: Checkouts com status 'test' encontrados: 1
+2025-05-28T20:45:35.809Z [INFO]: Template carregado: D:\humberto\projetos_react\landing-pages\cuidar-mais\backend\src\templates\eventEmailTemplate.html
+2025-05-28T20:45:36.430Z [INFO]: Imagem do cronograma carregada: D:\humberto\projetos_react\landing-pages\cuidar-mais\backend\src\templates\assets\image.png
+2025-05-28T20:45:36.431Z [INFO]: Total de destinatários: 1
+2025-05-28T20:45:36.432Z [INFO]: Processando lote de 1 destinatários
+2025-05-28T20:45:36.538Z [INFO]: Stats carregados do Firestore: totalSent=130
+2025-05-28T20:45:36.538Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=130, available=2670, availableForTemplates=2170
+2025-05-28T20:45:36.539Z [INFO]: Usando conta de email: congressoautismoma@gmail.com
+2025-05-28T20:45:36.539Z [INFO]: Processando email para humbertoaraf@gmail.com (índice 0)
+2025-05-28T20:45:36.540Z [INFO]: Verificando qrRawData para humbertoaraf@gmail.com: {"2025-06-01":"{\"checkoutId\":\"Ubo62waBtqgbsFo5exL9\",\"participantId\":\"Ubo62waBtqgbsFo5exL9-0\",\"participantName\":\"humberto monteiro araujo filho\",\"eventName\":\"Congresso Autismo MA 2025\",\"date\":\"2025-06-01\",\"signature\":\"64bcc94f2bd978dee4934d97ce2c9ecbf9ea184ef620b06cde68ed7fb04d8b2d\"}","2025-05-31":"{\"checkoutId\":\"Ubo62waBtqgbsFo5exL9\",\"participantId\":\"Ubo62waBtqgbsFo5exL9-0\",\"participantName\":\"humberto monteiro araujo filho\",\"eventName\":\"Congresso Autismo MA 2025\",\"date\":\"2025-05-31\",\"signature\":\"4131a0ab206df66a7c1d7da89ec8ad80d7d3b0ff026071ddf7ce24055768bd96\"}"}
+2025-05-28T20:45:36.541Z [INFO]: Usando QR codes existentes para humbertoaraf@gmail.com
+2025-05-28T20:45:36.673Z [INFO]: QR codes convertidos para base64: humbertoaraf@gmail.com
+2025-05-28T20:45:36.673Z [INFO]: Template preenchido para humbertoaraf@gmail.com
+2025-05-28T20:45:36.728Z [INFO]: Stats carregados do Firestore: totalSent=130
+2025-05-28T20:45:36.729Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=130, available=2670, availableForTemplates=2170
+2025-05-28T20:45:46.804Z [INFO]: Email enviado de congressoautismoma@gmail.com para humbertoaraf@gmail.com. Total enviado hoje: 131
+2025-05-28T20:45:46.804Z [INFO]: Email enviado para humbertoaraf@gmail.com
+2025-05-28T20:45:46.960Z [INFO]: Updated participant 0 in checkout Ubo62waBtqgbsFo5exL9
+2025-05-28T20:45:46.960Z [INFO]: Participante humbertoaraf@gmail.com atualizado com emailSent: true
+2025-05-28T20:45:52.190Z [INFO]: Aguardando 5 segundos antes do próximo lote
+2025-05-28T20:45:52.191Z [INFO]: Processamento de emails de teste concluído
+2025-05-28T20:49:48.220Z [INFO]: Iniciando envio de emails de teste para checkouts com status 'test'
+2025-05-28T20:49:48.654Z [INFO]: Stats carregados do Firestore: totalSent=132
+2025-05-28T20:49:48.654Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=132, available=2668, availableForTemplates=2168
+2025-05-28T20:49:48.655Z [INFO]: Estatísticas de email: {"totalSent":132,"available":2668,"availableForTemplates":2168}
+2025-05-28T20:49:48.771Z [INFO]: Checkouts com status 'test' encontrados: 1
+2025-05-28T20:49:48.773Z [INFO]: Template carregado: D:\humberto\projetos_react\landing-pages\cuidar-mais\backend\src\templates\eventEmailTemplate.html
+2025-05-28T20:49:48.776Z [INFO]: Imagem do cronograma carregada: D:\humberto\projetos_react\landing-pages\cuidar-mais\backend\src\templates\assets\image.png
+2025-05-28T20:49:48.776Z [INFO]: Total de destinatários: 1
+2025-05-28T20:49:48.777Z [INFO]: Processando lote de 1 destinatários
+2025-05-28T20:49:48.903Z [INFO]: Stats carregados do Firestore: totalSent=132
+2025-05-28T20:49:48.903Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=132, available=2668, availableForTemplates=2168
+2025-05-28T20:49:48.906Z [INFO]: Usando conta de email: congressoautismoma@gmail.com
+2025-05-28T20:49:48.906Z [INFO]: Processando email para humbertoaraf@gmail.com (índice 0)
+2025-05-28T20:49:48.907Z [INFO]: Usando QR codes existentes para humbertoaraf@gmail.com
+2025-05-28T20:49:49.014Z [INFO]: QR codes convertidos para imagens: humbertoaraf@gmail.com
+2025-05-28T20:49:49.134Z [INFO]: Stats carregados do Firestore: totalSent=132
+2025-05-28T20:49:49.134Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=132, available=2668, availableForTemplates=2168
+2025-05-28T20:49:58.286Z [INFO]: Email enviado de congressoautismoma@gmail.com para humbertoaraf@gmail.com. Total enviado hoje: 133
+2025-05-28T20:49:58.287Z [INFO]: Email enviado para humbertoaraf@gmail.com
+2025-05-28T20:49:58.459Z [INFO]: Updated participant 0 in checkout Ubo62waBtqgbsFo5exL9
+2025-05-28T20:49:58.460Z [INFO]: Participante humbertoaraf@gmail.com atualizado com emailSent: true
+2025-05-28T20:50:03.633Z [INFO]: Aguardando 5 segundos antes do próximo lote
+2025-05-28T20:50:03.633Z [INFO]: Processamento de emails de teste concluído
+2025-05-28T20:52:58.676Z [INFO]: Iniciando envio de emails de teste para checkouts com status 'test'
+2025-05-28T20:52:59.071Z [INFO]: Stats carregados do Firestore: totalSent=134
+2025-05-28T20:52:59.072Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=134, available=2666, availableForTemplates=2166
+2025-05-28T20:52:59.072Z [INFO]: Estatísticas de email: {"totalSent":134,"available":2666,"availableForTemplates":2166}
+2025-05-28T20:52:59.170Z [INFO]: Checkouts com status 'test' encontrados: 1
+2025-05-28T20:52:59.172Z [INFO]: Template carregado: D:\humberto\projetos_react\landing-pages\cuidar-mais\backend\src\templates\eventEmailTemplate.html
+2025-05-28T20:52:59.174Z [INFO]: Imagem do cronograma carregada: D:\humberto\projetos_react\landing-pages\cuidar-mais\backend\src\templates\assets\image.png
+2025-05-28T20:52:59.175Z [INFO]: Total de destinatários: 1
+2025-05-28T20:52:59.175Z [INFO]: Processando lote de 1 destinatários
+2025-05-28T20:52:59.268Z [INFO]: Stats carregados do Firestore: totalSent=134
+2025-05-28T20:52:59.268Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=134, available=2666, availableForTemplates=2166
+2025-05-28T20:52:59.269Z [INFO]: Usando conta de email: congressoautismoma@gmail.com
+2025-05-28T20:52:59.269Z [INFO]: Processando email para humbertoaraf@gmail.com (índice 0)
+2025-05-28T20:52:59.270Z [INFO]: Verificando qrRawData para humbertoaraf@gmail.com: {"2025-05-31":"{\"checkoutId\":\"Ubo62waBtqgbsFo5exL9\",\"participantId\":\"Ubo62waBtqgbsFo5exL9-0\",\"participantName\":\"humberto monteiro araujo filho\",\"eventName\":\"Congresso Autismo MA 2025\",\"date\":\"2025-05-31\",\"signature\":\"4131a0ab206df66a7c1d7da89ec8ad80d7d3b0ff026071ddf7ce24055768bd96\"}","2025-06-01":"{\"checkoutId\":\"Ubo62waBtqgbsFo5exL9\",\"participantId\":\"Ubo62waBtqgbsFo5exL9-0\",\"participantName\":\"humberto monteiro araujo filho\",\"eventName\":\"Congresso Autismo MA 2025\",\"date\":\"2025-06-01\",\"signature\":\"64bcc94f2bd978dee4934d97ce2c9ecbf9ea184ef620b06cde68ed7fb04d8b2d\"}"}
+2025-05-28T20:52:59.270Z [INFO]: Usando QR codes existentes para humbertoaraf@gmail.com
+2025-05-28T20:52:59.399Z [INFO]: QR codes convertidos para base64: humbertoaraf@gmail.com
+2025-05-28T20:52:59.399Z [INFO]: Template preenchido para humbertoaraf@gmail.com
+2025-05-28T20:52:59.400Z [INFO]: QR codes adicionados como anexos inline para humbertoaraf@gmail.com
+2025-05-28T20:52:59.452Z [INFO]: Stats carregados do Firestore: totalSent=134
+2025-05-28T20:52:59.453Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=134, available=2666, availableForTemplates=2166
+2025-05-28T20:53:09.364Z [INFO]: Email enviado de congressoautismoma@gmail.com para humbertoaraf@gmail.com. Total enviado hoje: 135
+2025-05-28T20:53:09.365Z [INFO]: Email enviado para humbertoaraf@gmail.com
+2025-05-28T20:53:09.569Z [INFO]: Updated participant 0 in checkout Ubo62waBtqgbsFo5exL9
+2025-05-28T20:53:09.569Z [INFO]: Participante humbertoaraf@gmail.com atualizado com emailSent: true
+2025-05-28T20:53:14.733Z [INFO]: Aguardando 5 segundos antes do próximo lote
+2025-05-28T20:53:14.734Z [INFO]: Processamento de emails de teste concluído
+2025-05-28T20:58:10.047Z [INFO]: Iniciando envio de emails de teste para checkouts com status 'test'
+2025-05-28T20:58:10.443Z [INFO]: Stats carregados do Firestore: totalSent=138
+2025-05-28T20:58:10.443Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=138, available=2662, availableForTemplates=2162
+2025-05-28T20:58:10.444Z [INFO]: Estatísticas de email: {"totalSent":138,"available":2662,"availableForTemplates":2162}
+2025-05-28T20:58:10.567Z [INFO]: Checkouts com status 'test' encontrados: 1
+2025-05-28T20:58:10.571Z [INFO]: Template carregado: D:\humberto\projetos_react\landing-pages\cuidar-mais\backend\src\templates\eventEmailTemplate.html
+2025-05-28T20:58:10.574Z [INFO]: Imagem do cronograma carregada: D:\humberto\projetos_react\landing-pages\cuidar-mais\backend\src\templates\assets\image.png
+2025-05-28T20:58:10.574Z [INFO]: Total de destinatários: 1
+2025-05-28T20:58:10.575Z [INFO]: Processando lote de 1 destinatários
+2025-05-28T20:58:10.749Z [INFO]: Stats carregados do Firestore: totalSent=138
+2025-05-28T20:58:10.750Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=138, available=2662, availableForTemplates=2162
+2025-05-28T20:58:10.751Z [INFO]: Usando conta de email: congressoautismoma@gmail.com
+2025-05-28T20:58:10.751Z [INFO]: Processando email para deboramlo@yahoo.com (índice 0)
+2025-05-28T20:58:10.751Z [INFO]: Verificando qrRawData para deboramlo@yahoo.com: {"2025-05-31":"{\"checkoutId\":\"Ubo62waBtqgbsFo5exL9\",\"participantId\":\"Ubo62waBtqgbsFo5exL9-0\",\"participantName\":\"humberto monteiro araujo filho\",\"eventName\":\"Congresso Autismo MA 2025\",\"date\":\"2025-05-31\",\"signature\":\"4131a0ab206df66a7c1d7da89ec8ad80d7d3b0ff026071ddf7ce24055768bd96\"}","2025-06-01":"{\"checkoutId\":\"Ubo62waBtqgbsFo5exL9\",\"participantId\":\"Ubo62waBtqgbsFo5exL9-0\",\"participantName\":\"humberto monteiro araujo filho\",\"eventName\":\"Congresso Autismo MA 2025\",\"date\":\"2025-06-01\",\"signature\":\"64bcc94f2bd978dee4934d97ce2c9ecbf9ea184ef620b06cde68ed7fb04d8b2d\"}"}
+2025-05-28T20:58:10.753Z [INFO]: Usando QR codes existentes para deboramlo@yahoo.com
+2025-05-28T20:58:10.874Z [INFO]: QR codes convertidos para base64: deboramlo@yahoo.com
+2025-05-28T20:58:10.875Z [INFO]: Template preenchido para deboramlo@yahoo.com
+2025-05-28T20:58:10.876Z [INFO]: QR codes adicionados como anexos inline para deboramlo@yahoo.com
+2025-05-28T20:58:10.925Z [INFO]: Stats carregados do Firestore: totalSent=138
+2025-05-28T20:58:10.926Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=138, available=2662, availableForTemplates=2162
+2025-05-28T20:58:20.848Z [INFO]: Email enviado de congressoautismoma@gmail.com para deboramlo@yahoo.com. Total enviado hoje: 139
+2025-05-28T20:58:20.849Z [INFO]: Email enviado para deboramlo@yahoo.com
+2025-05-28T20:58:21.033Z [INFO]: Updated participant 0 in checkout Ubo62waBtqgbsFo5exL9
+2025-05-28T20:58:21.033Z [INFO]: Participante deboramlo@yahoo.com atualizado com emailSent: true
+2025-05-28T20:58:26.185Z [INFO]: Aguardando 5 segundos antes do próximo lote
+2025-05-28T20:58:26.186Z [INFO]: Processamento de emails de teste concluído
+2025-05-30T18:37:47.325Z [INFO]: Fetched 0 active templates for status approved
+2025-05-30T18:37:47.327Z [INFO]: No active templates found for status approved in checkout lzycAI7duivjvHgA2Lk1
+2025-05-30T18:37:47.404Z [INFO]: Stats carregados do Firestore: totalSent=122
+2025-05-30T18:37:47.405Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=122, available=2678, availableForTemplates=2178
+2025-05-30T18:37:51.678Z [INFO]: Stats carregados do Firestore: totalSent=122
+2025-05-30T18:37:51.680Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=122, available=2678, availableForTemplates=2178
+2025-05-30T18:37:57.628Z [INFO]: Email enviado de congressoautismoma@gmail.com para bertohf5@gmail.com. Total enviado hoje: 123
+2025-05-30T18:37:57.757Z [INFO]: Email de confirmação enviado para bertohf5@gmail.com (participante 0). Total enviado hoje: 123
+2025-05-30T18:37:57.944Z [INFO]: Updated participant 0 in checkout lzycAI7duivjvHgA2Lk1
+2025-05-30T18:38:00.925Z [INFO]: Stats carregados do Firestore: totalSent=124
+2025-05-30T18:38:00.927Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=124, available=2676, availableForTemplates=2176
+2025-05-30T18:38:06.336Z [INFO]: Email enviado de congressoautismoma@gmail.com para bertohf5@gmail.com. Total enviado hoje: 125
+2025-05-30T18:38:06.497Z [INFO]: Email de confirmação enviado para bertohf5@gmail.com (participante 1). Total enviado hoje: 124
+2025-05-30T18:38:06.792Z [INFO]: Updated participant 1 in checkout lzycAI7duivjvHgA2Lk1
+2025-05-30T18:38:09.723Z [INFO]: Stats carregados do Firestore: totalSent=126
+2025-05-30T18:38:09.724Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=126, available=2674, availableForTemplates=2174
+2025-05-30T18:38:15.525Z [INFO]: Email enviado de congressoautismoma@gmail.com para bertohf5@gmail.com. Total enviado hoje: 127
+2025-05-30T18:38:15.650Z [INFO]: Email de confirmação enviado para bertohf5@gmail.com (participante 2). Total enviado hoje: 125
+2025-05-30T18:38:15.847Z [INFO]: Updated participant 2 in checkout lzycAI7duivjvHgA2Lk1
+2025-05-30T18:38:18.849Z [INFO]: Stats carregados do Firestore: totalSent=128
+2025-05-30T18:38:18.852Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=128, available=2672, availableForTemplates=2172
+2025-05-30T18:38:24.830Z [INFO]: Email enviado de congressoautismoma@gmail.com para bertohf5@gmail.com. Total enviado hoje: 129
+2025-05-30T18:38:24.977Z [INFO]: Email de confirmação enviado para bertohf5@gmail.com (participante 3). Total enviado hoje: 126
+2025-05-30T18:38:25.192Z [INFO]: Updated participant 3 in checkout lzycAI7duivjvHgA2Lk1
+2025-05-30T18:38:28.491Z [INFO]: Stats carregados do Firestore: totalSent=130
+2025-05-30T18:38:28.492Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=130, available=2670, availableForTemplates=2170
+2025-05-30T18:38:34.008Z [INFO]: Email enviado de congressoautismoma@gmail.com para bertohf5@gmail.com. Total enviado hoje: 131
+2025-05-30T18:38:34.187Z [INFO]: Email de confirmação enviado para bertohf5@gmail.com (participante 4). Total enviado hoje: 127
+2025-05-30T18:38:34.529Z [INFO]: Updated participant 4 in checkout lzycAI7duivjvHgA2Lk1
+2025-05-30T18:38:34.654Z [INFO]: Stats carregados do Firestore: totalSent=132
+2025-05-30T18:38:34.654Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=132, available=2668, availableForTemplates=2168
+2025-05-30T18:38:34.717Z [INFO]: Participante bertohf5@gmail.com (índice 0) já possui QR codes. Ignorando envio.
+2025-05-30T18:38:34.719Z [INFO]: Participante bertohf5@gmail.com (índice 1) já possui QR codes. Ignorando envio.
+2025-05-30T18:38:34.720Z [INFO]: Participante bertohf5@gmail.com (índice 2) já possui QR codes. Ignorando envio.
+2025-05-30T18:38:34.722Z [INFO]: Participante bertohf5@gmail.com (índice 3) já possui QR codes. Ignorando envio.
+2025-05-30T18:38:34.723Z [INFO]: Participante bertohf5@gmail.com (índice 4) já possui QR codes. Ignorando envio.
+2025-05-30T18:38:34.816Z [INFO]: Stats carregados do Firestore: totalSent=132
+2025-05-30T18:38:34.817Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=132, available=2668, availableForTemplates=2168
+2025-05-30T18:38:34.889Z [INFO]: Participante bertohf5@gmail.com (índice 0) já possui QR codes. Ignorando envio.
+2025-05-30T18:38:34.890Z [INFO]: Participante bertohf5@gmail.com (índice 1) já possui QR codes. Ignorando envio.
+2025-05-30T18:38:34.891Z [INFO]: Participante bertohf5@gmail.com (índice 2) já possui QR codes. Ignorando envio.
+2025-05-30T18:38:34.892Z [INFO]: Participante bertohf5@gmail.com (índice 3) já possui QR codes. Ignorando envio.
+2025-05-30T18:38:34.893Z [INFO]: Participante bertohf5@gmail.com (índice 4) já possui QR codes. Ignorando envio.
+2025-05-30T18:38:34.975Z [INFO]: Stats carregados do Firestore: totalSent=132
+2025-05-30T18:38:34.976Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=132, available=2668, availableForTemplates=2168
+2025-05-30T18:38:35.038Z [INFO]: Participante bertohf5@gmail.com (índice 0) já possui QR codes. Ignorando envio.
+2025-05-30T18:38:35.039Z [INFO]: Participante bertohf5@gmail.com (índice 1) já possui QR codes. Ignorando envio.
+2025-05-30T18:38:35.039Z [INFO]: Participante bertohf5@gmail.com (índice 2) já possui QR codes. Ignorando envio.
+2025-05-30T18:38:35.040Z [INFO]: Participante bertohf5@gmail.com (índice 3) já possui QR codes. Ignorando envio.
+2025-05-30T18:38:35.040Z [INFO]: Participante bertohf5@gmail.com (índice 4) já possui QR codes. Ignorando envio.
+2025-05-30T18:38:35.098Z [INFO]: Stats carregados do Firestore: totalSent=132
+2025-05-30T18:38:35.099Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=132, available=2668, availableForTemplates=2168
+2025-05-30T18:38:35.162Z [INFO]: Participante bertohf5@gmail.com (índice 0) já possui QR codes. Ignorando envio.
+2025-05-30T18:38:35.162Z [INFO]: Participante bertohf5@gmail.com (índice 1) já possui QR codes. Ignorando envio.
+2025-05-30T18:38:35.162Z [INFO]: Participante bertohf5@gmail.com (índice 2) já possui QR codes. Ignorando envio.
+2025-05-30T18:38:35.163Z [INFO]: Participante bertohf5@gmail.com (índice 3) já possui QR codes. Ignorando envio.
+2025-05-30T18:38:35.163Z [INFO]: Participante bertohf5@gmail.com (índice 4) já possui QR codes. Ignorando envio.
