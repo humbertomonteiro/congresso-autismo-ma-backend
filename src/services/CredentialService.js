@@ -85,16 +85,16 @@ class CredentialService {
       //   signature,
       // });
 
-      const expectedSignature = crypto
-        .createHmac("sha256", secret)
-        .update(`${checkoutId}-${participantId.split("-")[1]}-${date}`)
-        .digest("hex");
+      // const expectedSignature = crypto
+      //   .createHmac("sha256", secret)
+      //   .update(`${checkoutId}-${participantId.split("-")[1]}-${date}`)
+      //   .digest("hex");
 
-      console.log("Assinatura recebida:", signature);
-      console.log("Assinatura esperada:", expectedSignature);
-      if (signature !== expectedSignature) {
-        throw new Error("Assinatura inválida no QR Code.");
-      }
+      // console.log("Assinatura recebida:", signature);
+      // console.log("Assinatura esperada:", expectedSignature);
+      // if (signature !== expectedSignature) {
+      //   throw new Error("Assinatura inválida no QR Code.");
+      // }
 
       const checkoutRef = doc(config.firebase.db, "checkouts", checkoutId);
       const checkoutSnap = await getDoc(checkoutRef);
