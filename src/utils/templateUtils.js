@@ -236,4 +236,61 @@ const generateBoletoPDF = async (
   return pdfPath;
 };
 
-module.exports = { generateTicketPDF, generateBoletoPDF };
+const generateCertificatePDF = async (cpf, name) => {
+  const tempDir = path.join(__dirname, "../temp");
+  const pdfPath = path.join(tempDir, `certificate_${cpf}.pdf`);
+
+  await fs.mkdir(tempDir, { recursive: true });
+
+  const templatePath = path.join(
+    __dirname,
+    "../templates/certificateTemplate.html"
+  );
+  const htmlTemplate = await fs.readFile(templatePath, "utf8");
+
+  const htmlContent = htmlTemplate
+    .replace(/{{PARTICIPANT_NAME}}/g, name.toUpperCase())
+    .replace(/{{EVENT_NAME}}/g, "CONGRESSO AUTISMO MA 2025")
+    .replace(/{{ISSUE_DATE}}/g, formatDate(new Date()));
+
+  const executablePath =
+    process.env.NODE_ENV === "production"
+      ? "/usr/local/chromium/chrome"
+      : undefined;
+  const browser = await puppeteer.launch({
+    headless: true,
+    executablePath,
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage",
+      "--disable-gpu",
+    ],
+  });
+
+  const page = await browser.newPage();
+  // await page.setViewport({ width: 842, height: 595 });
+  await page.setContent(htmlContent, { waitUntil: "networkidle0" });
+  await page.pdf({
+    path: pdfPath,
+    format: "A4",
+    landscape: true,
+    printBackground: true,
+    margin: {
+      top: "0mm",
+      right: "0mm",
+      bottom: "0mm",
+      left: "0mm",
+    },
+  });
+  await browser.close();
+
+  console.log("Certificado PDF gerado com sucesso em:", pdfPath);
+  return pdfPath;
+};
+
+module.exports = {
+  generateTicketPDF,
+  generateBoletoPDF,
+  generateCertificatePDF,
+};

@@ -52,6 +52,8 @@ class CheckoutService {
       discount = this.calculateDiscount(fullTickets, halfTickets, 349.9);
     } else if (coupon === "vivian") {
       discount = this.calculateDiscount(fullTickets, halfTickets, 325.9);
+    } else if (coupon === "ingresso300") {
+      discount = this.calculateDiscount(fullTickets, halfTickets, 300);
     } else if (coupon === "prevenda") {
       discount = fullTickets * 50;
     } else if (coupon === "grupounico") {

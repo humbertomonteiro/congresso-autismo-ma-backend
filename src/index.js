@@ -5,6 +5,7 @@ const config = require("./config");
 const paymentRoutes = require("./routes/paymentRoutes");
 const emailRoutes = require("./routes/emailRoutes");
 const credentialRoutes = require("./routes/credentialRoutes");
+const certificateRoutes = require("./routes/certificateRoutes");
 const responseMiddleware = require("./middleware/response");
 const path = require("path");
 const { cleanupBoletos } = require("./jobs/cleanup");
@@ -29,6 +30,7 @@ app.get("/", (req, res) => {
 app.use("/api/payments", paymentRoutes);
 app.use("/api/email", emailRoutes);
 app.use("/api/credentials", credentialRoutes);
+app.use("/api/certificate", certificateRoutes);
 
 cleanupBoletos();
 verifyPendingPayments();

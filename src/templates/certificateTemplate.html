@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      .certificate {
+        /* width: 842px;
+          height: 595px; */
+        background-image: url("https://scontent.ffor13-1.fna.fbcdn.net/v/t39.30808-6/505613897_1105167098304204_1124269602429506624_n.jpg?stp=dst-jpg_s720x720_tt6&_nc_cat=101&ccb=1-7&_nc_sid=127cfc&_nc_ohc=t3A2-HBGj0AQ7kNvwHbtjL7&_nc_oc=AdkqzvqnLfCg1e1av-yL_AsWW0cwTbv3dEF1k1zSRtnF_zguDdDx_et3dbJ8lkj9m08&_nc_zt=23&_nc_ht=scontent.ffor13-1.fna&_nc_gid=K07fP-S6nJuncV5ctVm28A&oh=00_AfN1NoBqhVyfCRKvu9ki70whwYCX8SEFT8PGiXdnrtyYTg&oe=684D146B");
+        min-height: 100vh;
+        position: relative;
+        background-color: #fff;
+        background-size: cover;
+        border: 5px solid #1e9d7b;
+        box-sizing: border-box;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: "DM Sans", sans-serif;
+        color: #333333;
+        overflow: hidden;
+      }
+      .logo {
+        width: 200px;
+        position: absolute;
+        right: 80px;
+        top: 80px;
+        z-index: 2;
+      }
+      .content {
+        display: flex;
+        flex-direction: column;
+        padding-left: 80px;
+      }
+      .title {
+        font-size: 100px;
+        font-family: "DM Sans", sans-serif;
+        font-weight: 900;
+        color: #1e9d7b;
+      }
+      .subtitle {
+        font-size: 20px;
+      }
+      .font-big {
+        font-size: 30px;
+        margin-bottom: 20px;
+      }
+      .text {
+        max-width: 600px;
+      }
+      .footer {
+        margin-top: 30px;
+        display: flex;
+        gap: 50px;
+      }
+      .footer img {
+        width: 400px;
+        margin-left: -15px;
+        object-fit: contain;
+      }
+      .footer .asignature {
+        text-align: center;
+      }
+      .footer .asignature .line {
+        border-top: 1px solid #333;
+        width: 300px;
+        margin: 0 auto;
+        margin-bottom: 10px;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="certificate">
+      <!-- <img
+        class="background-img"
+        src="https://congressoautismoma.com.br/assets/bg-bootm1-DSaeEaPG.jpg"
+        alt="imagem background top"
+      /> -->
+      <img
+        class="logo"
+        src="https://congressoautismoma.com.br/assets/logo-C5rQVfJ8.png"
+        alt="Logo"
+      />
+      <div class="content">
+        <div class="title">Certificado</div>
+        <div class="subtitle">Certificamos que:</div>
+        <div class="font-big">{{PARTICIPANT_NAME}}</div>
+        <div class="subtitle">CPF:</div>
+        <div class="font-big">072.402.853-67</div>
+        <p class="text">
+          Participou do <strong>"Congresso Autismo MA 2025</strong> em São Luís
+          - MA Curso livre multidisciplinar sobre autismo, com carga horária de
+          20 horas, nos dias 31 de maio e 01 de junho de 2025.
+        </p>
+        <div class="footer">
+          <img
+            src="https://congressoautismoma.com.br/assets/logos-telefone-CcIJmQ1d.png"
+            alt="realização"
+          />
+          <div class="asignature">
+            <div class="line"></div>
+            <p class="position"><strong>Nome de quem vai assinar</strong></p>
+            <p class="position">Fundadora e Diretora do Congresso</p>
+          </div>
+        </div>
+      </div>
+      <div class="right-wave-decoration"></div>
+    </div>
+  </body>
+</html>
