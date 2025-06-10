@@ -16401,3 +16401,7 @@
 2025-06-10T01:05:21.637Z [ERROR]: Erro ao gerar lista de participantes: cpf is not defined
 2025-06-10T01:07:58.818Z [INFO]: Total de participantes que compareceram a incluir no PDF: 756
 2025-06-10T01:08:00.827Z [INFO]: PDF gerado com sucesso: lista_participantes.pdf
+2025-06-10T02:21:03.101Z [INFO]: Total de participantes que compareceram a incluir no PDF: 756
+2025-06-10T02:21:03.372Z [INFO]: PDF gerado com sucesso: lista_participantes.pdf
+2025-06-10T02:23:39.248Z [INFO]: Total de participantes que compareceram a incluir no PDF: 1576
+2025-06-10T02:23:39.485Z [INFO]: PDF gerado com sucesso: lista_participantes.pdf

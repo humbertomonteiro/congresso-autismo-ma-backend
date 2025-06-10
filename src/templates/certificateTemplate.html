@@ -15,7 +15,7 @@
       .certificate {
         /* width: 842px;
           height: 595px; */
-        background-image: url("https://scontent.ffor13-1.fna.fbcdn.net/v/t39.30808-6/505613897_1105167098304204_1124269602429506624_n.jpg?stp=dst-jpg_s720x720_tt6&_nc_cat=101&ccb=1-7&_nc_sid=127cfc&_nc_ohc=t3A2-HBGj0AQ7kNvwHbtjL7&_nc_oc=AdkqzvqnLfCg1e1av-yL_AsWW0cwTbv3dEF1k1zSRtnF_zguDdDx_et3dbJ8lkj9m08&_nc_zt=23&_nc_ht=scontent.ffor13-1.fna&_nc_gid=K07fP-S6nJuncV5ctVm28A&oh=00_AfN1NoBqhVyfCRKvu9ki70whwYCX8SEFT8PGiXdnrtyYTg&oe=684D146B");
+        background-image: url("https://congressoautismoma.com.br/assets/certificate-Bx3D15cY.jpg");
         min-height: 100vh;
         position: relative;
         background-color: #fff;
@@ -23,20 +23,26 @@
         border: 5px solid #1e9d7b;
         box-sizing: border-box;
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
         font-family: "DM Sans", sans-serif;
         color: #333333;
         overflow: hidden;
       }
-      .logo {
+      .name {
+        position: absolute;
+        top: 54%;
+        font-size: 22px;
+        padding-left: 35px;
+      }
+      /* .logo {
         width: 200px;
         position: absolute;
         right: 80px;
         top: 80px;
         z-index: 2;
-      }
-      .content {
+      } */
+      /* .content {
         display: flex;
         flex-direction: column;
         padding-left: 80px;
@@ -76,17 +82,18 @@
         margin: 0 auto;
         margin-bottom: 10px;
         margin-top: 20px;
-      }
+      } */
     </style>
   </head>
   <body>
     <div class="certificate">
+      <div class="name">{{PARTICIPANT_NAME}}</div>
       <!-- <img
         class="background-img"
         src="https://congressoautismoma.com.br/assets/bg-bootm1-DSaeEaPG.jpg"
         alt="imagem background top"
       /> -->
-      <img
+      <!-- <img
         class="logo"
         src="https://congressoautismoma.com.br/assets/logo-C5rQVfJ8.png"
         alt="Logo"
@@ -114,7 +121,7 @@
           </div>
         </div>
       </div>
-      <div class="right-wave-decoration"></div>
+      <div class="right-wave-decoration"></div> -->
     </div>
   </body>
 </html>

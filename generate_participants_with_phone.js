@@ -33,9 +33,8 @@ const generateParticipantsList = async () => {
             p.name && typeof p.name === "string" ? p.name.trim() : "";
           const email = p.email || "";
           const phone = p.number || "";
-          const attendedFirstDay =
-            p.validated && p.validated["2025-05-31"] === true;
-          if (name && email && attendedFirstDay) {
+
+          if (name && email) {
             participants.push({
               name,
               email,
