@@ -16405,3 +16405,12 @@
 2025-06-10T02:21:03.372Z [INFO]: PDF gerado com sucesso: lista_participantes.pdf
 2025-06-10T02:23:39.248Z [INFO]: Total de participantes que compareceram a incluir no PDF: 1576
 2025-06-10T02:23:39.485Z [INFO]: PDF gerado com sucesso: lista_participantes.pdf
+2025-06-11T12:29:54.802Z [INFO]: Fetched 0 active templates for status approved
+2025-06-11T12:29:54.819Z [INFO]: No active templates found for status approved in checkout Z8Mnyz3K5bVsqCWwu3xX
+2025-06-11T12:29:56.528Z [INFO]: Stats inicializados no Firestore: totalSent=0
+2025-06-11T12:29:56.529Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=0, available=2800, availableForTemplates=2300
+2025-06-11T12:30:04.168Z [INFO]: Stats carregados do Firestore: totalSent=0
+2025-06-11T12:30:04.170Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=0, available=2800, availableForTemplates=2300
+2025-06-11T12:30:10.742Z [INFO]: Email enviado de congressoautismoma@gmail.com para bertohf5@gmail.com. Total enviado hoje: 1
+2025-06-11T12:30:10.907Z [INFO]: Email de confirmação enviado para bertohf5@gmail.com (participante 0). Total enviado hoje: 1
+2025-06-11T12:30:11.113Z [INFO]: Updated participant 0 in checkout Z8Mnyz3K5bVsqCWwu3xX
