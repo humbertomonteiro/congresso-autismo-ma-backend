@@ -2,7 +2,7 @@ const fs = require("fs").promises;
 const { generateCertificatePDF } = require("../utils/templateUtils");
 
 class CertificateService {
-  async generateCertificate(cpf, name) {
+  async generateCertificate(cpf, name, templateHTML) {
     if (!cpf || !name) {
       throw new Error("CPF e nome são obrigatórios.");
     }
@@ -11,7 +11,11 @@ class CertificateService {
       // Normaliza o CPF (remove pontos e traços)
       const normalizedCpf = cpf.replace(/[\.-]/g, "");
       // Gera o PDF
-      const pdfPath = await generateCertificatePDF(normalizedCpf, name);
+      const pdfPath = await generateCertificatePDF(
+        normalizedCpf,
+        name,
+        templateHTML
+      );
       // Lê o arquivo PDF como buffer
       const pdfBuffer = await fs.readFile(pdfPath);
       // Remove o arquivo temporário

@@ -3,12 +3,14 @@ const CertificateService = require("../services/CertificateService");
 class CertificateController {
   async generateCertificate(req, res) {
     try {
-      const { cpf, name } = req.body;
+      //templateHTML: cientifica, monitoria, organizadora
+      const { cpf, name, templateHTML } = req.body;
 
       // Chama o service para gerar o PDF
       const { buffer, fileName } = await CertificateService.generateCertificate(
         cpf,
-        name
+        name,
+        templateHTML
       );
 
       // Configura os cabeçalhos da resposta

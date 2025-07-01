@@ -935,51 +935,415 @@ class EmailService {
     }
   }
 
-  async sendTestEmails(templateData) {
+  // async sendTestEmails(templateData) {
+  //   if (this.isProcessing) {
+  //     logger.info("Processamento de emails já em andamento, ignorando.");
+  //     return { success: false, message: "Processamento já em andamento" };
+  //   }
+
+  //   this.isProcessing = true;
+  //   logger.info(
+  //     "Iniciando envio de emails de teste para checkouts com status 'test'"
+  //   );
+
+  //   try {
+  //     const stats = await this.getEmailStats();
+  //     logger.info(`Estatísticas de email: ${JSON.stringify(stats)}`);
+
+  //     // Fetch checkouts with status "test"
+  //     const checkouts = await CheckoutRepository.fetchCheckouts({
+  //       status: "test",
+  //     });
+  //     logger.info(
+  //       `Checkouts com status 'test' encontrados: ${checkouts.length}`
+  //     );
+
+  //     if (checkouts.length === 0) {
+  //       logger.info("Nenhum checkout com status 'test' encontrado.");
+  //       return { success: true, message: "Nenhum checkout para processar" };
+  //     }
+
+  //     // Calculate total participants
+  //     const totalParticipants = checkouts.reduce(
+  //       (sum, c) => sum + c.participants.length,
+  //       0
+  //     );
+  //     if (totalParticipants > stats.availableForTemplates) {
+  //       logger.error(
+  //         `Restam ${stats.availableForTemplates} emails disponíveis. Não é possível enviar para ${totalParticipants} participantes.`
+  //       );
+  //       throw new Error(
+  //         `Limite insuficiente: ${totalParticipants} participantes, mas apenas ${stats.availableForTemplates} emails disponíveis.`
+  //       );
+  //     }
+
+  //     const templatePath = path.join(
+  //       __dirname,
+  //       "../templates/eventEmailTemplate.html"
+  //     );
+  //     let htmlTemplate;
+  //     try {
+  //       htmlTemplate = await fs.readFile(templatePath, "utf-8");
+  //       logger.info(`Template carregado: ${templatePath}`);
+  //     } catch (error) {
+  //       logger.error(`Erro ao carregar template: ${error.message}`);
+  //       throw new Error(`Erro ao carregar template: ${error.message}`);
+  //     }
+
+  //     // Load program image for inline attachment
+  //     const imagePath = path.join(__dirname, "../templates/assets/image.png");
+  //     let imageContent;
+  //     try {
+  //       imageContent = await fs.readFile(imagePath);
+  //       logger.info(`Imagem do cronograma carregada: ${imagePath}`);
+  //     } catch (error) {
+  //       logger.error(`Erro ao carregar imagem: ${error.message}`);
+  //       throw new Error(
+  //         `Erro ao carregar imagem do cronograma: ${error.message}`
+  //       );
+  //     }
+
+  //     const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  //     const batchSize = 50;
+  //     let accountIndex = 0;
+  //     const results = [];
+
+  //     // Process participants
+  //     const recipients = checkouts.flatMap((checkout) =>
+  //       checkout.participants.map((participant, participantIndex) => ({
+  //         email: participant.email,
+  //         checkoutId: checkout.id,
+  //         participantName: participant.name,
+  //         participantIndex,
+  //         allParticipants: checkout.participants,
+  //       }))
+  //     );
+  //     logger.info(`Total de destinatários: ${recipients.length}`);
+
+  //     for (let i = 0; i < recipients.length; i += batchSize) {
+  //       const batch = recipients.slice(i, i + batchSize);
+  //       logger.info(`Processando lote de ${batch.length} destinatários`);
+
+  //       const currentStats = await this.getEmailStats();
+  //       if (batch.length > currentStats.available) {
+  //         logger.error(
+  //           `Não há emails suficientes para o lote. Restam: ${currentStats.available}`
+  //         );
+  //         break;
+  //       }
+
+  //       const account = emailAccounts[accountIndex % emailAccounts.length];
+  //       logger.info(`Usando conta de email: ${account.user}`);
+
+  //       for (const recipient of batch) {
+  //         const participant =
+  //           recipient.allParticipants[recipient.participantIndex];
+  //         logger.info(
+  //           `Processando email para ${participant.email} (índice ${recipient.participantIndex})`
+  //         );
+
+  //         // Skip if email already sent
+  //         if (participant.emailSent) {
+  //           logger.info(
+  //             `Email já enviado para ${participant.email}. Ignorando.`
+  //           );
+  //           results.push({
+  //             success: false,
+  //             message: `Email já enviado para ${participant.name}`,
+  //             participantIdx: recipient.participantIndex,
+  //             checkoutId: recipient.checkoutId,
+  //           });
+  //           continue;
+  //         }
+
+  //         // Check qrRawData
+  //         logger.info(
+  //           `Verificando qrRawData para ${participant.email}: ${JSON.stringify(
+  //             participant.qrRawData || {}
+  //           )}`
+  //         );
+
+  //         // Prepare QR codes
+  //         let qrCode1, qrCode2;
+  //         if (
+  //           participant.qrRawData &&
+  //           participant.qrRawData["2025-05-31"] &&
+  //           participant.qrRawData["2025-06-01"]
+  //         ) {
+  //           logger.info(`Usando QR codes existentes para ${participant.email}`);
+  //           try {
+  //             qrCode1 = await QRCode.toDataURL(
+  //               participant.qrRawData["2025-05-31"],
+  //               {
+  //                 errorCorrectionLevel: "H",
+  //                 scale: 5,
+  //               }
+  //             );
+  //             qrCode2 = await QRCode.toDataURL(
+  //               participant.qrRawData["2025-06-01"],
+  //               {
+  //                 errorCorrectionLevel: "H",
+  //                 scale: 5,
+  //               }
+  //             );
+  //             logger.info(
+  //               `QR codes convertidos para base64: ${participant.email}`
+  //             );
+  //             logger.debug(
+  //               `QR Code 1 (primeiros 50 caracteres): ${qrCode1.substring(
+  //                 0,
+  //                 50
+  //               )}...`
+  //             );
+  //             logger.debug(
+  //               `QR Code 2 (primeiros 50 caracteres): ${qrCode2.substring(
+  //                 0,
+  //                 50
+  //               )}...`
+  //             );
+  //           } catch (error) {
+  //             logger.error(
+  //               `Erro ao converter QR codes para ${participant.email}: ${error.message}`
+  //             );
+  //             throw new Error(`Erro ao converter QR codes: ${error.message}`);
+  //           }
+  //         } else {
+  //           logger.info(`Gerando novos QR codes para ${participant.email}`);
+  //           try {
+  //             const { qrCodes, qrRawData } =
+  //               await CredentialService.generateQRCodesForParticipant(
+  //                 recipient.checkoutId,
+  //                 recipient.participantIndex,
+  //                 participant.name
+  //               );
+  //             qrCode1 = qrCodes[0]; // Assuming qrCodes contains base64 images
+  //             qrCode2 = qrCodes[1];
+  //             logger.info(`Novos QR codes gerados: ${participant.email}`);
+  //             logger.debug(
+  //               `QR Code 1 (primeiros 50 caracteres): ${qrCode1.substring(
+  //                 0,
+  //                 50
+  //               )}...`
+  //             );
+  //             logger.debug(
+  //               `QR Code 2 (primeiros 50 caracteres): ${qrCode2.substring(
+  //                 0,
+  //                 50
+  //               )}...`
+  //             );
+  //             await CheckoutRepository.updateParticipant(
+  //               recipient.checkoutId,
+  //               recipient.participantIndex,
+  //               {
+  //                 qrRawData,
+  //                 validated: { "2025-05-31": false, "2025-06-01": false },
+  //               }
+  //             );
+  //             logger.info(
+  //               `QR codes salvos no Firestore para ${participant.email}`
+  //             );
+  //           } catch (error) {
+  //             logger.error(
+  //               `Erro ao gerar QR codes para ${participant.email}: ${error.message}`
+  //             );
+  //             results.push({
+  //               success: false,
+  //               message: `Erro ao gerar QR codes para ${participant.name}: ${error.message}`,
+  //               participantIdx: recipient.participantIndex,
+  //               checkoutId: recipient.checkoutId,
+  //             });
+  //             continue;
+  //           }
+  //         }
+
+  //         // Validate QR code format
+  //         if (
+  //           !qrCode1.startsWith("data:image/png;base64,") ||
+  //           !qrCode2.startsWith("data:image/png;base64,")
+  //         ) {
+  //           logger.error(
+  //             `Formato de QR code inválido para ${participant.email}`
+  //           );
+  //           results.push({
+  //             success: false,
+  //             message: `Formato de QR code inválido para ${participant.name}`,
+  //             participantIdx: recipient.participantIndex,
+  //             checkoutId: recipient.checkoutId,
+  //           });
+  //           continue;
+  //         }
+
+  //         // Prepare email content
+  //         let html = htmlTemplate
+  //           .replace(/{{nome}}/g, participant.name || "Participante")
+  //           .replace("{{qrCode1}}", qrCode1)
+  //           .replace("{{qrCode2}}", qrCode2);
+  //         logger.info(`Template preenchido para ${participant.email}`);
+
+  //         const attachments = [
+  //           {
+  //             filename: "cronograma.png",
+  //             content: imageContent,
+  //             cid: "cronograma@eventoma2025",
+  //           },
+  //         ];
+
+  //         // Replace image path with CID
+  //         html = html.replace(
+  //           "./assets/image.png",
+  //           "cid:cronograma@eventoma2025"
+  //         );
+
+  //         // Fallback: Attach QR codes as images if inline fails
+  //         try {
+  //           const qrCode1Buffer = Buffer.from(qrCode1.split(",")[1], "base64");
+  //           const qrCode2Buffer = Buffer.from(qrCode2.split(",")[1], "base64");
+  //           attachments.push(
+  //             {
+  //               filename: `qrcode_day1_${
+  //                 participant.name || "participant"
+  //               }.png`,
+  //               content: qrCode1Buffer,
+  //               cid: "qrcode1@eventoma2025",
+  //             },
+  //             {
+  //               filename: `qrcode_day2_${
+  //                 participant.name || "participant"
+  //               }.png`,
+  //               content: qrCode2Buffer,
+  //               cid: "qrcode2@eventoma2025",
+  //             }
+  //           );
+  //           html = html
+  //             .replace("{{qrCode1}}", "cid:qrcode1@eventoma2025")
+  //             .replace("{{qrCode2}}", "cid:qrcode2@eventoma2025");
+  //           logger.info(
+  //             `QR codes adicionados como anexos inline para ${participant.email}`
+  //           );
+  //         } catch (error) {
+  //           logger.warn(
+  //             `Erro ao adicionar QR codes como anexos para ${participant.email}: ${error.message}`
+  //           );
+  //         }
+
+  //         // Send email
+  //         try {
+  //           await this.sendEmail({
+  //             from: account.user,
+  //             to: participant.email,
+  //             subject:
+  //               templateData.subject ||
+  //               "Confirmação de Inscrição - Congresso Autismo MA 2025",
+  //             html,
+  //             attachments,
+  //           });
+  //           logger.info(`Email enviado para ${participant.email}`);
+
+  //           // Update participant with emailSent flag
+  //           await CheckoutRepository.updateParticipant(
+  //             recipient.checkoutId,
+  //             recipient.participantIndex,
+  //             { emailSent: true }
+  //           );
+  //           logger.info(
+  //             `Participante ${participant.email} atualizado com emailSent: true`
+  //           );
+
+  //           results.push({
+  //             success: true,
+  //             message: `Email enviado com sucesso para ${participant.name}`,
+  //             participantIdx: recipient.participantIndex,
+  //             checkoutId: recipient.checkoutId,
+  //           });
+  //         } catch (error) {
+  //           logger.error(
+  //             `Erro ao enviar email para ${participant.email}: ${error.message}`
+  //           );
+  //           results.push({
+  //             success: false,
+  //             message: `Erro ao enviar email para ${participant.name}: ${error.message}`,
+  //             participantIdx: recipient.participantIndex,
+  //             checkoutId: recipient.checkoutId,
+  //           });
+  //           continue;
+  //         }
+
+  //         // Update email stats
+  //         await this.incrementEmailCount(1);
+  //       }
+
+  //       await delay(5000);
+  //       logger.info("Aguardando 5 segundos antes do próximo lote");
+  //       accountIndex++;
+  //     }
+
+  //     return {
+  //       success: true,
+  //       message: "Processamento de emails de teste concluído",
+  //       results,
+  //     };
+  //   } catch (error) {
+  //     logger.error(`Erro ao processar emails de teste: ${error.message}`);
+  //     throw error;
+  //   } finally {
+  //     this.isProcessing = false;
+  //     logger.info("Processamento de emails de teste concluído");
+  //   }
+  // }
+
+  async sendPostEventEmailsToApproved(templateData = {}) {
     if (this.isProcessing) {
-      logger.info("Processamento de emails já em andamento, ignorando.");
+      logger.info("Processamento de e-mails já em andamento, ignorando.");
       return { success: false, message: "Processamento já em andamento" };
     }
 
     this.isProcessing = true;
     logger.info(
-      "Iniciando envio de emails de teste para checkouts com status 'test'"
+      "Iniciando envio de e-mails pós-evento para checkouts aprovados"
     );
 
     try {
       const stats = await this.getEmailStats();
-      logger.info(`Estatísticas de email: ${JSON.stringify(stats)}`);
+      logger.info(`Estatísticas de e-mail: ${JSON.stringify(stats)}`);
 
-      // Fetch checkouts with status "test"
+      // Buscar checkouts com status "approved"
       const checkouts = await CheckoutRepository.fetchCheckouts({
-        status: "test",
+        status: templateData.status || "approved",
+        ...templateData.filters,
       });
       logger.info(
-        `Checkouts com status 'test' encontrados: ${checkouts.length}`
+        `Checkouts com status ${
+          templateData.status || "approved"
+        } encontrados: ${checkouts.length}`
       );
 
       if (checkouts.length === 0) {
-        logger.info("Nenhum checkout com status 'test' encontrado.");
+        logger.info(
+          `Nenhum checkout com status ${
+            templateData.status || "approved"
+          } encontrado.`
+        );
         return { success: true, message: "Nenhum checkout para processar" };
       }
 
-      // Calculate total participants
+      // Calcular total de participantes
       const totalParticipants = checkouts.reduce(
         (sum, c) => sum + c.participants.length,
         0
       );
       if (totalParticipants > stats.availableForTemplates) {
         logger.error(
-          `Restam ${stats.availableForTemplates} emails disponíveis. Não é possível enviar para ${totalParticipants} participantes.`
+          `Restam ${stats.availableForTemplates} e-mails disponíveis. Não é possível enviar para ${totalParticipants} participantes.`
         );
         throw new Error(
-          `Limite insuficiente: ${totalParticipants} participantes, mas apenas ${stats.availableForTemplates} emails disponíveis.`
+          `Limite insuficiente: ${totalParticipants} participantes, mas apenas ${stats.availableForTemplates} e-mails disponíveis.`
         );
       }
 
+      // Carregar o template HTML
       const templatePath = path.join(
         __dirname,
-        "../templates/eventEmailTemplate.html"
+        `../templates/${templateData.templateId}.html`
       );
       let htmlTemplate;
       try {
@@ -990,25 +1354,12 @@ class EmailService {
         throw new Error(`Erro ao carregar template: ${error.message}`);
       }
 
-      // Load program image for inline attachment
-      const imagePath = path.join(__dirname, "../templates/assets/image.png");
-      let imageContent;
-      try {
-        imageContent = await fs.readFile(imagePath);
-        logger.info(`Imagem do cronograma carregada: ${imagePath}`);
-      } catch (error) {
-        logger.error(`Erro ao carregar imagem: ${error.message}`);
-        throw new Error(
-          `Erro ao carregar imagem do cronograma: ${error.message}`
-        );
-      }
-
       const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-      const batchSize = 50;
+      const batchSize = 30;
       let accountIndex = 0;
       const results = [];
 
-      // Process participants
+      // Processar participantes
       const recipients = checkouts.flatMap((checkout) =>
         checkout.participants.map((participant, participantIndex) => ({
           email: participant.email,
@@ -1027,219 +1378,55 @@ class EmailService {
         const currentStats = await this.getEmailStats();
         if (batch.length > currentStats.available) {
           logger.error(
-            `Não há emails suficientes para o lote. Restam: ${currentStats.available}`
+            `Não há e-mails suficientes para o lote. Restam: ${currentStats.available}`
           );
           break;
         }
 
         const account = emailAccounts[accountIndex % emailAccounts.length];
-        logger.info(`Usando conta de email: ${account.user}`);
+        logger.info(`Usando conta de e-mail: ${account.user}`);
 
         for (const recipient of batch) {
           const participant =
             recipient.allParticipants[recipient.participantIndex];
           logger.info(
-            `Processando email para ${participant.email} (índice ${recipient.participantIndex})`
+            `Processando e-mail para ${participant.email} (índice ${recipient.participantIndex})`
           );
 
-          // Skip if email already sent
+          // Pular se o e-mail já foi enviado
           if (participant.emailSent) {
             logger.info(
-              `Email já enviado para ${participant.email}. Ignorando.`
+              `E-mail já enviado para ${participant.email}. Ignorando.`
             );
             results.push({
               success: false,
-              message: `Email já enviado para ${participant.name}`,
+              message: `E-mail já enviado para ${participant.name}`,
               participantIdx: recipient.participantIndex,
               checkoutId: recipient.checkoutId,
             });
             continue;
           }
 
-          // Check qrRawData
-          logger.info(
-            `Verificando qrRawData para ${participant.email}: ${JSON.stringify(
-              participant.qrRawData || {}
-            )}`
+          // Preparar conteúdo do e-mail
+          let html = htmlTemplate.replace(
+            /{{nome}}/g,
+            participant.name || "Participante"
           );
 
-          // Prepare QR codes
-          let qrCode1, qrCode2;
-          if (
-            participant.qrRawData &&
-            participant.qrRawData["2025-05-31"] &&
-            participant.qrRawData["2025-06-01"]
-          ) {
-            logger.info(`Usando QR codes existentes para ${participant.email}`);
-            try {
-              qrCode1 = await QRCode.toDataURL(
-                participant.qrRawData["2025-05-31"],
-                {
-                  errorCorrectionLevel: "H",
-                  scale: 5,
-                }
-              );
-              qrCode2 = await QRCode.toDataURL(
-                participant.qrRawData["2025-06-01"],
-                {
-                  errorCorrectionLevel: "H",
-                  scale: 5,
-                }
-              );
-              logger.info(
-                `QR codes convertidos para base64: ${participant.email}`
-              );
-              logger.debug(
-                `QR Code 1 (primeiros 50 caracteres): ${qrCode1.substring(
-                  0,
-                  50
-                )}...`
-              );
-              logger.debug(
-                `QR Code 2 (primeiros 50 caracteres): ${qrCode2.substring(
-                  0,
-                  50
-                )}...`
-              );
-            } catch (error) {
-              logger.error(
-                `Erro ao converter QR codes para ${participant.email}: ${error.message}`
-              );
-              throw new Error(`Erro ao converter QR codes: ${error.message}`);
-            }
-          } else {
-            logger.info(`Gerando novos QR codes para ${participant.email}`);
-            try {
-              const { qrCodes, qrRawData } =
-                await CredentialService.generateQRCodesForParticipant(
-                  recipient.checkoutId,
-                  recipient.participantIndex,
-                  participant.name
-                );
-              qrCode1 = qrCodes[0]; // Assuming qrCodes contains base64 images
-              qrCode2 = qrCodes[1];
-              logger.info(`Novos QR codes gerados: ${participant.email}`);
-              logger.debug(
-                `QR Code 1 (primeiros 50 caracteres): ${qrCode1.substring(
-                  0,
-                  50
-                )}...`
-              );
-              logger.debug(
-                `QR Code 2 (primeiros 50 caracteres): ${qrCode2.substring(
-                  0,
-                  50
-                )}...`
-              );
-              await CheckoutRepository.updateParticipant(
-                recipient.checkoutId,
-                recipient.participantIndex,
-                {
-                  qrRawData,
-                  validated: { "2025-05-31": false, "2025-06-01": false },
-                }
-              );
-              logger.info(
-                `QR codes salvos no Firestore para ${participant.email}`
-              );
-            } catch (error) {
-              logger.error(
-                `Erro ao gerar QR codes para ${participant.email}: ${error.message}`
-              );
-              results.push({
-                success: false,
-                message: `Erro ao gerar QR codes para ${participant.name}: ${error.message}`,
-                participantIdx: recipient.participantIndex,
-                checkoutId: recipient.checkoutId,
-              });
-              continue;
-            }
-          }
-
-          // Validate QR code format
-          if (
-            !qrCode1.startsWith("data:image/png;base64,") ||
-            !qrCode2.startsWith("data:image/png;base64,")
-          ) {
-            logger.error(
-              `Formato de QR code inválido para ${participant.email}`
-            );
-            results.push({
-              success: false,
-              message: `Formato de QR code inválido para ${participant.name}`,
-              participantIdx: recipient.participantIndex,
-              checkoutId: recipient.checkoutId,
-            });
-            continue;
-          }
-
-          // Prepare email content
-          let html = htmlTemplate
-            .replace(/{{nome}}/g, participant.name || "Participante")
-            .replace("{{qrCode1}}", qrCode1)
-            .replace("{{qrCode2}}", qrCode2);
-          logger.info(`Template preenchido para ${participant.email}`);
-
-          const attachments = [
-            {
-              filename: "cronograma.png",
-              content: imageContent,
-              cid: "cronograma@eventoma2025",
-            },
-          ];
-
-          // Replace image path with CID
-          html = html.replace(
-            "./assets/image.png",
-            "cid:cronograma@eventoma2025"
-          );
-
-          // Fallback: Attach QR codes as images if inline fails
-          try {
-            const qrCode1Buffer = Buffer.from(qrCode1.split(",")[1], "base64");
-            const qrCode2Buffer = Buffer.from(qrCode2.split(",")[1], "base64");
-            attachments.push(
-              {
-                filename: `qrcode_day1_${
-                  participant.name || "participant"
-                }.png`,
-                content: qrCode1Buffer,
-                cid: "qrcode1@eventoma2025",
-              },
-              {
-                filename: `qrcode_day2_${
-                  participant.name || "participant"
-                }.png`,
-                content: qrCode2Buffer,
-                cid: "qrcode2@eventoma2025",
-              }
-            );
-            html = html
-              .replace("{{qrCode1}}", "cid:qrcode1@eventoma2025")
-              .replace("{{qrCode2}}", "cid:qrcode2@eventoma2025");
-            logger.info(
-              `QR codes adicionados como anexos inline para ${participant.email}`
-            );
-          } catch (error) {
-            logger.warn(
-              `Erro ao adicionar QR codes como anexos para ${participant.email}: ${error.message}`
-            );
-          }
-
-          // Send email
+          // Enviar e-mail
           try {
             await this.sendEmail({
               from: account.user,
               to: participant.email,
               subject:
                 templateData.subject ||
-                "Confirmação de Inscrição - Congresso Autismo MA 2025",
+                "Obrigado por participar do Congresso Autismo MA 2025!",
               html,
-              attachments,
+              attachments: [], // Sem anexos para este e-mail
             });
-            logger.info(`Email enviado para ${participant.email}`);
+            logger.info(`E-mail enviado para ${participant.email}`);
 
-            // Update participant with emailSent flag
+            // Atualizar participante com a flag emailSent
             await CheckoutRepository.updateParticipant(
               recipient.checkoutId,
               recipient.participantIndex,
@@ -1251,43 +1438,43 @@ class EmailService {
 
             results.push({
               success: true,
-              message: `Email enviado com sucesso para ${participant.name}`,
+              message: `E-mail enviado com sucesso para ${participant.name}`,
               participantIdx: recipient.participantIndex,
               checkoutId: recipient.checkoutId,
             });
           } catch (error) {
             logger.error(
-              `Erro ao enviar email para ${participant.email}: ${error.message}`
+              `Erro ao enviar e-mail para ${participant.email}: ${error.message}`
             );
             results.push({
               success: false,
-              message: `Erro ao enviar email para ${participant.name}: ${error.message}`,
+              message: `Erro ao enviar e-mail para ${participant.name}: ${error.message}`,
               participantIdx: recipient.participantIndex,
               checkoutId: recipient.checkoutId,
             });
             continue;
           }
 
-          // Update email stats
+          // Atualizar estatísticas de e-mail
           await this.incrementEmailCount(1);
         }
 
-        await delay(5000);
+        await delay(60000);
         logger.info("Aguardando 5 segundos antes do próximo lote");
         accountIndex++;
       }
 
       return {
         success: true,
-        message: "Processamento de emails de teste concluído",
+        message: "Processamento de e-mails pós-evento concluído",
         results,
       };
     } catch (error) {
-      logger.error(`Erro ao processar emails de teste: ${error.message}`);
+      logger.error(`Erro ao processar e-mails pós-evento: ${error.message}`);
       throw error;
     } finally {
       this.isProcessing = false;
-      logger.info("Processamento de emails de teste concluído");
+      logger.info("Processamento de e-mails pós-evento concluído");
     }
   }
 }

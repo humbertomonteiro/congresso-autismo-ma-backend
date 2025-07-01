@@ -236,15 +236,19 @@ const generateBoletoPDF = async (
   return pdfPath;
 };
 
-const generateCertificatePDF = async (cpf, name) => {
+const generateCertificatePDF = async (cpf, name, templateHTML) => {
   const tempDir = path.join(__dirname, "../temp");
   const pdfPath = path.join(tempDir, `certificate_${cpf}.pdf`);
 
   await fs.mkdir(tempDir, { recursive: true });
 
+  if (!templateHTML) {
+    templateHTML = "default";
+  }
+
   const templatePath = path.join(
     __dirname,
-    "../templates/certificateTemplate.html"
+    `../templates/certificateTemplate-${templateHTML}.html`
   );
   const htmlTemplate = await fs.readFile(templatePath, "utf8");
 
