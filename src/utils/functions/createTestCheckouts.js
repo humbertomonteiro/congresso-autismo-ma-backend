@@ -1,4 +1,4 @@
-const { db } = require("./src/config").firebase;
+const { db } = require("../../config").firebase;
 const { collection, addDoc } = require("firebase/firestore");
 
 async function createTestCheckouts() {
@@ -8,7 +8,7 @@ async function createTestCheckouts() {
       status: "test",
       paymentMethod: "test",
       totalAmount: "100.00",
-      eventName: "Congresso Autismo MA 2025",
+      eventName: "Congresso Autismo MA 2026",
       participants: [
         {
           name: "Ana Teste",
@@ -38,7 +38,7 @@ async function createTestCheckouts() {
       status: "test",
       paymentMethod: "test",
       totalAmount: "200.00",
-      eventName: "Congresso Autismo MA 2025",
+      eventName: "Congresso Autismo MA 2026",
       participants: [
         {
           name: "Bruno Teste",

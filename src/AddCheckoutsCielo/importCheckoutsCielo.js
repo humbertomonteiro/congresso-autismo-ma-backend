@@ -97,7 +97,7 @@ const importCheckoutsFromExcelInBatches = (filePath) => {
           checkout["Status do Pagamento"] === "Pago" ? "approved" : "error", // Ajustado aqui
         paymentMethod: isCreditCard ? "creditCard" : "pix",
         totalAmount: checkout["Valor Total"].toString(),
-        eventName: "Congresso Autismo MA 2025",
+        eventName: "Congresso Autismo MA 2026",
         participants: [
           {
             name: checkout["Nome Comprador"],

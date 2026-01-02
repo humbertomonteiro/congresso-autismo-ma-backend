@@ -1,9 +1,9 @@
 // src/services/checkApprovedQRCodeFormat.js
 const { collection, getDocs } = require("firebase/firestore");
-const config = require("./src/config");
+const config = require("../../config");
 require("dotenv").config();
 
-const EVENT_DATES = ["2025-05-31", "2025-06-01"];
+const EVENT_DATES = ["2026-05-31", "2026-06-01"];
 
 async function checkApprovedQRCodeFormat() {
   try {

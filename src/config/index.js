@@ -81,12 +81,6 @@ const bancoDoBrasilConfig = {
   certificadoSenha: process.env.BB_CERTIFICADO_SENHA,
 };
 
-// Log para depuração (pode remover em produção)
-console.log("Cielo Config:", {
-  merchantId: cieloConfig.merchantId,
-  merchantKey: cieloConfig.merchantKey,
-});
-
 // Exportação das configurações
 module.exports = {
   port: process.env.PORT || 5000, // Adicionado para o index.js

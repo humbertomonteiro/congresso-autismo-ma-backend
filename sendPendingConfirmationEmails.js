@@ -51,7 +51,7 @@ async function sendPendingConfirmationEmails() {
           checkoutId,
           from: EMAIL_FROM,
           to: participant.email,
-          subject: "Confirmação de Pagamento - Congresso Autismo MA 2025",
+          subject: "Confirmação de Pagamento - Congresso Autismo MA 2026",
           participantIndex: i,
           data: {
             name: participant.name || "Participante",

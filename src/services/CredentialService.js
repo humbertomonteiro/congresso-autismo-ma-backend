@@ -9,8 +9,8 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const secret = process.env.QR_SECRET;
-const EVENT_NAME = "Congresso Autismo MA 2025";
-const EVENT_DATES = ["2025-05-31", "2025-06-01"];
+const EVENT_NAME = "Congresso Autismo MA 2026";
+const EVENT_DATES = ["2026-05-31", "2026-06-01"];
 
 class CredentialService {
   async generateQRCodesForParticipant(
@@ -55,7 +55,7 @@ class CredentialService {
 
       participant.qrCodes = qrCodes;
       participant.qrRawData = qrRawData;
-      participant.validated = { "2025-05-31": false, "2025-06-01": false };
+      participant.validated = { "2026-05-31": false, "2026-06-01": false };
       await updateDoc(checkoutRef, { participants: checkout.participants });
 
       return { qrCodes, qrRawData };

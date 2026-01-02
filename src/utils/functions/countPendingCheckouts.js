@@ -1,6 +1,6 @@
-const { db } = require("./src/config").firebase;
+const { db } = require("../../config").firebase;
 const { collection, query, where, getDocs } = require("firebase/firestore");
-const logger = require("./src/logger");
+const logger = require("../../logger");
 
 async function countPendingCheckouts() {
   try {

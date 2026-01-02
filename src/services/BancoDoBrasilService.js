@@ -17,8 +17,8 @@ class BancoDoBrasilService {
       // pfx: fs.readFileSync(config.bancoDoBrasil.certificadoPfx),
       // passphrase: config.bancoDoBrasil.certificadoSenha,
     });
-    this.basePrice = 798;
-    this.halfPrice = 399;
+    this.basePrice = 289;
+    this.halfPrice = 144.5;
   }
 
   // formatDate(date) {
@@ -144,8 +144,8 @@ class BancoDoBrasilService {
         original: (amount / 100).toFixed(2),
       },
       chave: "saludcuidarmais@gmail.com", // Chave Pix fixa
-      solicitacaoPagador: "Pagamento Congresso Autismo MA 2025",
-      infoAdicionais: [{ nome: "Evento", valor: "Congresso Autismo MA 2025" }],
+      solicitacaoPagador: "Pagamento Congresso Autismo MA 2026",
+      infoAdicionais: [{ nome: "Evento", valor: "Congresso Autismo MA 2026" }],
     };
 
     const response = await this.requestWithRetries(pixEndpoint, payload, {
@@ -160,7 +160,7 @@ class BancoDoBrasilService {
       status: "pending",
       paymentMethod: "pix",
       totalAmount: (amount / 100).toFixed(2),
-      eventName: "Congresso Autismo MA 2025",
+      eventName: "Congresso Autismo MA 2026",
       participants: [{ name: customer.Name, document: customer.Identity }], // Ajuste se vier do frontend
       paymentId: response.txid,
       orderDetails: {
@@ -277,7 +277,7 @@ class BancoDoBrasilService {
         descricaoTipoTitulo: "DM",
         indicadorPermissaoRecebimentoParcial: "S",
         numeroTituloBeneficiario: `0${cleanIdentity.slice(0, 4)}-DSD-1`,
-        textoCampoUtilizacaoBeneficiario: "CONGRESSOAUTISMOMA2025",
+        textoCampoUtilizacaoBeneficiario: "CONGRESSOAUTISMOMA2026",
         numeroTituloCliente: numeroTituloCliente,
         desconto: { tipo: 0 },
         jurosMora: { tipo: 1, valor: 1.0, porcentagem: 0 },
@@ -330,7 +330,7 @@ class BancoDoBrasilService {
         status: "pending",
         paymentMethod: "boleto",
         totalAmount: totals.total,
-        eventName: "Congresso Autismo MA 2025",
+        eventName: "Congresso Autismo MA 2026",
         participants,
         paymentId: boletoResponse.numero,
         orderDetails: {
@@ -386,7 +386,7 @@ class BancoDoBrasilService {
         status: "error",
         paymentMethod: "boleto",
         totalAmount: totals?.total || "0.00",
-        eventName: "Congresso Autismo MA 2025",
+        eventName: "Congresso Autismo MA 2026",
         participants: participants || [],
         paymentId: boletoResponse?.numero || null,
         orderDetails: totals

@@ -85,7 +85,7 @@ const generateParticipantsList = async () => {
     // Adicionar título
     doc.font("Helvetica-Bold").fontSize(10);
     doc.text(
-      "Lista de Participantes - Congresso Autismo MA 2025",
+      "Lista de Participantes - Congresso Autismo MA 2026",
       margin,
       margin
     );

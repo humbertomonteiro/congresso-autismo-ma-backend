@@ -271,8 +271,8 @@ class EmailService {
   //   // Verifica se o participante já tem QR codes (evita duplicatas)
   //   if (
   //     participant.qrRawData &&
-  //     participant.qrRawData["2025-05-31"] &&
-  //     participant.qrRawData["2025-06-01"]
+  //     participant.qrRawData["2026-05-31"] &&
+  //     participant.qrRawData["2026-06-01"]
   //   ) {
   //     logger.info(
   //       `Participante ${participant.email} (índice ${participantIdx}) já possui QR codes. Ignorando envio.`
@@ -352,7 +352,7 @@ class EmailService {
   //   // Salva os QR codes no Firebase
   //   await CheckoutRepository.updateParticipant(checkoutId, participantIdx, {
   //     qrRawData,
-  //     validated: { "2025-05-31": false, "2025-06-01": false },
+  //     validated: { "2026-05-31": false, "2026-06-01": false },
   //   });
 
   //   // Remove o PDF temporário
@@ -417,8 +417,8 @@ class EmailService {
       // Verifica se o participante já tem QR codes
       if (
         participant.qrRawData &&
-        participant.qrRawData["2025-05-31"] &&
-        participant.qrRawData["2025-06-01"]
+        participant.qrRawData["2026-05-31"] &&
+        participant.qrRawData["2026-06-01"]
       ) {
         logger.info(
           `Participante ${participant.email} (índice ${participantIdx}) já possui QR codes. Ignorando envio.`
@@ -503,7 +503,7 @@ class EmailService {
       // Salva os QR codes no Firebase
       await CheckoutRepository.updateParticipant(checkoutId, participantIdx, {
         qrRawData,
-        validated: { "2025-05-31": false, "2025-06-01": false },
+        validated: { "2026-05-31": false, "2026-06-01": false },
       });
 
       // Remove o PDF temporário
@@ -623,7 +623,7 @@ class EmailService {
   //                 participantIndex,
   //                 {
   //                   qrRawData,
-  //                   validated: { "2025-05-31": false, "2025-06-01": false },
+  //                   validated: { "2026-05-31": false, "2026-06-01": false },
   //                 }
   //               );
   //             }
@@ -782,8 +782,8 @@ class EmailService {
 
               if (
                 participant.qrRawData &&
-                participant.qrRawData["2025-05-31"] &&
-                participant.qrRawData["2025-06-01"]
+                participant.qrRawData["2026-05-31"] &&
+                participant.qrRawData["2026-06-01"]
               ) {
                 logger.info(
                   `Usando QR codes existentes para ${participant.email}`
@@ -791,10 +791,10 @@ class EmailService {
 
                 try {
                   const qrCode1 = await QRCode.toDataURL(
-                    participant.qrRawData["2025-05-31"]
+                    participant.qrRawData["2026-05-31"]
                   );
                   const qrCode2 = await QRCode.toDataURL(
-                    participant.qrRawData["2025-06-01"]
+                    participant.qrRawData["2026-06-01"]
                   );
                   qrCodesData = [qrCode1, qrCode2];
                   logger.info(
@@ -807,8 +807,8 @@ class EmailService {
                   throw error;
                 }
                 // qrCodesData = [
-                //   participant.qrRawData["2025-05-31"],
-                //   participant.qrRawData["2025-06-01"],
+                //   participant.qrRawData["2026-05-31"],
+                //   participant.qrRawData["2026-06-01"],
                 // ];
                 // logger.info(
                 //   `Dados de QR Code preparados para ${participant.email}`
@@ -831,7 +831,7 @@ class EmailService {
                     recipient.participantIndex,
                     {
                       qrRawData: result.qrRawData,
-                      validated: { "2025-05-31": false, "2025-06-01": false },
+                      validated: { "2026-05-31": false, "2026-06-01": false },
                     }
                   );
                 } catch (error) {
@@ -1067,20 +1067,20 @@ class EmailService {
   //         let qrCode1, qrCode2;
   //         if (
   //           participant.qrRawData &&
-  //           participant.qrRawData["2025-05-31"] &&
-  //           participant.qrRawData["2025-06-01"]
+  //           participant.qrRawData["2026-05-31"] &&
+  //           participant.qrRawData["2026-06-01"]
   //         ) {
   //           logger.info(`Usando QR codes existentes para ${participant.email}`);
   //           try {
   //             qrCode1 = await QRCode.toDataURL(
-  //               participant.qrRawData["2025-05-31"],
+  //               participant.qrRawData["2026-05-31"],
   //               {
   //                 errorCorrectionLevel: "H",
   //                 scale: 5,
   //               }
   //             );
   //             qrCode2 = await QRCode.toDataURL(
-  //               participant.qrRawData["2025-06-01"],
+  //               participant.qrRawData["2026-06-01"],
   //               {
   //                 errorCorrectionLevel: "H",
   //                 scale: 5,
@@ -1136,7 +1136,7 @@ class EmailService {
   //               recipient.participantIndex,
   //               {
   //                 qrRawData,
-  //                 validated: { "2025-05-31": false, "2025-06-01": false },
+  //                 validated: { "2026-05-31": false, "2026-06-01": false },
   //               }
   //             );
   //             logger.info(
@@ -1184,14 +1184,14 @@ class EmailService {
   //           {
   //             filename: "cronograma.png",
   //             content: imageContent,
-  //             cid: "cronograma@eventoma2025",
+  //             cid: "cronograma@eventoma2026",
   //           },
   //         ];
 
   //         // Replace image path with CID
   //         html = html.replace(
   //           "./assets/image.png",
-  //           "cid:cronograma@eventoma2025"
+  //           "cid:cronograma@eventoma2026"
   //         );
 
   //         // Fallback: Attach QR codes as images if inline fails
@@ -1204,19 +1204,19 @@ class EmailService {
   //                 participant.name || "participant"
   //               }.png`,
   //               content: qrCode1Buffer,
-  //               cid: "qrcode1@eventoma2025",
+  //               cid: "qrcode1@eventoma2026",
   //             },
   //             {
   //               filename: `qrcode_day2_${
   //                 participant.name || "participant"
   //               }.png`,
   //               content: qrCode2Buffer,
-  //               cid: "qrcode2@eventoma2025",
+  //               cid: "qrcode2@eventoma2026",
   //             }
   //           );
   //           html = html
-  //             .replace("{{qrCode1}}", "cid:qrcode1@eventoma2025")
-  //             .replace("{{qrCode2}}", "cid:qrcode2@eventoma2025");
+  //             .replace("{{qrCode1}}", "cid:qrcode1@eventoma2026")
+  //             .replace("{{qrCode2}}", "cid:qrcode2@eventoma2026");
   //           logger.info(
   //             `QR codes adicionados como anexos inline para ${participant.email}`
   //           );
@@ -1233,7 +1233,7 @@ class EmailService {
   //             to: participant.email,
   //             subject:
   //               templateData.subject ||
-  //               "Confirmação de Inscrição - Congresso Autismo MA 2025",
+  //               "Confirmação de Inscrição - Congresso Autismo MA 2026",
   //             html,
   //             attachments,
   //           });
@@ -1420,7 +1420,7 @@ class EmailService {
               to: participant.email,
               subject:
                 templateData.subject ||
-                "Obrigado por participar do Congresso Autismo MA 2025!",
+                "Obrigado por participar do Congresso Autismo MA 2026!",
               html,
               attachments: [], // Sem anexos para este e-mail
             });

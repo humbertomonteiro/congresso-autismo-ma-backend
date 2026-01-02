@@ -1,7 +1,7 @@
 const PDFDocument = require("pdfkit");
 const fs = require("fs");
-const CheckoutRepository = require("./src/repositories/CheckoutRepository");
-const logger = require("./src/logger");
+const CheckoutRepository = require("../../repositories/CheckoutRepository");
+const logger = require("../../logger");
 
 // Função para formatar CPF
 const formatCpf = (cpf) => {
@@ -82,7 +82,7 @@ const generateParticipantsList = async () => {
     // Adicionar título
     doc.font("Helvetica-Bold").fontSize(10);
     doc.text(
-      "Lista de Participantes - Congresso Autismo MA 2025",
+      "Lista de Participantes - Congresso Autismo MA 2026",
       margin,
       margin
     );

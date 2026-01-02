@@ -1,6 +1,6 @@
-const CheckoutRepository = require("./src/repositories/CheckoutRepository");
+const CheckoutRepository = require("../../repositories/CheckoutRepository");
 const fs = require("fs");
-const logger = require("./src/logger");
+const logger = require("../../logger");
 
 // Função para formatar CPF
 const formatCpf = (cpf) => {

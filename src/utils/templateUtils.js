@@ -5,8 +5,8 @@ const bwipjs = require("bwip-js");
 const QRCode = require("qrcode");
 const config = require("../config");
 
-const BASE_PRICE = 549.0;
-const HALF_PRICE = 399.0;
+const BASE_PRICE = 289.0;
+const HALF_PRICE = 144.5;
 
 const calculateTotal = (ticketQuantity, halfTickets, coupon) => {
   if (!Number.isInteger(ticketQuantity) || ticketQuantity <= 0) {
@@ -61,8 +61,8 @@ const generateTicketPDF = async (recipient, qrCodes) => {
   await fs.mkdir(tempDir, { recursive: true });
 
   // Assume que qrCodes já vem em base64 (data:image/png;base64,...)
-  const qrCodeDay1 = qrCodes["2025-05-31"];
-  const qrCodeDay2 = qrCodes["2025-06-01"];
+  const qrCodeDay1 = qrCodes["2026-05-31"];
+  const qrCodeDay2 = qrCodes["2026-06-01"];
 
   const templatePath = path.join(__dirname, "../templates/ticketTemplate.html");
   const htmlTemplate = await fs.readFile(templatePath, "utf8");
@@ -71,9 +71,9 @@ const generateTicketPDF = async (recipient, qrCodes) => {
     .replace(/{{PARTICIPANT_NAME}}/g, recipient.participantName.toUpperCase())
     .replace(/{{QRCODE_DAY1}}/g, qrCodeDay1)
     .replace(/{{QRCODE_DAY2}}/g, qrCodeDay2)
-    .replace(/{{EVENT_NAME}}/g, "CONGRESSO AUTISMO MA 2025")
-    .replace(/{{DATE_DAY1}}/g, "31.05.2025")
-    .replace(/{{DATE_DAY2}}/g, "01.06.2025")
+    .replace(/{{EVENT_NAME}}/g, "CONGRESSO AUTISMO MA 2026")
+    .replace(/{{DATE_DAY1}}/g, "31.05.2026")
+    .replace(/{{DATE_DAY2}}/g, "01.06.2026")
     .replace(/{{LOCATION}}/g, "CENTRO DE CONVENÇÕES MA")
     .replace(/{{TIME}}/g, "08:00 - 18:00")
     .replace(/{{SUPPORT_EMAIL}}/g, "suporte@congressoautismoma.com.br");
@@ -254,7 +254,7 @@ const generateCertificatePDF = async (cpf, name, templateHTML) => {
 
   const htmlContent = htmlTemplate
     .replace(/{{PARTICIPANT_NAME}}/g, name.toUpperCase())
-    .replace(/{{EVENT_NAME}}/g, "CONGRESSO AUTISMO MA 2025")
+    .replace(/{{EVENT_NAME}}/g, "CONGRESSO AUTISMO MA 2026")
     .replace(/{{ISSUE_DATE}}/g, formatDate(new Date()));
 
   const executablePath =

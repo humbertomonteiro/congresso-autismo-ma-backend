@@ -25,7 +25,7 @@ const generateParticipantsList = async () => {
     });
     console.log(`Encontrados ${checkouts.length} checkouts aprovados.`);
 
-    // Coletar participantes que foram ao evento (validated['2025-05-31'] === true)
+    // Coletar participantes que foram ao evento (validated['2026-05-31'] === true)
     const participants = [];
     checkouts.forEach((checkout) => {
       if (checkout.participants && Array.isArray(checkout.participants)) {
@@ -33,9 +33,9 @@ const generateParticipantsList = async () => {
           const name =
             p.name && typeof p.name === "string" ? p.name.trim() : "";
           const cpf = p.cpf || p.document || "";
-          // Verificar se o participante tem validated['2025-05-31'] === true
+          // Verificar se o participante tem validated['2026-05-31'] === true
           const attendedFirstDay =
-            p.validated && p.validated["2025-05-31"] === true;
+            p.validated && p.validated["2026-05-31"] === true;
           if (name && cpf && attendedFirstDay) {
             participants.push({
               name,
@@ -86,7 +86,7 @@ const generateParticipantsList = async () => {
     // Adicionar título
     doc.font("Helvetica-Bold").fontSize(10);
     doc.text(
-      "Lista de Participantes - Congresso Autismo MA 2025",
+      "Lista de Participantes - Congresso Autismo MA 2026",
       margin,
       margin
     );

@@ -6,8 +6,8 @@ const { startOfDay, endOfDay, parse } = require("date-fns");
 
 class CheckoutService {
   constructor() {
-    this.basePrice = 798;
-    this.halfPrice = 399;
+    this.basePrice = 289;
+    this.halfPrice = 144.5;
   }
 
   calculateDiscount(fullTickets, halfTickets, valueTicket) {

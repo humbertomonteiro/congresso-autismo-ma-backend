@@ -152,7 +152,7 @@ class CheckoutRepository {
           checkoutId: checkoutId,
           from: process.env.EMAIL_USER_1,
           to: participant.email,
-          subject: "Confirmação de Pagamento - Congresso Autismo MA 2025",
+          subject: "Confirmação de Pagamento - Congresso Autismo MA 2026",
           data: {
             name: participant.name || "Participante",
             transactionId: checkoutData.transactionId || "N/A",
