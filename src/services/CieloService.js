@@ -4,7 +4,8 @@ const CheckoutRepository = require("../repositories/CheckoutRepository");
 
 const { toZonedTime } = require("date-fns-tz");
 
-const EVENT_NAME = "Congresso Autismo MA 2026";
+const config = require("../config");
+const EVENT_NAME = config.event.name;
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 

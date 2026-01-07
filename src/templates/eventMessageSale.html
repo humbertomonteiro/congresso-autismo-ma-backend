@@ -20,15 +20,16 @@
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       }
       .header {
-        background-color: #007bff;
         color: #ffffff;
         text-align: center;
         padding: 20px;
+        padding-bottom: 0;
       }
       .header h1 {
         margin: 0;
         font-size: 24px;
       }
+
       .content {
         padding: 20px;
         color: #333333;
@@ -39,15 +40,20 @@
         color: #007bff;
       }
       .content p {
-        margin: 10px 0;
+        margin: 20px 0;
       }
       .qr-code {
         text-align: center;
         margin: 20px 0;
       }
       .qr-code img {
-        max-width: 150px;
+        max-width: 100px;
         height: auto;
+      }
+      .ass {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        align-items: center;
       }
       .footer {
         background-color: #f4f4f4;
@@ -67,7 +73,7 @@
       }
 
       .content .img {
-        width: 500px;
+        width: 300px;
       }
       @media only screen and (max-width: 600px) {
         .container {
@@ -86,52 +92,52 @@
   <body>
     <div class="container">
       <div class="header">
-        <h1>Congresso Autismo MA 2026</h1>
+        <!-- <h1>Congresso Autismo MA 2026</h1> -->
+        <img class="img-header" src="./assets/logo.png" alt="Imagem da logo." />
       </div>
       <div class="content">
-        <h2>Saudações, {{nome}}!</h2>
+        <!-- <h2>Saudações, {{nome}}!</h2> -->
         <p>
-          Estamos ansiosos por esse encontro cheio de conhecimento e emoção,
-          voce não pode perder nenhum detalhe, então fique atento na
-          programação:
+          É com muita alegria que compartilhamos uma notícia especial com você,
+          que já fez parte da nossa história.
         </p>
         <p>
-          <strong>Credenciamento</strong>: 16/05/2026 as 07:15 . Será
-          obrigatório o uso do crachá após credenciamento
+          Está confirmada a 4ª edição do Congresso de Autismo da clínica Salud
+          Cuidar Mais. Que acontecerá nos dias 16 e 17 de maio, em São Luis do
+          Maranhão.
         </p>
-        <p>Programação do evento:</p>
-        <img class="img" src="./assets/image.png" alt="Imagem do cronograma." />
-        <p>Caso não esteja visualizando, veja no nosso site:</p>
-        <a class="button" href="https://congressoautismoma.com.br/#cronograma"
-          >Cronograma Autismo MA 2026</a
-        >
         <p>
-          E aproveitando a oportunidade não esqueça de apresentar seus ingressos
-          no credenciamento:
+          Você está recebendo essa informação em primeira mão, como forma de
+          reconhecimento por já ter participado de edições anteriores e por
+          caminhar conosco na construção de um evento cada vez mais relevante,
+          humano e transformador.
+        </p>
+        <p>
+          Em breve, enviaremos a programação completa, palestrantes convidados e
+          todas as informações sobre inscrições. Mas fizemos questão de avisar
+          antes, porque você é parte fundamental dessa trajetória.
+        </p>
+        <p>
+          Seguimos com o mesmo propósito: compartilhar conhecimento, promover
+          conexões e fortalecer práticas que impactam positivamente a vida das
+          pessoas neurodivergentes, suas famílias e os profissionais da área.
         </p>
 
-        <p>
-          Os Qr Codes estão em anexo, caso queira baixar um PDF com os
-          ingressos, clique no botão abaixo:
-        </p>
-        <a class="button" href="https://congressoautismoma.com.br/ingressos"
-          >Seus ingressos</a
-        >
-        <!-- <div class="qr-code">
-          <p><strong>QR Code - 31 de Maio de 2026</strong></p>
-          <img src="{{qrCode1}}" alt="QR Code 31/05/2026" />
+        <p>Esperamos você para mais um encontro especial.</p>
+        <p>Fiquem informados pelo Instagram da @saludcuidarmais</p>
+        <p>Com carinho,</p>
+        <div class="ass">
+          <img
+            class="img"
+            src="https://congressoautismoma.vercel.app/assets/logo-no-text-D-x9nHzY.png"
+            alt="Imagem da logo."
+          />
+          <div>
+            <div>Ana Paula Duarte</div>
+            <div>989 81644714</div>
+            <div>Congresso de Autismo</div>
+          </div>
         </div>
-        <div class="qr-code">
-          <p><strong>QR Code - 1 de Junho de 2026</strong></p>
-          <img src="{{qrCode2}}" alt="QR Code 01/06/2026" />
-        </div> -->
-        <p>
-          O evento acontecerá no centro de convenções Multicenter Sebrae
-          localizado na Avenida Jeronimo de Albuquerque s/n Alto do Calhau São
-          Luis-MA , nos dias 16/05 e 17/05,
-        </p>
-        <p>Esperamos por você la.</p>
-        <p>Atenciosamente, a comissão organizadora.</p>
       </div>
       <div class="footer">
         <p>Congresso Autismo MA 2026 | São Luís, Maranhão</p>

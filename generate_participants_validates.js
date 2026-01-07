@@ -35,7 +35,7 @@ const generateParticipantsList = async () => {
           const cpf = p.cpf || p.document || "";
           // Verificar se o participante tem validated['2026-05-31'] === true
           const attendedFirstDay =
-            p.validated && p.validated["2026-05-31"] === true;
+            p.validated && p.validated["2026-05-16"] === true;
           if (name && cpf && attendedFirstDay) {
             participants.push({
               name,

@@ -3,7 +3,7 @@ const { collection, getDocs } = require("firebase/firestore");
 const config = require("../../config");
 require("dotenv").config();
 
-const EVENT_DATES = ["2026-05-31", "2026-06-01"];
+const EVENT_DATES = config.event.dates;
 
 async function checkApprovedQRCodeFormat() {
   try {

@@ -1,5 +1,4 @@
 // src/services/CredentialService.js
-const config = require("../config"); // Ajustado para nova estrutura
 const { doc, getDoc, updateDoc } = require("firebase/firestore");
 const QRCode = require("qrcode");
 const crypto = require("crypto");
@@ -9,8 +8,9 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const secret = process.env.QR_SECRET;
-const EVENT_NAME = "Congresso Autismo MA 2026";
-const EVENT_DATES = ["2026-05-31", "2026-06-01"];
+const config = require("../config");
+const EVENT_NAME = config.event.name;
+const EVENT_DATES = config.event.dates;
 
 class CredentialService {
   async generateQRCodesForParticipant(
@@ -55,7 +55,7 @@ class CredentialService {
 
       participant.qrCodes = qrCodes;
       participant.qrRawData = qrRawData;
-      participant.validated = { "2026-05-31": false, "2026-06-01": false };
+      participant.validated = { "2026-05-16": false, "2026-05-17": false };
       await updateDoc(checkoutRef, { participants: checkout.participants });
 
       return { qrCodes, qrRawData };

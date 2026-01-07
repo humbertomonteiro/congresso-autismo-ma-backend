@@ -61,7 +61,7 @@ class EmailService {
       logger.info("Stats inicializados no Firestore: totalSent=0");
     }
 
-    const totalSent = stats.totalSent || 0; // Garante que não seja undefined
+    const totalSent = stats.totalSent || 0;
     const available = this.totalDailyLimit - totalSent;
     const availableForTemplates = Math.max(
       0,
@@ -417,8 +417,8 @@ class EmailService {
       // Verifica se o participante já tem QR codes
       if (
         participant.qrRawData &&
-        participant.qrRawData["2026-05-31"] &&
-        participant.qrRawData["2026-06-01"]
+        participant.qrRawData["2026-05-16"] &&
+        participant.qrRawData["2026-05-17"]
       ) {
         logger.info(
           `Participante ${participant.email} (índice ${participantIdx}) já possui QR codes. Ignorando envio.`
@@ -503,7 +503,7 @@ class EmailService {
       // Salva os QR codes no Firebase
       await CheckoutRepository.updateParticipant(checkoutId, participantIdx, {
         qrRawData,
-        validated: { "2026-05-31": false, "2026-06-01": false },
+        validated: { "2026-05-16": false, "2026-05-17": false },
       });
 
       // Remove o PDF temporário
@@ -623,7 +623,7 @@ class EmailService {
   //                 participantIndex,
   //                 {
   //                   qrRawData,
-  //                   validated: { "2026-05-31": false, "2026-06-01": false },
+  //                   validated: { "2026-05-16": false, "2026-06-01": false },
   //                 }
   //               );
   //             }
@@ -782,8 +782,8 @@ class EmailService {
 
               if (
                 participant.qrRawData &&
-                participant.qrRawData["2026-05-31"] &&
-                participant.qrRawData["2026-06-01"]
+                participant.qrRawData["2026-05-16"] &&
+                participant.qrRawData["2026-05-17"]
               ) {
                 logger.info(
                   `Usando QR codes existentes para ${participant.email}`
@@ -791,10 +791,10 @@ class EmailService {
 
                 try {
                   const qrCode1 = await QRCode.toDataURL(
-                    participant.qrRawData["2026-05-31"]
+                    participant.qrRawData["2026-05-16"]
                   );
                   const qrCode2 = await QRCode.toDataURL(
-                    participant.qrRawData["2026-06-01"]
+                    participant.qrRawData["2026-05-17"]
                   );
                   qrCodesData = [qrCode1, qrCode2];
                   logger.info(
@@ -808,7 +808,7 @@ class EmailService {
                 }
                 // qrCodesData = [
                 //   participant.qrRawData["2026-05-31"],
-                //   participant.qrRawData["2026-06-01"],
+                //   participant.qrRawData["2026-05-17"],
                 // ];
                 // logger.info(
                 //   `Dados de QR Code preparados para ${participant.email}`
@@ -831,7 +831,7 @@ class EmailService {
                     recipient.participantIndex,
                     {
                       qrRawData: result.qrRawData,
-                      validated: { "2026-05-31": false, "2026-06-01": false },
+                      validated: { "2026-05-16": false, "2026-05-17": false },
                     }
                   );
                 } catch (error) {
@@ -1068,7 +1068,7 @@ class EmailService {
   //         if (
   //           participant.qrRawData &&
   //           participant.qrRawData["2026-05-31"] &&
-  //           participant.qrRawData["2026-06-01"]
+  //           participant.qrRawData["2026-05-17"]
   //         ) {
   //           logger.info(`Usando QR codes existentes para ${participant.email}`);
   //           try {

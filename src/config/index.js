@@ -81,6 +81,16 @@ const bancoDoBrasilConfig = {
   certificadoSenha: process.env.BB_CERTIFICADO_SENHA,
 };
 
+const eventConfig = {
+  name: "Congresso Autismo MA 2026",
+  dates: ["2026-05-16", "2026-05-17"],
+};
+
+const valueTickets = {
+  allTicket: 289,
+  halfTicket: 144.5,
+};
+
 // Exportação das configurações
 module.exports = {
   port: process.env.PORT || 5000, // Adicionado para o index.js
@@ -93,4 +103,6 @@ module.exports = {
   },
   cielo: cieloConfig,
   bancoDoBrasil: bancoDoBrasilConfig,
+  event: eventConfig,
+  valueTickets,
 };

@@ -4,15 +4,19 @@ const EmailService = require("../services/EmailService"); // Adicionado
 const { toZonedTime, format } = require("date-fns-tz");
 const { startOfDay, endOfDay, parse } = require("date-fns");
 
+const config = require("../config");
+const ALL_TICKET_VALUE = config.valueTickets.allTicket;
+const HALF_TICKET_VALUE = config.valueTickets.halfTicket;
+
 class CheckoutService {
-  constructor() {
-    this.basePrice = 289;
-    this.halfPrice = 144.5;
-  }
+  // constructor() {
+  //   ALL_TICKET_VALUE = 289;
+  //   HALF_TICKET_VALUE = 144.5;
+  // }
 
   calculateDiscount(fullTickets, halfTickets, valueTicket) {
-    const resultDiscontAllTickets = this.basePrice - valueTicket;
-    const resultDiscontHalfTickets = this.halfPrice - valueTicket;
+    const resultDiscontAllTickets = ALL_TICKET_VALUE - valueTicket;
+    const resultDiscontHalfTickets = HALF_TICKET_VALUE - valueTicket;
 
     const discount =
       fullTickets * resultDiscontAllTickets +
@@ -34,8 +38,8 @@ class CheckoutService {
     }
 
     const fullTickets = ticketQuantity - halfTickets;
-    const valueTicketsAll = fullTickets * this.basePrice;
-    const valueTicketsHalf = halfTickets * this.halfPrice;
+    const valueTicketsAll = fullTickets * ALL_TICKET_VALUE;
+    const valueTicketsHalf = halfTickets * HALF_TICKET_VALUE;
     let discount = 0;
 
     if (coupon === "grupo" && ticketQuantity >= 5) {
@@ -252,64 +256,64 @@ class CheckoutService {
       const statusBoleto = BancoDoBrasilService.getBoletoStatus(paymentId);
       console.log("Status dos boletos:", statusBoleto);
 
-      // const checkouts = await CheckoutRepository.getPendingCheckouts();
-      // const checkout = checkouts.find((c) => c.paymentId === paymentId);
+      const checkouts = await CheckoutRepository.getPendingCheckouts();
+      const checkout = checkouts.find((c) => c.paymentId === paymentId);
 
-      // if (!checkout) {
-      //   console.log(
-      //     `[CheckoutService] Checkout com paymentId ${paymentId} não encontrado ou não está pendente`
-      //   );
-      //   return { status: "not_found" };
-      // }
+      if (!checkout) {
+        console.log(
+          `[CheckoutService] Checkout com paymentId ${paymentId} não encontrado ou não está pendente`
+        );
+        return { status: "not_found" };
+      }
 
-      // const { id, paymentMethod, paymentDetails } = checkout;
-      // console.log(
-      //   `[CheckoutService] Checkout encontrado - ID: ${id}, método: ${paymentMethod}`
-      // );
-      // const now = new Date();
+      const { id, paymentMethod, paymentDetails } = checkout;
+      console.log(
+        `[CheckoutService] Checkout encontrado - ID: ${id}, método: ${paymentMethod}`
+      );
+      const now = new Date();
 
-      // let isExpired = false;
-      // if (paymentMethod === "pix" && paymentDetails.pix?.expirationDate) {
-      //   isExpired = new Date(paymentDetails.pix.expirationDate) < now;
-      // } else if (
-      //   paymentMethod === "boleto" &&
-      //   paymentDetails.boleto?.dataVencimento
-      // ) {
-      //   isExpired = new Date(paymentDetails.boleto.dataVencimento) < now;
-      // }
+      let isExpired = false;
+      if (paymentMethod === "pix" && paymentDetails.pix?.expirationDate) {
+        isExpired = new Date(paymentDetails.pix.expirationDate) < now;
+      } else if (
+        paymentMethod === "boleto" &&
+        paymentDetails.boleto?.dataVencimento
+      ) {
+        isExpired = new Date(paymentDetails.boleto.dataVencimento) < now;
+      }
 
-      // if (isExpired) {
-      //   console.log(
-      //     `[CheckoutService] Checkout ${id} (${paymentMethod}) expirado`
-      //   );
-      //   await CheckoutRepository.updateCheckoutStatus(id, "error", null);
-      //   await CheckoutRepository.resetAndUpdatePendingEmails(id, "error"); // Adicionado aqui
-      //   return { status: "error" };
-      // }
+      if (isExpired) {
+        console.log(
+          `[CheckoutService] Checkout ${id} (${paymentMethod}) expirado`
+        );
+        await CheckoutRepository.updateCheckoutStatus(id, "error", null);
+        await CheckoutRepository.resetAndUpdatePendingEmails(id, "error"); // Adicionado aqui
+        return { status: "error" };
+      }
 
-      // let newStatus;
-      // if (paymentMethod === "pix") {
-      //   newStatus = await BancoDoBrasilService.getPixStatus(paymentId);
-      // } else if (paymentMethod === "boleto") {
-      //   const boletoNumber = paymentId;
-      //   console.log(`[CheckoutService] Usando boletoNumber: ${boletoNumber}`);
-      //   newStatus = await BancoDoBrasilService.getBoletoStatus(boletoNumber);
-      // } else {
-      //   throw new Error(`Método de pagamento desconhecido: ${paymentMethod}`);
-      // }
+      let newStatus;
+      if (paymentMethod === "pix") {
+        newStatus = await BancoDoBrasilService.getPixStatus(paymentId);
+      } else if (paymentMethod === "boleto") {
+        const boletoNumber = paymentId;
+        console.log(`[CheckoutService] Usando boletoNumber: ${boletoNumber}`);
+        newStatus = await BancoDoBrasilService.getBoletoStatus(boletoNumber);
+      } else {
+        throw new Error(`Método de pagamento desconhecido: ${paymentMethod}`);
+      }
 
-      // console.log(
-      //   `[CheckoutService] Status do checkout ${id} (${paymentMethod}): ${newStatus}`
-      // );
-      // await CheckoutRepository.updateCheckoutStatus(
-      //   id,
-      //   newStatus,
-      //   newStatus === "approved"
-      //     ? EmailService.sendEmailConfirmationPayment
-      //     : null
-      // );
-      // await CheckoutRepository.resetAndUpdatePendingEmails(id, newStatus); // Adicionado aqui
-      // return { status: newStatus };
+      console.log(
+        `[CheckoutService] Status do checkout ${id} (${paymentMethod}): ${newStatus}`
+      );
+      await CheckoutRepository.updateCheckoutStatus(
+        id,
+        newStatus,
+        newStatus === "approved"
+          ? EmailService.sendEmailConfirmationPayment
+          : null
+      );
+      await CheckoutRepository.resetAndUpdatePendingEmails(id, newStatus); // Adicionado aqui
+      return { status: newStatus };
     } catch (error) {
       console.error(
         `[CheckoutService] Erro ao verificar pagamento ${paymentId}: ${error.message}`

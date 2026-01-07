@@ -1,12 +1,16 @@
 const axios = require("axios");
 const https = require("https");
-const config = require("../config");
-const CheckoutService = require("./CheckoutService");
+// const CheckoutService = require("./CheckoutService");
 const CheckoutRepository = require("../repositories/CheckoutRepository");
 const { generateBoletoPDF } = require("../utils/templateUtils");
 
 const { format, addDays } = require("date-fns");
 const { toZonedTime } = require("date-fns-tz");
+
+const config = require("../config");
+const ALL_TICKET_VALUE = config.valueTickets.allTicket;
+const HALF_TICKET_VALUE = config.valueTickets.halfTicket;
+const EVENT_NAME = config.event.name;
 
 class BancoDoBrasilService {
   constructor() {
@@ -17,8 +21,6 @@ class BancoDoBrasilService {
       // pfx: fs.readFileSync(config.bancoDoBrasil.certificadoPfx),
       // passphrase: config.bancoDoBrasil.certificadoSenha,
     });
-    this.basePrice = 289;
-    this.halfPrice = 144.5;
   }
 
   // formatDate(date) {
@@ -51,15 +53,15 @@ class BancoDoBrasilService {
     }
 
     const fullTickets = ticketQuantity - halfTickets;
-    const valueTicketsAll = fullTickets * this.basePrice;
-    const valueTicketsHalf = halfTickets * this.halfPrice;
+    const valueTicketsAll = fullTickets * ALL_TICKET_VALUE;
+    const valueTicketsHalf = halfTickets * HALF_TICKET_VALUE;
     let discount = 0;
 
     if (coupon === "grupo" && ticketQuantity >= 5) {
       const valueTicket = 649;
 
-      const resultDiscontAllTickets = this.basePrice - valueTicket;
-      const resultDiscontHalfTickets = this.halfPrice - valueTicket;
+      const resultDiscontAllTickets = ALL_TICKET_VALUE - valueTicket;
+      const resultDiscontHalfTickets = HALF_TICKET_VALUE - valueTicket;
 
       discount =
         fullTickets * resultDiscontAllTickets +
@@ -143,9 +145,9 @@ class BancoDoBrasilService {
       valor: {
         original: (amount / 100).toFixed(2),
       },
-      chave: "saludcuidarmais@gmail.com", // Chave Pix fixa
-      solicitacaoPagador: "Pagamento Congresso Autismo MA 2026",
-      infoAdicionais: [{ nome: "Evento", valor: "Congresso Autismo MA 2026" }],
+      chave: "saludcuidarmais@gmail.com",
+      solicitacaoPagador: `Pagamento ${EVENT_NAME}`,
+      infoAdicionais: [{ nome: "Evento", valor: EVENT_NAME }],
     };
 
     const response = await this.requestWithRetries(pixEndpoint, payload, {
@@ -160,7 +162,7 @@ class BancoDoBrasilService {
       status: "pending",
       paymentMethod: "pix",
       totalAmount: (amount / 100).toFixed(2),
-      eventName: "Congresso Autismo MA 2026",
+      eventName: EVENT_NAME,
       participants: [{ name: customer.Name, document: customer.Identity }], // Ajuste se vier do frontend
       paymentId: response.txid,
       orderDetails: {
@@ -330,7 +332,7 @@ class BancoDoBrasilService {
         status: "pending",
         paymentMethod: "boleto",
         totalAmount: totals.total,
-        eventName: "Congresso Autismo MA 2026",
+        eventName: EVENT_NAME,
         participants,
         paymentId: boletoResponse.numero,
         orderDetails: {
@@ -386,7 +388,7 @@ class BancoDoBrasilService {
         status: "error",
         paymentMethod: "boleto",
         totalAmount: totals?.total || "0.00",
-        eventName: "Congresso Autismo MA 2026",
+        eventName: EVENT_NAME,
         participants: participants || [],
         paymentId: boletoResponse?.numero || null,
         orderDetails: totals
