@@ -57,3 +57,1250 @@
 2026-01-06T17:39:39.151Z [INFO]: Stats carregados do Firestore: totalSent=41
 2026-01-06T17:39:39.152Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=41, available=2759, availableForTemplates=2259
 2026-01-06T17:39:41.886Z [INFO]: Email enviado de congressoautismoma@gmail.com para bertohf5@gmail.com. Total enviado hoje: 42
+2026-01-07T11:31:43.282Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T11:31:43.508Z [INFO]: Stats inicializados no Firestore: totalSent=0
+2026-01-07T11:31:43.510Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=0, available=2800, availableForTemplates=2300
+2026-01-07T11:45:54.886Z [INFO]: Stats carregados do Firestore: totalSent=0
+2026-01-07T11:45:54.889Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=0, available=2800, availableForTemplates=2300
+2026-01-07T11:45:54.984Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T11:46:54.651Z [INFO]: Stats carregados do Firestore: totalSent=0
+2026-01-07T11:46:54.654Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=0, available=2800, availableForTemplates=2300
+2026-01-07T11:46:54.745Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T11:49:49.991Z [INFO]: Stats carregados do Firestore: totalSent=0
+2026-01-07T11:49:49.993Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=0, available=2800, availableForTemplates=2300
+2026-01-07T11:49:50.090Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T11:49:50.427Z [INFO]: Template Zh1fAyveRZlQ7IMYLa62 criado para approved com alvo de 3 emails.
+2026-01-07T11:49:50.517Z [INFO]: Updated checkout jvlar6T3moZsmESgD0OJ with: {"pendingEmails":{"_methodName":"arrayUnion","_elements":["Zh1fAyveRZlQ7IMYLa62"]}}
+2026-01-07T11:49:50.610Z [INFO]: Updated checkout uncRrgoG4ZUekqMndEjd with: {"pendingEmails":{"_methodName":"arrayUnion","_elements":["Zh1fAyveRZlQ7IMYLa62"]}}
+2026-01-07T11:49:50.698Z [INFO]: Updated checkout zyeKI89XVJxRjmmoktWw with: {"pendingEmails":{"_methodName":"arrayUnion","_elements":["Zh1fAyveRZlQ7IMYLa62"]}}
+2026-01-07T11:51:33.545Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T11:51:33.558Z [INFO]: Stats carregados do Firestore: totalSent=0
+2026-01-07T11:51:33.558Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=0, available=2800, availableForTemplates=2300
+2026-01-07T11:51:43.083Z [INFO]: Stats carregados do Firestore: totalSent=0
+2026-01-07T11:51:43.085Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=0, available=2800, availableForTemplates=2300
+2026-01-07T11:51:43.088Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T11:51:53.073Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T11:51:53.078Z [INFO]: Stats carregados do Firestore: totalSent=0
+2026-01-07T11:51:53.078Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=0, available=2800, availableForTemplates=2300
+2026-01-07T11:52:03.070Z [INFO]: Stats carregados do Firestore: totalSent=0
+2026-01-07T11:52:03.071Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=0, available=2800, availableForTemplates=2300
+2026-01-07T11:52:03.073Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T11:52:13.061Z [INFO]: Stats carregados do Firestore: totalSent=0
+2026-01-07T11:52:13.062Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=0, available=2800, availableForTemplates=2300
+2026-01-07T11:52:13.065Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T11:52:23.052Z [INFO]: Stats carregados do Firestore: totalSent=0
+2026-01-07T11:52:23.053Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=0, available=2800, availableForTemplates=2300
+2026-01-07T11:52:23.054Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T11:52:27.849Z [INFO]: Template Zh1fAyveRZlQ7IMYLa62 deletado com sucesso
+2026-01-07T11:52:27.949Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T11:52:33.049Z [INFO]: Stats carregados do Firestore: totalSent=0
+2026-01-07T11:52:33.050Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=0, available=2800, availableForTemplates=2300
+2026-01-07T11:52:33.051Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T11:52:43.124Z [INFO]: Stats carregados do Firestore: totalSent=0
+2026-01-07T11:52:43.125Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=0, available=2800, availableForTemplates=2300
+2026-01-07T11:52:43.127Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T11:52:53.412Z [INFO]: Stats carregados do Firestore: totalSent=0
+2026-01-07T11:52:53.412Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=0, available=2800, availableForTemplates=2300
+2026-01-07T11:52:53.414Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T11:53:03.084Z [INFO]: Stats carregados do Firestore: totalSent=0
+2026-01-07T11:53:03.085Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=0, available=2800, availableForTemplates=2300
+2026-01-07T11:53:03.087Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T11:53:37.273Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T11:53:37.275Z [INFO]: Stats carregados do Firestore: totalSent=0
+2026-01-07T11:53:37.276Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=0, available=2800, availableForTemplates=2300
+2026-01-07T11:53:47.270Z [INFO]: Stats carregados do Firestore: totalSent=0
+2026-01-07T11:53:47.271Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=0, available=2800, availableForTemplates=2300
+2026-01-07T11:53:47.273Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T11:53:57.266Z [INFO]: Stats carregados do Firestore: totalSent=0
+2026-01-07T11:53:57.267Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=0, available=2800, availableForTemplates=2300
+2026-01-07T11:53:57.269Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T11:54:07.286Z [INFO]: Stats carregados do Firestore: totalSent=0
+2026-01-07T11:54:07.286Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=0, available=2800, availableForTemplates=2300
+2026-01-07T11:54:07.288Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T11:54:17.273Z [INFO]: Stats carregados do Firestore: totalSent=0
+2026-01-07T11:54:17.274Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=0, available=2800, availableForTemplates=2300
+2026-01-07T11:54:17.275Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T11:54:27.253Z [INFO]: Stats carregados do Firestore: totalSent=0
+2026-01-07T11:54:27.254Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=0, available=2800, availableForTemplates=2300
+2026-01-07T11:54:27.256Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T11:54:37.261Z [INFO]: Stats carregados do Firestore: totalSent=0
+2026-01-07T11:54:37.262Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=0, available=2800, availableForTemplates=2300
+2026-01-07T11:54:37.264Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T11:54:47.262Z [INFO]: Stats carregados do Firestore: totalSent=0
+2026-01-07T11:54:47.263Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=0, available=2800, availableForTemplates=2300
+2026-01-07T11:54:47.264Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T11:54:52.294Z [INFO]: Stats carregados do Firestore: totalSent=0
+2026-01-07T11:54:52.294Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=0, available=2800, availableForTemplates=2300
+2026-01-07T11:54:52.363Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T11:54:52.664Z [INFO]: Template H7HnDoc7OQSSo4YpF576 criado para test com alvo de 2 emails.
+2026-01-07T11:54:52.759Z [INFO]: Updated checkout uncRrgoG4ZUekqMndEjd with: {"pendingEmails":{"_methodName":"arrayUnion","_elements":["H7HnDoc7OQSSo4YpF576"]}}
+2026-01-07T11:54:52.853Z [INFO]: Updated checkout zyeKI89XVJxRjmmoktWw with: {"pendingEmails":{"_methodName":"arrayUnion","_elements":["H7HnDoc7OQSSo4YpF576"]}}
+2026-01-07T11:54:52.871Z [INFO]: Iniciando processamento de e-mails automáticos
+2026-01-07T11:54:52.947Z [INFO]: Stats carregados do Firestore: totalSent=0
+2026-01-07T11:54:52.948Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=0, available=2800, availableForTemplates=2300
+2026-01-07T11:54:52.948Z [INFO]: Estatísticas de e-mail: {"totalSent":0,"available":2800,"availableForTemplates":2300}
+2026-01-07T11:54:53.009Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T11:54:53.009Z [INFO]: Total de templates carregados: 1
+2026-01-07T11:54:53.010Z [INFO]: Templates a processar: H7HnDoc7OQSSo4YpF576
+2026-01-07T11:54:53.010Z [INFO]: Processando template H7HnDoc7OQSSo4YpF576 com statusFilter test, includeQRCodes: true
+2026-01-07T11:54:53.095Z [INFO]: Fetched 2 checkouts needing template H7HnDoc7OQSSo4YpF576
+2026-01-07T11:54:53.096Z [INFO]: Checkouts pendentes para template H7HnDoc7OQSSo4YpF576: 2
+2026-01-07T11:54:53.096Z [INFO]: Checkout uncRrgoG4ZUekqMndEjd tem 1 participantes para enviar
+2026-01-07T11:54:53.096Z [INFO]: Checkout zyeKI89XVJxRjmmoktWw tem 1 participantes para enviar
+2026-01-07T11:54:53.096Z [INFO]: Total de destinatários para template H7HnDoc7OQSSo4YpF576: 2
+2026-01-07T11:54:53.097Z [INFO]: Processando lote de 2 destinatários
+2026-01-07T11:54:53.172Z [INFO]: Stats carregados do Firestore: totalSent=0
+2026-01-07T11:54:53.172Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=0, available=2800, availableForTemplates=2300
+2026-01-07T11:54:53.173Z [INFO]: Usando conta de e-mail: congressoautismoma@gmail.com
+2026-01-07T11:54:53.286Z [INFO]: Template HTML carregado de: D:\humberto\projetos_react\landing-pages\cuidar-mais\backend\src\templates\emailTemplateSimple.html
+2026-01-07T11:54:53.287Z [INFO]: Estatísticas atuais: {"totalSent":0,"available":2800,"availableForTemplates":2300}
+2026-01-07T11:54:53.287Z [INFO]: Processando e-mail para bertohf5@gmail.com (índice 0)
+2026-01-07T11:54:53.287Z [INFO]: Preparando QR codes para bertohf5@gmail.com
+2026-01-07T11:54:53.287Z [INFO]: Usando QR codes existentes para bertohf5@gmail.com
+2026-01-07T11:54:53.504Z [INFO]: QR codes convertidos para imagens: bertohf5@gmail.com
+2026-01-07T11:54:53.505Z [INFO]: Gerando PDF para bertohf5@gmail.com com 2 QR codes
+2026-01-07T11:54:57.258Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T11:54:57.260Z [INFO]: Stats carregados do Firestore: totalSent=0
+2026-01-07T11:54:57.261Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=0, available=2800, availableForTemplates=2300
+2026-01-07T11:54:58.973Z [INFO]: PDF gerado em: D:\humberto\projetos_react\landing-pages\cuidar-mais\backend\src\temp\tickets_uncRrgoG4ZUekqMndEjd_undefined.pdf
+2026-01-07T11:54:59.034Z [INFO]: Stats carregados do Firestore: totalSent=0
+2026-01-07T11:54:59.036Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=0, available=2800, availableForTemplates=2300
+2026-01-07T11:55:04.979Z [INFO]: Email enviado de congressoautismoma@gmail.com para bertohf5@gmail.com. Total enviado hoje: 1
+2026-01-07T11:55:04.980Z [INFO]: E-mail enviado para bertohf5@gmail.com
+2026-01-07T11:55:05.055Z [INFO]: Template H7HnDoc7OQSSo4YpF576 atualizado com sucesso
+2026-01-07T11:55:05.056Z [INFO]: Template H7HnDoc7OQSSo4YpF576 atualizado: sentCount=1, progress=50
+2026-01-07T11:55:05.058Z [INFO]: PDF temporário removido: D:\humberto\projetos_react\landing-pages\cuidar-mais\backend\src\temp\tickets_uncRrgoG4ZUekqMndEjd_undefined.pdf
+2026-01-07T11:55:05.138Z [INFO]: Updated checkout uncRrgoG4ZUekqMndEjd with: {"pendingEmails":{"_methodName":"arrayRemove","_elements":["H7HnDoc7OQSSo4YpF576"]},"sentEmails":{"_methodName":"arrayUnion","_elements":["H7HnDoc7OQSSo4YpF576"]}}
+2026-01-07T11:55:05.139Z [INFO]: Checkout uncRrgoG4ZUekqMndEjd atualizado: template H7HnDoc7OQSSo4YpF576 movido de pendingEmails para sentEmails
+2026-01-07T11:55:05.139Z [INFO]: Estatísticas atuais: {"totalSent":0,"available":2800,"availableForTemplates":2300}
+2026-01-07T11:55:05.139Z [INFO]: Processando e-mail para bertohf5@gmail.com (índice 0)
+2026-01-07T11:55:05.140Z [INFO]: Preparando QR codes para bertohf5@gmail.com
+2026-01-07T11:55:05.140Z [INFO]: Usando QR codes existentes para bertohf5@gmail.com
+2026-01-07T11:55:05.215Z [INFO]: QR codes convertidos para imagens: bertohf5@gmail.com
+2026-01-07T11:55:05.216Z [INFO]: Gerando PDF para bertohf5@gmail.com com 2 QR codes
+2026-01-07T11:55:07.271Z [INFO]: Stats carregados do Firestore: totalSent=1
+2026-01-07T11:55:07.271Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=1, available=2799, availableForTemplates=2299
+2026-01-07T11:55:07.273Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T11:55:07.880Z [INFO]: PDF gerado em: D:\humberto\projetos_react\landing-pages\cuidar-mais\backend\src\temp\tickets_zyeKI89XVJxRjmmoktWw_undefined.pdf
+2026-01-07T11:55:07.934Z [INFO]: Stats carregados do Firestore: totalSent=1
+2026-01-07T11:55:07.935Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=1, available=2799, availableForTemplates=2299
+2026-01-07T11:55:12.561Z [INFO]: Email enviado de congressoautismoma@gmail.com para bertohf5@gmail.com. Total enviado hoje: 2
+2026-01-07T11:55:12.562Z [INFO]: E-mail enviado para bertohf5@gmail.com
+2026-01-07T11:55:12.631Z [INFO]: Template H7HnDoc7OQSSo4YpF576 atualizado com sucesso
+2026-01-07T11:55:12.631Z [INFO]: Template H7HnDoc7OQSSo4YpF576 atualizado: sentCount=2, progress=100
+2026-01-07T11:55:12.632Z [INFO]: PDF temporário removido: D:\humberto\projetos_react\landing-pages\cuidar-mais\backend\src\temp\tickets_zyeKI89XVJxRjmmoktWw_undefined.pdf
+2026-01-07T11:55:12.720Z [INFO]: Updated checkout zyeKI89XVJxRjmmoktWw with: {"pendingEmails":{"_methodName":"arrayRemove","_elements":["H7HnDoc7OQSSo4YpF576"]},"sentEmails":{"_methodName":"arrayUnion","_elements":["H7HnDoc7OQSSo4YpF576"]}}
+2026-01-07T11:55:12.720Z [INFO]: Checkout zyeKI89XVJxRjmmoktWw atualizado: template H7HnDoc7OQSSo4YpF576 movido de pendingEmails para sentEmails
+2026-01-07T11:55:17.260Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T11:55:17.261Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T11:55:17.263Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T11:55:17.725Z [INFO]: Aguardando 5 segundos antes do próximo lote
+2026-01-07T11:55:17.728Z [INFO]: Processamento de e-mails automáticos concluído
+2026-01-07T11:55:17.817Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T11:55:17.880Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T11:55:17.880Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T11:55:27.276Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T11:55:27.277Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T11:55:27.278Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T11:55:37.265Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T11:55:37.265Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T11:55:37.267Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T11:55:47.272Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T11:55:47.272Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T11:55:47.274Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T11:55:57.268Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T11:55:57.268Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T11:55:57.270Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T11:56:07.289Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T11:56:07.289Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T11:56:07.290Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T11:56:17.398Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T11:56:17.398Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T11:56:17.399Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T11:56:27.402Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T11:56:27.402Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T11:56:27.403Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T11:56:37.404Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T11:56:37.404Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T11:56:37.406Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T11:56:47.424Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T11:56:47.424Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T11:56:47.426Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T11:56:57.391Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T11:56:57.392Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T11:56:57.397Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T11:57:07.390Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T11:57:07.390Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T11:57:07.392Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T11:57:17.411Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T11:57:17.412Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T11:57:17.413Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T11:57:27.420Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T11:57:27.421Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T11:57:27.422Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T11:57:37.399Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T11:57:37.399Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T11:57:37.401Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T11:57:47.413Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T11:57:47.413Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T11:57:47.414Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T11:57:57.410Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T11:57:57.410Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T11:57:57.412Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T11:58:07.433Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T11:58:07.434Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T11:58:07.437Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T11:58:17.412Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T11:58:17.413Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T11:58:17.414Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T11:58:27.302Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T11:58:27.304Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T11:58:27.308Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T11:58:37.264Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T11:58:37.265Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T11:58:37.269Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T11:58:47.283Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T11:58:47.284Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T11:58:47.289Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T11:58:57.299Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T11:58:57.311Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T11:58:57.317Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T11:59:07.283Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T11:59:07.285Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T11:59:07.289Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T11:59:17.308Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T11:59:17.309Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T11:59:17.313Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T11:59:27.275Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T11:59:27.276Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T11:59:27.285Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T11:59:37.268Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T11:59:37.269Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T11:59:37.272Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T11:59:47.277Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T11:59:47.279Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T11:59:47.283Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T11:59:57.264Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T11:59:57.265Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T11:59:57.270Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:00:07.325Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:00:07.327Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:00:07.331Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:00:17.298Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:00:17.300Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:00:17.305Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:00:27.321Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:00:27.323Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:00:27.327Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:00:37.282Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:00:37.284Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:00:37.287Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:00:47.303Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:00:47.305Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:00:47.308Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:00:57.312Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:00:57.313Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:00:57.317Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:01:07.278Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:01:07.279Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:01:07.284Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:01:17.253Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:01:17.254Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:01:17.300Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:01:27.412Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:01:27.413Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:01:27.416Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:01:37.443Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:01:37.444Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:01:37.447Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:01:47.413Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:01:47.413Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:01:47.416Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:01:57.430Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:01:57.431Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:01:57.434Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:02:07.448Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:02:07.449Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:02:07.452Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:02:17.422Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:02:17.423Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:02:17.426Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:02:27.377Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:02:27.378Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:02:27.379Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:02:37.436Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:02:37.437Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:02:37.438Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:02:47.410Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:02:47.411Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:02:47.413Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:02:57.395Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:02:57.395Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:02:57.396Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:03:07.422Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:03:07.423Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:03:07.426Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:03:17.395Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:03:17.396Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:03:17.397Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:03:27.413Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:03:27.413Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:03:27.414Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:03:37.410Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:03:37.410Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:03:37.411Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:03:47.419Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:03:47.419Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:03:47.420Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:03:57.401Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:03:57.402Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:03:57.405Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:04:07.418Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:04:07.419Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:04:07.422Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:04:17.422Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:04:17.423Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:04:17.425Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:04:27.420Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:04:27.421Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:04:27.424Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:04:37.400Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:04:37.401Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:04:37.404Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:04:47.421Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:04:47.422Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:04:47.425Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:04:57.398Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:04:57.399Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:04:57.402Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:05:07.422Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:05:07.423Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:05:07.427Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:05:17.442Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:05:17.443Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:05:17.446Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:05:27.415Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:05:27.416Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:05:27.418Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:05:37.411Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:05:37.412Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:05:37.415Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:05:47.411Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:05:47.412Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:05:47.415Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:05:57.403Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:05:57.404Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:05:57.406Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:06:07.414Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:06:07.415Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:06:07.418Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:06:17.411Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:06:17.412Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:06:17.414Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:06:39.436Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:06:39.436Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:06:39.438Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:07:39.457Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:07:39.458Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:07:39.462Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:08:39.456Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:08:39.456Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:08:39.457Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:09:39.430Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:09:39.431Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:09:39.434Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:10:39.434Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:10:39.434Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:10:39.437Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:11:39.448Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:11:39.448Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:11:39.450Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:12:39.429Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:12:39.430Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:12:39.433Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:13:39.439Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:13:39.439Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:13:39.440Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:14:39.441Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:14:39.442Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:14:39.445Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:15:39.436Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:15:39.438Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:15:39.441Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:16:03.920Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:16:03.920Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:16:03.922Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:16:03.992Z [INFO]: Template H7HnDoc7OQSSo4YpF576 deletado com sucesso
+2026-01-07T12:16:04.086Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:16:07.281Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:16:07.282Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:16:07.283Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:16:14.359Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:16:14.361Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:16:14.362Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:16:24.376Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:16:24.377Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:16:24.381Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:16:34.358Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:16:34.360Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:16:34.363Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:16:44.402Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:16:44.403Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:16:44.405Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:16:54.416Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:16:54.417Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:16:54.420Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:17:04.408Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:17:04.408Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:17:04.409Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:17:14.814Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:17:14.817Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:17:14.858Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:17:24.420Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:17:24.421Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:17:24.424Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:17:34.438Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:17:34.439Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:17:34.441Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:18:39.430Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:18:39.431Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:18:39.432Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:19:39.478Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:19:39.479Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:19:39.485Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:20:39.413Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:20:39.413Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:20:39.416Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:21:39.428Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:21:39.430Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:21:39.435Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:22:39.426Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:22:39.427Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:22:39.430Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:22:54.138Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:22:54.138Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:22:54.139Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:23:04.431Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:23:04.432Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:23:04.437Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:23:14.411Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:23:14.412Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:23:14.415Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:23:24.907Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:23:24.910Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:23:24.923Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:23:34.806Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:23:34.809Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:23:34.818Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:23:44.503Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:23:44.505Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:23:44.510Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:23:54.428Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:23:54.429Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:23:54.435Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:24:17.585Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:24:17.586Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:24:17.589Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:24:24.375Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:24:24.376Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:24:24.383Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:24:34.385Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:24:34.385Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:24:34.387Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:24:44.426Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:24:44.427Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:24:44.432Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:24:54.413Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:24:54.414Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:24:54.417Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:25:04.360Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:25:04.361Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:25:04.365Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:25:14.412Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:25:14.413Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:25:14.415Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:25:24.404Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:25:24.404Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:25:24.452Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:25:34.410Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:25:34.411Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:25:34.416Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:25:44.407Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:25:44.408Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:25:44.413Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:25:51.239Z [INFO]: Fetched 0 active templates for status approved
+2026-01-07T12:25:51.240Z [INFO]: No active templates found for status approved in checkout RyTYEUJ9yKPUqIRfZCmV
+2026-01-07T12:25:51.343Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:25:51.344Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:25:54.410Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:25:54.410Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:25:54.411Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:25:56.556Z [INFO]: Stats carregados do Firestore: totalSent=2
+2026-01-07T12:25:56.557Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=2, available=2798, availableForTemplates=2298
+2026-01-07T12:26:03.070Z [INFO]: Email enviado de congressoautismoma@gmail.com para bertohf5@gmail.com. Total enviado hoje: 3
+2026-01-07T12:26:03.243Z [INFO]: Email de confirmação enviado para bertohf5@gmail.com (participante 0). Total enviado hoje: 3
+2026-01-07T12:26:03.427Z [INFO]: Updated participant 0 in checkout RyTYEUJ9yKPUqIRfZCmV
+2026-01-07T12:26:04.423Z [INFO]: Stats carregados do Firestore: totalSent=4
+2026-01-07T12:26:04.424Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=4, available=2796, availableForTemplates=2296
+2026-01-07T12:26:04.428Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:26:39.409Z [INFO]: Stats carregados do Firestore: totalSent=4
+2026-01-07T12:26:39.411Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=4, available=2796, availableForTemplates=2296
+2026-01-07T12:26:39.416Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:26:47.112Z [INFO]: Stats carregados do Firestore: totalSent=4
+2026-01-07T12:26:47.112Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=4, available=2796, availableForTemplates=2296
+2026-01-07T12:26:47.141Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:26:54.431Z [INFO]: Stats carregados do Firestore: totalSent=4
+2026-01-07T12:26:54.432Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=4, available=2796, availableForTemplates=2296
+2026-01-07T12:26:54.436Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:27:04.420Z [INFO]: Stats carregados do Firestore: totalSent=4
+2026-01-07T12:27:04.420Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=4, available=2796, availableForTemplates=2296
+2026-01-07T12:27:04.422Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:27:14.352Z [INFO]: Stats carregados do Firestore: totalSent=4
+2026-01-07T12:27:14.353Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=4, available=2796, availableForTemplates=2296
+2026-01-07T12:27:14.358Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:27:22.705Z [INFO]: Stats carregados do Firestore: totalSent=4
+2026-01-07T12:27:22.706Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=4, available=2796, availableForTemplates=2296
+2026-01-07T12:27:22.773Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:27:23.046Z [INFO]: Template PsS9Al7jRLKxHeJVPXn7 criado para test com alvo de 3 emails.
+2026-01-07T12:27:23.138Z [INFO]: Updated checkout Ubo62waBtqgbsFo5exL9 with: {"pendingEmails":{"_methodName":"arrayUnion","_elements":["PsS9Al7jRLKxHeJVPXn7"]}}
+2026-01-07T12:27:23.207Z [INFO]: Updated checkout uncRrgoG4ZUekqMndEjd with: {"pendingEmails":{"_methodName":"arrayUnion","_elements":["PsS9Al7jRLKxHeJVPXn7"]}}
+2026-01-07T12:27:23.310Z [INFO]: Updated checkout zyeKI89XVJxRjmmoktWw with: {"pendingEmails":{"_methodName":"arrayUnion","_elements":["PsS9Al7jRLKxHeJVPXn7"]}}
+2026-01-07T12:27:23.327Z [INFO]: Iniciando processamento de e-mails automáticos
+2026-01-07T12:27:23.386Z [INFO]: Stats carregados do Firestore: totalSent=4
+2026-01-07T12:27:23.387Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=4, available=2796, availableForTemplates=2296
+2026-01-07T12:27:23.387Z [INFO]: Estatísticas de e-mail: {"totalSent":4,"available":2796,"availableForTemplates":2296}
+2026-01-07T12:27:23.473Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:27:23.474Z [INFO]: Total de templates carregados: 1
+2026-01-07T12:27:23.474Z [INFO]: Templates a processar: PsS9Al7jRLKxHeJVPXn7
+2026-01-07T12:27:23.474Z [INFO]: Processando template PsS9Al7jRLKxHeJVPXn7 com statusFilter test, includeQRCodes: false
+2026-01-07T12:27:23.587Z [INFO]: Fetched 3 checkouts needing template PsS9Al7jRLKxHeJVPXn7
+2026-01-07T12:27:23.588Z [INFO]: Checkouts pendentes para template PsS9Al7jRLKxHeJVPXn7: 3
+2026-01-07T12:27:23.588Z [INFO]: Checkout Ubo62waBtqgbsFo5exL9 tem 1 participantes para enviar
+2026-01-07T12:27:23.589Z [INFO]: Checkout uncRrgoG4ZUekqMndEjd tem 1 participantes para enviar
+2026-01-07T12:27:23.589Z [INFO]: Checkout zyeKI89XVJxRjmmoktWw tem 1 participantes para enviar
+2026-01-07T12:27:23.590Z [INFO]: Total de destinatários para template PsS9Al7jRLKxHeJVPXn7: 3
+2026-01-07T12:27:23.590Z [INFO]: Processando lote de 3 destinatários
+2026-01-07T12:27:23.654Z [INFO]: Stats carregados do Firestore: totalSent=4
+2026-01-07T12:27:23.655Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=4, available=2796, availableForTemplates=2296
+2026-01-07T12:27:23.655Z [INFO]: Usando conta de e-mail: congressoautismoma@gmail.com
+2026-01-07T12:27:23.657Z [INFO]: Template HTML carregado de: D:\humberto\projetos_react\landing-pages\cuidar-mais\backend\src\templates\emailTemplateSimple.html
+2026-01-07T12:27:23.657Z [INFO]: Estatísticas atuais: {"totalSent":4,"available":2796,"availableForTemplates":2296}
+2026-01-07T12:27:23.658Z [INFO]: Processando e-mail para deboramlo@yahoo.com (índice 0)
+2026-01-07T12:27:23.708Z [INFO]: Stats carregados do Firestore: totalSent=4
+2026-01-07T12:27:23.710Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=4, available=2796, availableForTemplates=2296
+2026-01-07T12:27:24.353Z [INFO]: Stats carregados do Firestore: totalSent=4
+2026-01-07T12:27:24.354Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=4, available=2796, availableForTemplates=2296
+2026-01-07T12:27:24.356Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:27:27.459Z [INFO]: Email enviado de congressoautismoma@gmail.com para deboramlo@yahoo.com. Total enviado hoje: 5
+2026-01-07T12:27:27.460Z [INFO]: E-mail enviado para deboramlo@yahoo.com
+2026-01-07T12:27:27.523Z [INFO]: Template PsS9Al7jRLKxHeJVPXn7 atualizado com sucesso
+2026-01-07T12:27:27.523Z [INFO]: Template PsS9Al7jRLKxHeJVPXn7 atualizado: sentCount=1, progress=33
+2026-01-07T12:27:27.593Z [INFO]: Updated checkout Ubo62waBtqgbsFo5exL9 with: {"pendingEmails":{"_methodName":"arrayRemove","_elements":["PsS9Al7jRLKxHeJVPXn7"]},"sentEmails":{"_methodName":"arrayUnion","_elements":["PsS9Al7jRLKxHeJVPXn7"]}}
+2026-01-07T12:27:27.593Z [INFO]: Checkout Ubo62waBtqgbsFo5exL9 atualizado: template PsS9Al7jRLKxHeJVPXn7 movido de pendingEmails para sentEmails
+2026-01-07T12:27:27.593Z [INFO]: Estatísticas atuais: {"totalSent":4,"available":2796,"availableForTemplates":2296}
+2026-01-07T12:27:27.593Z [INFO]: Processando e-mail para bertohf5@gmail.com (índice 0)
+2026-01-07T12:27:27.665Z [INFO]: Stats carregados do Firestore: totalSent=5
+2026-01-07T12:27:27.666Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=5, available=2795, availableForTemplates=2295
+2026-01-07T12:27:30.553Z [INFO]: Email enviado de congressoautismoma@gmail.com para bertohf5@gmail.com. Total enviado hoje: 6
+2026-01-07T12:27:30.554Z [INFO]: E-mail enviado para bertohf5@gmail.com
+2026-01-07T12:27:30.638Z [INFO]: Template PsS9Al7jRLKxHeJVPXn7 atualizado com sucesso
+2026-01-07T12:27:30.638Z [INFO]: Template PsS9Al7jRLKxHeJVPXn7 atualizado: sentCount=2, progress=67
+2026-01-07T12:27:30.719Z [INFO]: Updated checkout uncRrgoG4ZUekqMndEjd with: {"pendingEmails":{"_methodName":"arrayRemove","_elements":["PsS9Al7jRLKxHeJVPXn7"]},"sentEmails":{"_methodName":"arrayUnion","_elements":["PsS9Al7jRLKxHeJVPXn7"]}}
+2026-01-07T12:27:30.720Z [INFO]: Checkout uncRrgoG4ZUekqMndEjd atualizado: template PsS9Al7jRLKxHeJVPXn7 movido de pendingEmails para sentEmails
+2026-01-07T12:27:30.720Z [INFO]: Estatísticas atuais: {"totalSent":4,"available":2796,"availableForTemplates":2296}
+2026-01-07T12:27:30.722Z [INFO]: Processando e-mail para bertohf5@gmail.com (índice 0)
+2026-01-07T12:27:30.797Z [INFO]: Stats carregados do Firestore: totalSent=6
+2026-01-07T12:27:30.797Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=6, available=2794, availableForTemplates=2294
+2026-01-07T12:27:33.766Z [INFO]: Email enviado de congressoautismoma@gmail.com para bertohf5@gmail.com. Total enviado hoje: 7
+2026-01-07T12:27:33.766Z [INFO]: E-mail enviado para bertohf5@gmail.com
+2026-01-07T12:27:33.833Z [INFO]: Template PsS9Al7jRLKxHeJVPXn7 atualizado com sucesso
+2026-01-07T12:27:33.834Z [INFO]: Template PsS9Al7jRLKxHeJVPXn7 atualizado: sentCount=3, progress=100
+2026-01-07T12:27:33.907Z [INFO]: Updated checkout zyeKI89XVJxRjmmoktWw with: {"pendingEmails":{"_methodName":"arrayRemove","_elements":["PsS9Al7jRLKxHeJVPXn7"]},"sentEmails":{"_methodName":"arrayUnion","_elements":["PsS9Al7jRLKxHeJVPXn7"]}}
+2026-01-07T12:27:33.908Z [INFO]: Checkout zyeKI89XVJxRjmmoktWw atualizado: template PsS9Al7jRLKxHeJVPXn7 movido de pendingEmails para sentEmails
+2026-01-07T12:27:34.405Z [INFO]: Stats carregados do Firestore: totalSent=7
+2026-01-07T12:27:34.405Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=7, available=2793, availableForTemplates=2293
+2026-01-07T12:27:34.409Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:27:38.917Z [INFO]: Aguardando 5 segundos antes do próximo lote
+2026-01-07T12:27:38.918Z [INFO]: Processamento de e-mails automáticos concluído
+2026-01-07T12:27:39.002Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:27:39.070Z [INFO]: Stats carregados do Firestore: totalSent=7
+2026-01-07T12:27:39.071Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=7, available=2793, availableForTemplates=2293
+2026-01-07T12:27:44.400Z [INFO]: Stats carregados do Firestore: totalSent=7
+2026-01-07T12:27:44.400Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=7, available=2793, availableForTemplates=2293
+2026-01-07T12:27:44.402Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:27:54.402Z [INFO]: Stats carregados do Firestore: totalSent=7
+2026-01-07T12:27:54.403Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=7, available=2793, availableForTemplates=2293
+2026-01-07T12:27:54.406Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:28:04.428Z [INFO]: Stats carregados do Firestore: totalSent=7
+2026-01-07T12:28:04.428Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=7, available=2793, availableForTemplates=2293
+2026-01-07T12:28:04.429Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:28:14.399Z [INFO]: Stats carregados do Firestore: totalSent=7
+2026-01-07T12:28:14.400Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=7, available=2793, availableForTemplates=2293
+2026-01-07T12:28:14.403Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:28:24.423Z [INFO]: Stats carregados do Firestore: totalSent=7
+2026-01-07T12:28:24.424Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=7, available=2793, availableForTemplates=2293
+2026-01-07T12:28:24.427Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:28:39.438Z [INFO]: Stats carregados do Firestore: totalSent=7
+2026-01-07T12:28:39.439Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=7, available=2793, availableForTemplates=2293
+2026-01-07T12:28:39.441Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:29:03.854Z [INFO]: Stats carregados do Firestore: totalSent=7
+2026-01-07T12:29:03.855Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=7, available=2793, availableForTemplates=2293
+2026-01-07T12:29:03.858Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:29:04.353Z [INFO]: Stats carregados do Firestore: totalSent=7
+2026-01-07T12:29:04.354Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=7, available=2793, availableForTemplates=2293
+2026-01-07T12:29:04.356Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:29:52.505Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:29:52.508Z [INFO]: Stats carregados do Firestore: totalSent=7
+2026-01-07T12:29:52.508Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=7, available=2793, availableForTemplates=2293
+2026-01-07T12:29:54.461Z [INFO]: Template PsS9Al7jRLKxHeJVPXn7 deletado com sucesso
+2026-01-07T12:29:54.557Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:30:03.425Z [INFO]: Stats carregados do Firestore: totalSent=7
+2026-01-07T12:30:03.426Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=7, available=2793, availableForTemplates=2293
+2026-01-07T12:30:03.426Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:30:12.502Z [INFO]: Stats carregados do Firestore: totalSent=7
+2026-01-07T12:30:12.503Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=7, available=2793, availableForTemplates=2293
+2026-01-07T12:30:12.505Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:30:22.530Z [INFO]: Stats carregados do Firestore: totalSent=7
+2026-01-07T12:30:22.530Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=7, available=2793, availableForTemplates=2293
+2026-01-07T12:30:22.533Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:30:32.502Z [INFO]: Stats carregados do Firestore: totalSent=7
+2026-01-07T12:30:32.503Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=7, available=2793, availableForTemplates=2293
+2026-01-07T12:30:32.505Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:30:42.532Z [INFO]: Stats carregados do Firestore: totalSent=7
+2026-01-07T12:30:42.533Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=7, available=2793, availableForTemplates=2293
+2026-01-07T12:30:42.536Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:30:53.403Z [INFO]: Stats carregados do Firestore: totalSent=7
+2026-01-07T12:30:53.403Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=7, available=2793, availableForTemplates=2293
+2026-01-07T12:30:53.404Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:31:02.486Z [INFO]: Stats carregados do Firestore: totalSent=7
+2026-01-07T12:31:02.487Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=7, available=2793, availableForTemplates=2293
+2026-01-07T12:31:02.489Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:31:10.529Z [INFO]: Stats carregados do Firestore: totalSent=7
+2026-01-07T12:31:10.530Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=7, available=2793, availableForTemplates=2293
+2026-01-07T12:31:10.597Z [INFO]: Carregados 0 templates do Firestore
+2026-01-07T12:31:11.003Z [INFO]: Template c7HBajiAk9MCbM9mSXrS criado para test com alvo de 4 emails.
+2026-01-07T12:31:11.091Z [INFO]: Updated checkout RyTYEUJ9yKPUqIRfZCmV with: {"pendingEmails":{"_methodName":"arrayUnion","_elements":["c7HBajiAk9MCbM9mSXrS"]}}
+2026-01-07T12:31:11.173Z [INFO]: Updated checkout Ubo62waBtqgbsFo5exL9 with: {"pendingEmails":{"_methodName":"arrayUnion","_elements":["c7HBajiAk9MCbM9mSXrS"]}}
+2026-01-07T12:31:11.238Z [INFO]: Updated checkout uncRrgoG4ZUekqMndEjd with: {"pendingEmails":{"_methodName":"arrayUnion","_elements":["c7HBajiAk9MCbM9mSXrS"]}}
+2026-01-07T12:31:11.304Z [INFO]: Updated checkout zyeKI89XVJxRjmmoktWw with: {"pendingEmails":{"_methodName":"arrayUnion","_elements":["c7HBajiAk9MCbM9mSXrS"]}}
+2026-01-07T12:31:11.317Z [INFO]: Iniciando processamento de e-mails automáticos
+2026-01-07T12:31:11.395Z [INFO]: Stats carregados do Firestore: totalSent=7
+2026-01-07T12:31:11.395Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=7, available=2793, availableForTemplates=2293
+2026-01-07T12:31:11.396Z [INFO]: Estatísticas de e-mail: {"totalSent":7,"available":2793,"availableForTemplates":2293}
+2026-01-07T12:31:11.479Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:31:11.480Z [INFO]: Total de templates carregados: 1
+2026-01-07T12:31:11.481Z [INFO]: Templates a processar: c7HBajiAk9MCbM9mSXrS
+2026-01-07T12:31:11.482Z [INFO]: Processando template c7HBajiAk9MCbM9mSXrS com statusFilter test, includeQRCodes: false
+2026-01-07T12:31:11.631Z [INFO]: Fetched 4 checkouts needing template c7HBajiAk9MCbM9mSXrS
+2026-01-07T12:31:11.632Z [INFO]: Checkouts pendentes para template c7HBajiAk9MCbM9mSXrS: 4
+2026-01-07T12:31:11.633Z [INFO]: Checkout RyTYEUJ9yKPUqIRfZCmV tem 1 participantes para enviar
+2026-01-07T12:31:11.633Z [INFO]: Checkout Ubo62waBtqgbsFo5exL9 tem 1 participantes para enviar
+2026-01-07T12:31:11.634Z [INFO]: Checkout uncRrgoG4ZUekqMndEjd tem 1 participantes para enviar
+2026-01-07T12:31:11.635Z [INFO]: Checkout zyeKI89XVJxRjmmoktWw tem 1 participantes para enviar
+2026-01-07T12:31:11.635Z [INFO]: Total de destinatários para template c7HBajiAk9MCbM9mSXrS: 4
+2026-01-07T12:31:11.636Z [INFO]: Processando lote de 4 destinatários
+2026-01-07T12:31:11.695Z [INFO]: Stats carregados do Firestore: totalSent=7
+2026-01-07T12:31:11.696Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=7, available=2793, availableForTemplates=2293
+2026-01-07T12:31:11.696Z [INFO]: Usando conta de e-mail: congressoautismoma@gmail.com
+2026-01-07T12:31:11.698Z [INFO]: Template HTML carregado de: D:\humberto\projetos_react\landing-pages\cuidar-mais\backend\src\templates\emailTemplateSimple.html
+2026-01-07T12:31:11.698Z [INFO]: Estatísticas atuais: {"totalSent":7,"available":2793,"availableForTemplates":2293}
+2026-01-07T12:31:11.698Z [INFO]: Processando e-mail para fsantiago369@gmail.com (índice 0)
+2026-01-07T12:31:11.758Z [INFO]: Stats carregados do Firestore: totalSent=7
+2026-01-07T12:31:11.759Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=7, available=2793, availableForTemplates=2293
+2026-01-07T12:31:12.495Z [INFO]: Stats carregados do Firestore: totalSent=7
+2026-01-07T12:31:12.495Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=7, available=2793, availableForTemplates=2293
+2026-01-07T12:31:12.498Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:31:14.459Z [INFO]: Email enviado de congressoautismoma@gmail.com para fsantiago369@gmail.com. Total enviado hoje: 8
+2026-01-07T12:31:14.460Z [INFO]: E-mail enviado para fsantiago369@gmail.com
+2026-01-07T12:31:14.526Z [INFO]: Template c7HBajiAk9MCbM9mSXrS atualizado com sucesso
+2026-01-07T12:31:14.527Z [INFO]: Template c7HBajiAk9MCbM9mSXrS atualizado: sentCount=1, progress=25
+2026-01-07T12:31:14.589Z [INFO]: Updated checkout RyTYEUJ9yKPUqIRfZCmV with: {"pendingEmails":{"_methodName":"arrayRemove","_elements":["c7HBajiAk9MCbM9mSXrS"]},"sentEmails":{"_methodName":"arrayUnion","_elements":["c7HBajiAk9MCbM9mSXrS"]}}
+2026-01-07T12:31:14.590Z [INFO]: Checkout RyTYEUJ9yKPUqIRfZCmV atualizado: template c7HBajiAk9MCbM9mSXrS movido de pendingEmails para sentEmails
+2026-01-07T12:31:14.590Z [INFO]: Estatísticas atuais: {"totalSent":7,"available":2793,"availableForTemplates":2293}
+2026-01-07T12:31:14.591Z [INFO]: Processando e-mail para deboramlo@yahoo.com (índice 0)
+2026-01-07T12:31:14.660Z [INFO]: Stats carregados do Firestore: totalSent=8
+2026-01-07T12:31:14.661Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=8, available=2792, availableForTemplates=2292
+2026-01-07T12:31:17.357Z [INFO]: Email enviado de congressoautismoma@gmail.com para deboramlo@yahoo.com. Total enviado hoje: 9
+2026-01-07T12:31:17.358Z [INFO]: E-mail enviado para deboramlo@yahoo.com
+2026-01-07T12:31:17.420Z [INFO]: Template c7HBajiAk9MCbM9mSXrS atualizado com sucesso
+2026-01-07T12:31:17.421Z [INFO]: Template c7HBajiAk9MCbM9mSXrS atualizado: sentCount=2, progress=50
+2026-01-07T12:31:17.491Z [INFO]: Updated checkout Ubo62waBtqgbsFo5exL9 with: {"pendingEmails":{"_methodName":"arrayRemove","_elements":["c7HBajiAk9MCbM9mSXrS"]},"sentEmails":{"_methodName":"arrayUnion","_elements":["c7HBajiAk9MCbM9mSXrS"]}}
+2026-01-07T12:31:17.492Z [INFO]: Checkout Ubo62waBtqgbsFo5exL9 atualizado: template c7HBajiAk9MCbM9mSXrS movido de pendingEmails para sentEmails
+2026-01-07T12:31:17.493Z [INFO]: Estatísticas atuais: {"totalSent":7,"available":2793,"availableForTemplates":2293}
+2026-01-07T12:31:17.493Z [INFO]: Processando e-mail para bertohf5@gmail.com (índice 0)
+2026-01-07T12:31:17.554Z [INFO]: Stats carregados do Firestore: totalSent=9
+2026-01-07T12:31:17.555Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=9, available=2791, availableForTemplates=2291
+2026-01-07T12:31:20.173Z [INFO]: Email enviado de congressoautismoma@gmail.com para bertohf5@gmail.com. Total enviado hoje: 10
+2026-01-07T12:31:20.174Z [INFO]: E-mail enviado para bertohf5@gmail.com
+2026-01-07T12:31:20.233Z [INFO]: Template c7HBajiAk9MCbM9mSXrS atualizado com sucesso
+2026-01-07T12:31:20.234Z [INFO]: Template c7HBajiAk9MCbM9mSXrS atualizado: sentCount=3, progress=75
+2026-01-07T12:31:20.306Z [INFO]: Updated checkout uncRrgoG4ZUekqMndEjd with: {"pendingEmails":{"_methodName":"arrayRemove","_elements":["c7HBajiAk9MCbM9mSXrS"]},"sentEmails":{"_methodName":"arrayUnion","_elements":["c7HBajiAk9MCbM9mSXrS"]}}
+2026-01-07T12:31:20.307Z [INFO]: Checkout uncRrgoG4ZUekqMndEjd atualizado: template c7HBajiAk9MCbM9mSXrS movido de pendingEmails para sentEmails
+2026-01-07T12:31:20.308Z [INFO]: Estatísticas atuais: {"totalSent":7,"available":2793,"availableForTemplates":2293}
+2026-01-07T12:31:20.309Z [INFO]: Processando e-mail para bertohf5@gmail.com (índice 0)
+2026-01-07T12:31:20.375Z [INFO]: Stats carregados do Firestore: totalSent=10
+2026-01-07T12:31:20.379Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=10, available=2790, availableForTemplates=2290
+2026-01-07T12:31:22.506Z [INFO]: Stats carregados do Firestore: totalSent=10
+2026-01-07T12:31:22.507Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=10, available=2790, availableForTemplates=2290
+2026-01-07T12:31:22.510Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:31:23.050Z [INFO]: Email enviado de congressoautismoma@gmail.com para bertohf5@gmail.com. Total enviado hoje: 11
+2026-01-07T12:31:23.052Z [INFO]: E-mail enviado para bertohf5@gmail.com
+2026-01-07T12:31:23.124Z [INFO]: Template c7HBajiAk9MCbM9mSXrS atualizado com sucesso
+2026-01-07T12:31:23.125Z [INFO]: Template c7HBajiAk9MCbM9mSXrS atualizado: sentCount=4, progress=100
+2026-01-07T12:31:23.194Z [INFO]: Updated checkout zyeKI89XVJxRjmmoktWw with: {"pendingEmails":{"_methodName":"arrayRemove","_elements":["c7HBajiAk9MCbM9mSXrS"]},"sentEmails":{"_methodName":"arrayUnion","_elements":["c7HBajiAk9MCbM9mSXrS"]}}
+2026-01-07T12:31:23.195Z [INFO]: Checkout zyeKI89XVJxRjmmoktWw atualizado: template c7HBajiAk9MCbM9mSXrS movido de pendingEmails para sentEmails
+2026-01-07T12:31:28.198Z [INFO]: Aguardando 5 segundos antes do próximo lote
+2026-01-07T12:31:28.199Z [INFO]: Processamento de e-mails automáticos concluído
+2026-01-07T12:31:28.279Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:31:28.345Z [INFO]: Stats carregados do Firestore: totalSent=11
+2026-01-07T12:31:28.346Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=11, available=2789, availableForTemplates=2289
+2026-01-07T12:31:32.512Z [INFO]: Stats carregados do Firestore: totalSent=11
+2026-01-07T12:31:32.513Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=11, available=2789, availableForTemplates=2289
+2026-01-07T12:31:32.517Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:31:42.503Z [INFO]: Stats carregados do Firestore: totalSent=11
+2026-01-07T12:31:42.505Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=11, available=2789, availableForTemplates=2289
+2026-01-07T12:31:42.509Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:31:52.498Z [INFO]: Stats carregados do Firestore: totalSent=11
+2026-01-07T12:31:52.499Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=11, available=2789, availableForTemplates=2289
+2026-01-07T12:31:52.503Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:32:02.496Z [INFO]: Stats carregados do Firestore: totalSent=11
+2026-01-07T12:32:02.496Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=11, available=2789, availableForTemplates=2289
+2026-01-07T12:32:02.497Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:32:12.523Z [INFO]: Stats carregados do Firestore: totalSent=11
+2026-01-07T12:32:12.524Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=11, available=2789, availableForTemplates=2289
+2026-01-07T12:32:12.528Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:32:23.404Z [INFO]: Stats carregados do Firestore: totalSent=11
+2026-01-07T12:32:23.404Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=11, available=2789, availableForTemplates=2289
+2026-01-07T12:32:23.405Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:32:33.416Z [INFO]: Stats carregados do Firestore: totalSent=11
+2026-01-07T12:32:33.416Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=11, available=2789, availableForTemplates=2289
+2026-01-07T12:32:33.418Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:32:43.389Z [INFO]: Stats carregados do Firestore: totalSent=11
+2026-01-07T12:32:43.389Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=11, available=2789, availableForTemplates=2289
+2026-01-07T12:32:43.392Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:32:53.429Z [INFO]: Stats carregados do Firestore: totalSent=11
+2026-01-07T12:32:53.430Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=11, available=2789, availableForTemplates=2289
+2026-01-07T12:32:53.431Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:33:03.418Z [INFO]: Stats carregados do Firestore: totalSent=11
+2026-01-07T12:33:03.419Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=11, available=2789, availableForTemplates=2289
+2026-01-07T12:33:03.422Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:33:13.409Z [INFO]: Stats carregados do Firestore: totalSent=11
+2026-01-07T12:33:13.410Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=11, available=2789, availableForTemplates=2289
+2026-01-07T12:33:13.413Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:33:22.484Z [INFO]: Stats carregados do Firestore: totalSent=11
+2026-01-07T12:33:22.485Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=11, available=2789, availableForTemplates=2289
+2026-01-07T12:33:22.490Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:33:32.515Z [INFO]: Stats carregados do Firestore: totalSent=11
+2026-01-07T12:33:32.516Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=11, available=2789, availableForTemplates=2289
+2026-01-07T12:33:32.520Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:33:33.523Z [INFO]: Stats carregados do Firestore: totalSent=11
+2026-01-07T12:33:33.524Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=11, available=2789, availableForTemplates=2289
+2026-01-07T12:33:33.592Z [INFO]: Carregados 1 templates do Firestore
+2026-01-07T12:33:33.897Z [INFO]: Template jYsl2YGYZRTxQFUOmhW9 criado para test com alvo de 4 emails.
+2026-01-07T12:33:33.987Z [INFO]: Updated checkout RyTYEUJ9yKPUqIRfZCmV with: {"pendingEmails":{"_methodName":"arrayUnion","_elements":["jYsl2YGYZRTxQFUOmhW9"]}}
+2026-01-07T12:33:34.080Z [INFO]: Updated checkout Ubo62waBtqgbsFo5exL9 with: {"pendingEmails":{"_methodName":"arrayUnion","_elements":["jYsl2YGYZRTxQFUOmhW9"]}}
+2026-01-07T12:33:34.170Z [INFO]: Updated checkout uncRrgoG4ZUekqMndEjd with: {"pendingEmails":{"_methodName":"arrayUnion","_elements":["jYsl2YGYZRTxQFUOmhW9"]}}
+2026-01-07T12:33:34.257Z [INFO]: Updated checkout zyeKI89XVJxRjmmoktWw with: {"pendingEmails":{"_methodName":"arrayUnion","_elements":["jYsl2YGYZRTxQFUOmhW9"]}}
+2026-01-07T12:33:34.282Z [INFO]: Iniciando processamento de e-mails automáticos
+2026-01-07T12:33:34.371Z [INFO]: Stats carregados do Firestore: totalSent=11
+2026-01-07T12:33:34.373Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=11, available=2789, availableForTemplates=2289
+2026-01-07T12:33:34.374Z [INFO]: Estatísticas de e-mail: {"totalSent":11,"available":2789,"availableForTemplates":2289}
+2026-01-07T12:33:34.457Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:33:34.459Z [INFO]: Total de templates carregados: 2
+2026-01-07T12:33:34.460Z [INFO]: Templates a processar: jYsl2YGYZRTxQFUOmhW9
+2026-01-07T12:33:34.461Z [INFO]: Processando template jYsl2YGYZRTxQFUOmhW9 com statusFilter test, includeQRCodes: false
+2026-01-07T12:33:34.592Z [INFO]: Fetched 4 checkouts needing template jYsl2YGYZRTxQFUOmhW9
+2026-01-07T12:33:34.593Z [INFO]: Checkouts pendentes para template jYsl2YGYZRTxQFUOmhW9: 4
+2026-01-07T12:33:34.594Z [INFO]: Checkout RyTYEUJ9yKPUqIRfZCmV tem 1 participantes para enviar
+2026-01-07T12:33:34.595Z [INFO]: Checkout Ubo62waBtqgbsFo5exL9 tem 1 participantes para enviar
+2026-01-07T12:33:34.596Z [INFO]: Checkout uncRrgoG4ZUekqMndEjd tem 1 participantes para enviar
+2026-01-07T12:33:34.597Z [INFO]: Checkout zyeKI89XVJxRjmmoktWw tem 1 participantes para enviar
+2026-01-07T12:33:34.598Z [INFO]: Total de destinatários para template jYsl2YGYZRTxQFUOmhW9: 4
+2026-01-07T12:33:34.599Z [INFO]: Processando lote de 4 destinatários
+2026-01-07T12:33:34.676Z [INFO]: Stats carregados do Firestore: totalSent=11
+2026-01-07T12:33:34.678Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=11, available=2789, availableForTemplates=2289
+2026-01-07T12:33:34.679Z [INFO]: Usando conta de e-mail: congressoautismoma@gmail.com
+2026-01-07T12:33:34.787Z [INFO]: Template HTML carregado de: D:\humberto\projetos_react\landing-pages\cuidar-mais\backend\src\templates\emailTemplateSimple.html
+2026-01-07T12:33:34.789Z [INFO]: Estatísticas atuais: {"totalSent":11,"available":2789,"availableForTemplates":2289}
+2026-01-07T12:33:34.791Z [INFO]: Processando e-mail para fsantiago369@gmail.com (índice 0)
+2026-01-07T12:33:34.861Z [INFO]: Stats carregados do Firestore: totalSent=11
+2026-01-07T12:33:34.862Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=11, available=2789, availableForTemplates=2289
+2026-01-07T12:33:37.548Z [INFO]: Email enviado de congressoautismoma@gmail.com para fsantiago369@gmail.com. Total enviado hoje: 12
+2026-01-07T12:33:37.549Z [INFO]: E-mail enviado para fsantiago369@gmail.com
+2026-01-07T12:33:37.631Z [INFO]: Template jYsl2YGYZRTxQFUOmhW9 atualizado com sucesso
+2026-01-07T12:33:37.632Z [INFO]: Template jYsl2YGYZRTxQFUOmhW9 atualizado: sentCount=1, progress=25
+2026-01-07T12:33:37.698Z [INFO]: Updated checkout RyTYEUJ9yKPUqIRfZCmV with: {"pendingEmails":{"_methodName":"arrayRemove","_elements":["jYsl2YGYZRTxQFUOmhW9"]},"sentEmails":{"_methodName":"arrayUnion","_elements":["jYsl2YGYZRTxQFUOmhW9"]}}
+2026-01-07T12:33:37.699Z [INFO]: Checkout RyTYEUJ9yKPUqIRfZCmV atualizado: template jYsl2YGYZRTxQFUOmhW9 movido de pendingEmails para sentEmails
+2026-01-07T12:33:37.699Z [INFO]: Estatísticas atuais: {"totalSent":11,"available":2789,"availableForTemplates":2289}
+2026-01-07T12:33:37.700Z [INFO]: Processando e-mail para deboramlo@yahoo.com (índice 0)
+2026-01-07T12:33:37.775Z [INFO]: Stats carregados do Firestore: totalSent=12
+2026-01-07T12:33:37.776Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=12, available=2788, availableForTemplates=2288
+2026-01-07T12:33:40.442Z [INFO]: Email enviado de congressoautismoma@gmail.com para deboramlo@yahoo.com. Total enviado hoje: 13
+2026-01-07T12:33:40.443Z [INFO]: E-mail enviado para deboramlo@yahoo.com
+2026-01-07T12:33:40.530Z [INFO]: Template jYsl2YGYZRTxQFUOmhW9 atualizado com sucesso
+2026-01-07T12:33:40.531Z [INFO]: Template jYsl2YGYZRTxQFUOmhW9 atualizado: sentCount=2, progress=50
+2026-01-07T12:33:40.621Z [INFO]: Updated checkout Ubo62waBtqgbsFo5exL9 with: {"pendingEmails":{"_methodName":"arrayRemove","_elements":["jYsl2YGYZRTxQFUOmhW9"]},"sentEmails":{"_methodName":"arrayUnion","_elements":["jYsl2YGYZRTxQFUOmhW9"]}}
+2026-01-07T12:33:40.622Z [INFO]: Checkout Ubo62waBtqgbsFo5exL9 atualizado: template jYsl2YGYZRTxQFUOmhW9 movido de pendingEmails para sentEmails
+2026-01-07T12:33:40.623Z [INFO]: Estatísticas atuais: {"totalSent":11,"available":2789,"availableForTemplates":2289}
+2026-01-07T12:33:40.624Z [INFO]: Processando e-mail para bertohf5@gmail.com (índice 0)
+2026-01-07T12:33:40.700Z [INFO]: Stats carregados do Firestore: totalSent=13
+2026-01-07T12:33:40.701Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=13, available=2787, availableForTemplates=2287
+2026-01-07T12:33:42.522Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:33:42.526Z [INFO]: Stats carregados do Firestore: totalSent=13
+2026-01-07T12:33:42.527Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=13, available=2787, availableForTemplates=2287
+2026-01-07T12:33:43.852Z [INFO]: Email enviado de congressoautismoma@gmail.com para bertohf5@gmail.com. Total enviado hoje: 14
+2026-01-07T12:33:43.853Z [INFO]: E-mail enviado para bertohf5@gmail.com
+2026-01-07T12:33:43.933Z [INFO]: Template jYsl2YGYZRTxQFUOmhW9 atualizado com sucesso
+2026-01-07T12:33:43.933Z [INFO]: Template jYsl2YGYZRTxQFUOmhW9 atualizado: sentCount=3, progress=75
+2026-01-07T12:33:44.032Z [INFO]: Updated checkout uncRrgoG4ZUekqMndEjd with: {"pendingEmails":{"_methodName":"arrayRemove","_elements":["jYsl2YGYZRTxQFUOmhW9"]},"sentEmails":{"_methodName":"arrayUnion","_elements":["jYsl2YGYZRTxQFUOmhW9"]}}
+2026-01-07T12:33:44.033Z [INFO]: Checkout uncRrgoG4ZUekqMndEjd atualizado: template jYsl2YGYZRTxQFUOmhW9 movido de pendingEmails para sentEmails
+2026-01-07T12:33:44.035Z [INFO]: Estatísticas atuais: {"totalSent":11,"available":2789,"availableForTemplates":2289}
+2026-01-07T12:33:44.036Z [INFO]: Processando e-mail para bertohf5@gmail.com (índice 0)
+2026-01-07T12:33:44.114Z [INFO]: Stats carregados do Firestore: totalSent=14
+2026-01-07T12:33:44.116Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=14, available=2786, availableForTemplates=2286
+2026-01-07T12:33:46.597Z [INFO]: Email enviado de congressoautismoma@gmail.com para bertohf5@gmail.com. Total enviado hoje: 15
+2026-01-07T12:33:46.599Z [INFO]: E-mail enviado para bertohf5@gmail.com
+2026-01-07T12:33:46.664Z [INFO]: Template jYsl2YGYZRTxQFUOmhW9 atualizado com sucesso
+2026-01-07T12:33:46.665Z [INFO]: Template jYsl2YGYZRTxQFUOmhW9 atualizado: sentCount=4, progress=100
+2026-01-07T12:33:46.759Z [INFO]: Updated checkout zyeKI89XVJxRjmmoktWw with: {"pendingEmails":{"_methodName":"arrayRemove","_elements":["jYsl2YGYZRTxQFUOmhW9"]},"sentEmails":{"_methodName":"arrayUnion","_elements":["jYsl2YGYZRTxQFUOmhW9"]}}
+2026-01-07T12:33:46.760Z [INFO]: Checkout zyeKI89XVJxRjmmoktWw atualizado: template jYsl2YGYZRTxQFUOmhW9 movido de pendingEmails para sentEmails
+2026-01-07T12:33:51.774Z [INFO]: Aguardando 5 segundos antes do próximo lote
+2026-01-07T12:33:51.775Z [INFO]: Processamento de e-mails automáticos concluído
+2026-01-07T12:33:51.853Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:33:51.922Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:33:51.922Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:33:52.504Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:33:52.505Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:33:52.507Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:34:02.531Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:34:02.533Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:34:02.538Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:34:12.504Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:34:12.505Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:34:12.510Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:34:22.542Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:34:22.543Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:34:22.547Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:34:32.503Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:34:32.504Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:34:32.508Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:34:42.510Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:34:42.514Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:34:42.518Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:34:52.531Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:34:52.532Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:34:52.536Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:35:02.510Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:35:02.511Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:35:02.515Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:35:12.515Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:35:12.516Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:35:12.520Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:35:22.496Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:35:22.497Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:35:22.502Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:35:32.522Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:35:32.523Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:35:32.525Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:35:42.532Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:35:42.533Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:35:42.538Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:35:52.503Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:35:52.504Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:35:52.509Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:36:02.520Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:36:02.522Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:36:02.525Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:36:12.504Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:36:12.506Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:36:12.509Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:36:22.518Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:36:22.519Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:36:22.520Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:36:32.513Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:36:32.513Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:36:32.515Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:36:42.523Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:36:42.525Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:36:42.528Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:36:52.530Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:36:52.531Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:36:52.535Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:37:03.417Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:37:03.418Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:37:03.419Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:37:13.428Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:37:13.429Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:37:13.432Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:37:23.420Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:37:23.421Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:37:23.424Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:37:33.396Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:37:33.396Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:37:33.399Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:37:43.405Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:37:43.405Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:37:43.407Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:37:53.408Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:37:53.409Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:37:53.412Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:38:39.427Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:38:39.428Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:38:39.431Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:39:39.421Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:39:39.421Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:39:39.423Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:40:39.416Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:40:39.416Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:40:39.419Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:41:39.433Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:41:39.434Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:41:39.438Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:42:39.429Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:42:39.430Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:42:39.434Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:43:39.417Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:43:39.418Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:43:39.420Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:44:39.413Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:44:39.414Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:44:39.417Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:45:39.415Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:45:39.415Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:45:39.418Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:46:39.430Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:46:39.430Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:46:39.432Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:47:39.426Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:47:39.427Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:47:39.430Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:48:39.408Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:48:39.408Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:48:39.410Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:49:39.404Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:49:39.404Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:49:39.406Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:50:39.411Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:50:39.412Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:50:39.416Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:51:39.419Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:51:39.420Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:51:39.423Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:52:39.414Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:52:39.415Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:52:39.418Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:53:39.423Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:53:39.425Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:53:39.427Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:54:39.430Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:54:39.431Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:54:39.434Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:55:39.416Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:55:39.417Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:55:39.419Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:56:39.442Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:56:39.443Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:56:39.446Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:57:39.435Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:57:39.436Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:57:39.439Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:58:39.442Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:58:39.443Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:58:39.445Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T12:59:39.453Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T12:59:39.454Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T12:59:39.457Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:00:39.411Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:00:39.413Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:00:39.415Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:01:39.431Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:01:39.431Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:01:39.433Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:02:39.422Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:02:39.422Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:02:39.424Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:03:39.441Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:03:39.442Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:03:39.445Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:04:39.429Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:04:39.430Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:04:39.433Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:05:39.440Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:05:39.441Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:05:39.444Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:06:39.462Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:06:39.463Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:06:39.466Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:07:39.425Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:07:39.425Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:07:39.427Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:08:39.434Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:08:39.435Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:08:39.438Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:09:39.425Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:09:39.425Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:09:39.427Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:10:39.437Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:10:39.437Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:10:39.440Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:11:39.473Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:11:39.475Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:11:39.478Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:12:39.438Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:12:39.439Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:12:39.442Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:13:39.439Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:13:39.440Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:13:39.442Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:14:39.435Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:14:39.436Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:14:39.438Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:15:39.421Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:15:39.422Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:15:39.424Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:16:39.427Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:16:39.428Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:16:39.431Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:17:39.426Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:17:39.426Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:17:39.427Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:18:39.418Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:18:39.419Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:18:39.422Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:19:39.442Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:19:39.443Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:19:39.444Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:20:39.437Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:20:39.438Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:20:39.441Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:21:39.435Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:21:39.435Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:21:39.436Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:22:39.440Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:22:39.441Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:22:39.443Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:23:39.422Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:23:39.422Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:23:39.424Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:24:39.413Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:24:39.414Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:24:39.416Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:25:39.430Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:25:39.431Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:25:39.434Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:26:39.428Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:26:39.429Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:26:39.431Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:27:39.458Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:27:39.459Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:27:39.460Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:28:39.417Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:28:39.418Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:28:39.421Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:29:39.412Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:29:39.413Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:29:39.416Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:30:39.432Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:30:39.433Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:30:39.436Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:31:39.415Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:31:39.415Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:31:39.418Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:32:39.446Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:32:39.447Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:32:39.448Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:33:39.420Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:33:39.421Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:33:39.424Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:34:39.432Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:34:39.432Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:34:39.433Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:35:39.429Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:35:39.431Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:35:39.437Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:36:39.439Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:36:39.440Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:36:39.442Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:37:39.433Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:37:39.434Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:37:39.435Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:38:39.420Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:38:39.424Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:38:39.426Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:39:39.446Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:39:39.446Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:39:39.448Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:40:39.412Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:40:39.413Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:40:39.416Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:41:39.504Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:41:39.505Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:41:39.509Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:42:39.437Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:42:39.438Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:42:39.441Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:43:39.429Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:43:39.431Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:43:39.434Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:44:39.433Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:44:39.435Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:44:39.437Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:45:39.435Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:45:39.436Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:45:39.439Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:46:39.417Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:46:39.417Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:46:39.419Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:47:39.412Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:47:39.413Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:47:39.416Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:48:39.423Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:48:39.424Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:48:39.428Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:49:39.437Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:49:39.438Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:49:39.442Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:50:39.427Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:50:39.428Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:50:39.432Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:51:39.439Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:51:39.440Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:51:39.443Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:52:39.441Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:52:39.442Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:52:39.443Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:53:39.535Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:53:39.536Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:53:39.539Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:54:39.488Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:54:39.489Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:54:39.492Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:55:39.413Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:55:39.413Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:55:39.416Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:56:39.422Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:56:39.423Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:56:39.426Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:57:39.443Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:57:39.444Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:57:39.447Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:58:39.428Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:58:39.430Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:58:39.432Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T13:59:39.438Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T13:59:39.439Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T13:59:39.441Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T14:00:39.426Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T14:00:39.427Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T14:00:39.430Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T14:01:39.432Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T14:01:39.433Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T14:01:39.436Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T14:02:39.427Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T14:02:39.428Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T14:02:39.431Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T14:03:39.439Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T14:03:39.440Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T14:03:39.443Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T14:04:39.451Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T14:04:39.452Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T14:04:39.454Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T14:05:39.438Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T14:05:39.439Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T14:05:39.442Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T14:06:39.446Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T14:06:39.447Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T14:06:39.450Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T14:07:39.418Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T14:07:39.419Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T14:07:39.421Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T14:08:39.435Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T14:08:39.436Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T14:08:39.439Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T14:09:39.414Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T14:09:39.414Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T14:09:39.416Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T14:10:39.440Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T14:10:39.441Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T14:10:39.444Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T14:11:39.414Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T14:11:39.415Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T14:11:39.418Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T14:12:39.434Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T14:12:39.435Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T14:12:39.438Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T14:13:39.434Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T14:13:39.435Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T14:13:39.437Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T14:14:39.440Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T14:14:39.441Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T14:14:39.444Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T14:15:39.420Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T14:15:39.421Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T14:15:39.424Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T14:16:39.436Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T14:16:39.437Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T14:16:39.440Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T14:17:39.426Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T14:17:39.426Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T14:17:39.427Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T14:18:39.433Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T14:18:39.434Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T14:18:39.437Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T14:19:39.426Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T14:19:39.426Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T14:19:39.427Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T14:20:39.441Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T14:20:39.442Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T14:20:39.444Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T14:21:39.456Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T14:21:39.457Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T14:21:39.459Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T14:22:39.413Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T14:22:39.413Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T14:22:39.416Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T14:23:39.423Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T14:23:39.424Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T14:23:39.427Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T14:24:39.448Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T14:24:39.449Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T14:24:39.451Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T14:25:39.448Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T14:25:39.449Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T14:25:39.452Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T14:26:39.437Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T14:26:39.438Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T14:26:39.441Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T14:27:39.424Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T14:27:39.425Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T14:27:39.428Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T14:28:39.435Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T14:28:39.436Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T14:28:39.439Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T14:29:39.433Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T14:29:39.434Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T14:29:39.437Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T14:30:39.430Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T14:30:39.431Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T14:30:39.435Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T14:31:39.439Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T14:31:39.440Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T14:31:39.442Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T14:32:39.457Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T14:32:39.458Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T14:32:39.461Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T14:33:39.437Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T14:33:39.438Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T14:33:39.441Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T14:34:39.432Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T14:34:39.433Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T14:34:39.436Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T14:35:39.416Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T14:35:39.416Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T14:35:39.418Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T14:36:39.427Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T14:36:39.428Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T14:36:39.431Z [INFO]: Carregados 2 templates do Firestore
+2026-01-07T17:33:20.068Z [INFO]: Stats carregados do Firestore: totalSent=15
+2026-01-07T17:33:20.069Z [INFO]: Calculado: totalDailyLimit=2800, totalSent=15, available=2785, availableForTemplates=2285
+2026-01-07T17:33:20.071Z [INFO]: Carregados 2 templates do Firestore

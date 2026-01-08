@@ -188,6 +188,7 @@ class EmailService {
 
     const checkouts = await CheckoutRepository.fetchCheckouts({
       status: statusFilter,
+      // eventName: "Congresso Autismo MA 2026",
     });
     const targetCount =
       statusFilter === "approved"
@@ -674,6 +675,7 @@ class EmailService {
   //     logger.info("Processamento concluído.");
   //   }
   // }
+
   async processAutomaticEmails(templateIds = null) {
     if (this.isProcessing) {
       logger.info("Processamento já em andamento, ignorando.");
@@ -822,10 +824,7 @@ class EmailService {
                       recipient.participantIndex,
                       participant.name
                     );
-                  qrCodesData = [
-                    result.qrCodes[0], // Usar as imagens geradas diretamente
-                    result.qrCodes[1],
-                  ];
+                  qrCodesData = [result.qrCodes[0], result.qrCodes[1]];
                   await CheckoutRepository.updateParticipant(
                     recipient.checkoutId,
                     recipient.participantIndex,
