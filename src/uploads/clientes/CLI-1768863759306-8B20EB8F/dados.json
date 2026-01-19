@@ -1,0 +1,50 @@
+{
+  "_id": "CLI-1768863759306-8B20EB8F",
+  "nomeCliente": "formulario-pre-inscricao",
+  "cpfCliente": "formulario-pre-inscricao",
+  "dataNascimentoCliente": "2026-01-08",
+  "tipoSanguineo": "A-",
+  "diagnostico": "formulario-pre-inscricao",
+  "sexo": "FEMININO",
+  "operadoraSaude": "formulario-pre-inscricao",
+  "coparticipacao": "Não",
+  "nomeMae": "formulario-pre-inscricao",
+  "rgMae": "formulario-pre-inscricao",
+  "cpfMae": "formulario-pre-inscricao",
+  "dataNascimentoMae": "2026-01-22",
+  "profissaoMae": "formulario-pre-inscricao",
+  "nomePai": "formulario-pre-inscricao",
+  "rgPai": "formulario-pre-inscricao",
+  "cpfPai": "formulario-pre-inscricao",
+  "dataNascimentoPai": "2026-01-24",
+  "profissaoPai": "formulario-pre-inscricao",
+  "terapias": [
+    "INTEGRAÇÃO SENSORIAL"
+  ],
+  "logradouro": "formulario-pre-inscricao",
+  "numero": "formulario-pre-inscricao",
+  "bairro": "formulario-pre-inscricao",
+  "complemento": "formulario-pre-inscricao",
+  "cep": "formulario-pre-inscricao",
+  "cidade": "formulario-pre-inscricao",
+  "estado": "PI",
+  "telefoneResidencial": "formulario-pre-inscricao",
+  "telefoneMae": "formulario-pre-inscricao",
+  "telefonePai": "formulario-pre-inscricao",
+  "telefoneRecado": "formulario-pre-inscricao",
+  "emergenciaContato": "formulario-pre-inscricao",
+  "autorizacao": "SIM",
+  "metadata": {
+    "criadoEm": "2026-01-19T23:02:49.713Z",
+    "totalArquivos": 2,
+    "googleSheetsRow": "Não especificado",
+    "googleSheetsSuccess": true,
+    "localPaths": {
+      "assinatura": "clientes\\CLI-1768863759306-8B20EB8F\\assinatura_1768863759307.jpg",
+      "documentos": [
+        "clientes\\CLI-1768863759306-8B20EB8F\\documento-1_1768863759310.pdf"
+      ],
+      "diretorio": "D:\\humberto\\projetos_react\\landing-pages\\cuidar-mais\\backend\\src\\uploads\\clientes\\CLI-1768863759306-8B20EB8F"
+    }
+  }
+}

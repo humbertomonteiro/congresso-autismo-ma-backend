@@ -87,7 +87,7 @@ const eventConfig = {
 };
 
 const valueTickets = {
-  allTicket: 289,
+  allTicket: 297,
   halfTicket: 144.5,
 };
 

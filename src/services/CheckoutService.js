@@ -9,11 +9,6 @@ const ALL_TICKET_VALUE = config.valueTickets.allTicket;
 const HALF_TICKET_VALUE = config.valueTickets.halfTicket;
 
 class CheckoutService {
-  // constructor() {
-  //   ALL_TICKET_VALUE = 289;
-  //   HALF_TICKET_VALUE = 144.5;
-  // }
-
   calculateDiscount(fullTickets, halfTickets, valueTicket) {
     const resultDiscontAllTickets = ALL_TICKET_VALUE - valueTicket;
     const resultDiscontHalfTickets = HALF_TICKET_VALUE - valueTicket;

@@ -340,3 +340,46 @@ async function addTransactionsToFirestore() {
 addTransactionsToFirestore().catch((error) => {
   console.error("Erro ao adicionar transações:", error);
 });
+// test-google-script.js
+const axios = require("axios");
+
+const WEB_APP_URL =
+  "https://script.google.com/macros/s/AKfycbyRThOh4oJ8CRpEgrScKVKAVk-S2uB21M6DiEKeyFlpB3rc0uiemWSJe8iGzVi8K8cf/exec";
+
+async function testGoogleScript() {
+  console.log("🧪 Testando conexão com Google Apps Script...");
+
+  const testData = {
+    timestamp: new Date().toISOString(),
+    nomeCliente: "TESTE CONEXÃO",
+    cpfCliente: "111.222.333-44",
+    diagnostico: "Teste de conexão",
+    sexo: "MASCULINO",
+    nomeMae: "Mãe Teste",
+    cpfMae: "222.333.444-55",
+    telefoneMae: "(11) 99999-9999",
+    emergenciaContato: "Teste",
+    autorizacao: "SIM",
+    test: true,
+  };
+
+  try {
+    const response = await axios.post(WEB_APP_URL, testData, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      timeout: 10000,
+    });
+
+    console.log("✅ Resposta do Web App:", response.data);
+    console.log("📊 Status:", response.status);
+  } catch (error) {
+    console.error("❌ Erro:", error.message);
+    if (error.response) {
+      console.error("📋 Resposta de erro:", error.response.data);
+      console.error("🔢 Status code:", error.response.status);
+    }
+  }
+}
+
+testGoogleScript();

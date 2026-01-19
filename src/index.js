@@ -6,10 +6,20 @@ const paymentRoutes = require("./routes/paymentRoutes");
 const emailRoutes = require("./routes/emailRoutes");
 const credentialRoutes = require("./routes/credentialRoutes");
 const certificateRoutes = require("./routes/certificateRoutes");
+const clientRegistrationRoutes = require("./routes/clientRegistrationRoutes");
+
 const responseMiddleware = require("./middleware/response");
 const path = require("path");
 const { cleanupBoletos } = require("./jobs/cleanup");
 const { verifyPendingPayments } = require("./jobs/verifyPayments");
+
+const multerDebug = (req, res, next) => {
+  console.log("=== MULTER DEBUG (REAL) ===");
+  console.log("Body keys:", Object.keys(req.body));
+  console.log("Files keys:", req.files ? Object.keys(req.files) : null);
+  console.log("==========================");
+  next();
+};
 
 dotenv.config();
 
@@ -18,6 +28,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(responseMiddleware);
+app.use(express.urlencoded({ extended: true }));
 
 const boletoDir = path.join(__dirname, "temp");
 app.use("/boletos", express.static(boletoDir));
@@ -31,6 +42,8 @@ app.use("/api/payments", paymentRoutes);
 app.use("/api/email", emailRoutes);
 app.use("/api/credentials", credentialRoutes);
 app.use("/api/certificate", certificateRoutes);
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/api/client", multerDebug, clientRegistrationRoutes);
 
 cleanupBoletos();
 verifyPendingPayments();
