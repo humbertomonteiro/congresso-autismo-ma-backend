@@ -2,7 +2,7 @@ const emailService = require("./src/services/EmailService");
 
 const templateData = {
   templateId: "eventMessageSale",
-  status: "test",
+  status: "approved",
 };
 
 emailService
