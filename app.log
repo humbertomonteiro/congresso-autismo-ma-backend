@@ -14686,3 +14686,7 @@
 2026-01-20T01:32:20.995Z [INFO]: Participante leticianescosta190@gmail.com atualizado com emailSent: true
 2026-01-20T01:33:21.157Z [INFO]: Aguardando 5 segundos antes do próximo lote
 2026-01-20T01:33:21.158Z [INFO]: Processamento de e-mails pós-evento concluído
+2026-04-06T13:51:59.275Z [INFO]: Fetched 0 active templates for status pending
+2026-04-06T13:51:59.277Z [INFO]: No active templates found for status pending in checkout UtNiEuzUfjhPBnEykWFi
+2026-04-06T13:54:57.595Z [INFO]: Fetched 0 active templates for status pending
+2026-04-06T13:54:57.597Z [INFO]: No active templates found for status pending in checkout QvW8Xv5tBhaNZo0ZPfkl
