@@ -4,45 +4,7 @@ const puppeteer = require("puppeteer");
 const bwipjs = require("bwip-js");
 const QRCode = require("qrcode");
 const config = require("../config");
-
-const BASE_PRICE = config.valueTickets.allTicket;
-const HALF_PRICE = config.valueTickets.halfTicket;
-
-const calculateTotal = (ticketQuantity, halfTickets, coupon) => {
-  if (!Number.isInteger(ticketQuantity) || ticketQuantity <= 0) {
-    throw new Error("Quantidade de ingressos inválida.");
-  }
-  if (
-    !Number.isInteger(halfTickets) ||
-    halfTickets < 0 ||
-    halfTickets > ticketQuantity
-  ) {
-    throw new Error("Número de ingressos meia inválido.");
-  }
-
-  const fullTickets = ticketQuantity - halfTickets;
-  const valueTicketsAll = fullTickets * BASE_PRICE;
-  const valueTicketsHalf = halfTickets * HALF_PRICE;
-  let discount = 0;
-
-  if (coupon === "grupo" && ticketQuantity >= 5) {
-    discount = (ticketQuantity - halfTickets) * 100;
-  } else if (coupon === "terapeuta") {
-    discount = 50;
-  } else if (coupon && coupon !== "grupo") {
-    throw new Error("Cupom inválido.");
-  }
-
-  const total = valueTicketsAll + valueTicketsHalf - discount;
-
-  return {
-    valueTicketsAll: valueTicketsAll.toFixed(2),
-    valueTicketsHalf: valueTicketsHalf.toFixed(2),
-    discount: discount.toFixed(2),
-    total: total.toFixed(2),
-    totalInCents: Math.round(total * 100),
-  };
-};
+const { calculateTotal } = require("./calculateTotal");
 
 const formatDate = (date) => {
   const day = String(date.getDate()).padStart(2, "0");
@@ -108,12 +70,18 @@ const generateBoletoPDF = async (
   customer,
   ticketQuantity,
   halfTickets,
+  socialTickets,
   coupon,
   participants,
   dataVencimento
 ) => {
-  const calculation = calculateTotal(ticketQuantity, halfTickets, coupon);
-  const fullTickets = ticketQuantity - halfTickets;
+  const fullTickets = ticketQuantity - halfTickets - socialTickets;
+  const calculation = calculateTotal(
+    fullTickets,
+    halfTickets,
+    socialTickets,
+    coupon
+  );
 
   const barcodeBuffer = await new Promise((resolve, reject) => {
     bwipjs.toBuffer(

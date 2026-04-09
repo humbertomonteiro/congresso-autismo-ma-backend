@@ -8,28 +8,31 @@ const path = require("path");
 
 const processCreditPayment = async (req, res) => {
   const {
-    ticketQuantity,
+    allTickets,
     halfTickets,
+    socialTickets,
     coupon,
     participants,
     creditCardData,
     payer,
   } = req.body;
 
+  const allT = parseInt(allTickets) || 0;
+  const halfT = parseInt(halfTickets) || 0;
+  const socialT = parseInt(socialTickets) || 0;
+  const ticketQuantity = allT + halfT + socialT;
+
   try {
     // Validações
     CheckoutService.validateParticipants(participants, ticketQuantity);
     CheckoutService.validateCreditCard(creditCardData);
-    const totals = CheckoutService.calculateTotal(
-      ticketQuantity,
-      halfTickets,
-      coupon
-    );
+    const totals = CheckoutService.calculateTotal(allT, halfT, socialT, coupon);
 
     // Processar pagamento com cartão
     const result = await CieloService.processCreditPayment(
-      ticketQuantity,
-      halfTickets,
+      allT,
+      halfT,
+      socialT,
       coupon,
       participants,
       creditCardData,
@@ -40,6 +43,7 @@ const processCreditPayment = async (req, res) => {
     res.sendResponse(200, true, result.message, {
       paymentId: result.paymentId,
       checkoutId: result.checkoutId,
+      participantIds: result.participantIds,
       status: result.status,
       totalAmount: totals.total,
       transactionId: result.transactionId,
@@ -56,21 +60,25 @@ const processCreditPayment = async (req, res) => {
   }
 };
 
-// Mantidos intactos do código novo (funcionando com Banco do Brasil)
 const processPixPayment = async (req, res) => {
-  const { ticketQuantity, halfTickets, coupon, participants } = req.body;
+  const { allTickets, halfTickets, socialTickets, coupon, participants } = req.body;
+
+  const allT = parseInt(allTickets) || 0;
+  const halfT = parseInt(halfTickets) || 0;
+  const socialT = parseInt(socialTickets) || 0;
+  const ticketQuantity = allT + halfT + socialT;
 
   try {
     CheckoutService.validateParticipants(participants, ticketQuantity);
-    const totals = CheckoutService.calculateTotal(
-      ticketQuantity,
-      halfTickets,
-      coupon
-    );
+    const totals = CheckoutService.calculateTotal(allT, halfT, socialT, coupon);
 
     const pixResponse = await BancoDoBrasilService.createPixPayment(
       totals.totalInCents,
-      { Name: participants[0].name, Identity: participants[0].document }
+      allT,
+      halfT,
+      socialT,
+      coupon,
+      participants
     );
 
     res.sendResponse(
@@ -79,6 +87,7 @@ const processPixPayment = async (req, res) => {
       "Pix gerado com sucesso, aguardando pagamento",
       {
         checkoutId: pixResponse.checkoutId,
+        participantIds: pixResponse.participantIds,
         paymentId: pixResponse.txId,
         qrCodeString: pixResponse.qrCode,
         qrCodeLink: pixResponse.qrCodeLink,
@@ -92,16 +101,17 @@ const processPixPayment = async (req, res) => {
 };
 
 const processBoletoPayment = async (req, res) => {
-  const { ticketQuantity, halfTickets, coupon, participants, payer } = req.body;
+  const { allTickets, halfTickets, socialTickets, coupon, participants, payer } = req.body;
+
+  const allT = parseInt(allTickets) || 0;
+  const halfT = parseInt(halfTickets) || 0;
+  const socialT = parseInt(socialTickets) || 0;
+  const ticketQuantity = allT + halfT + socialT;
 
   try {
     CheckoutService.validateParticipants(participants, ticketQuantity);
     CheckoutService.validateBoleto(payer);
-    const totals = CheckoutService.calculateTotal(
-      ticketQuantity,
-      halfTickets,
-      coupon
-    );
+    const totals = CheckoutService.calculateTotal(allT, halfT, socialT, coupon);
 
     if (!payer.document) {
       throw new Error("Documento do pagador é obrigatório.");
@@ -111,8 +121,9 @@ const processBoletoPayment = async (req, res) => {
       totals.totalInCents,
       { Name: payer.name, Identity: payer.document },
       payer,
-      ticketQuantity,
-      halfTickets,
+      allT,
+      halfT,
+      socialT,
       coupon,
       participants
     );
@@ -143,10 +154,11 @@ const processBoletoPayment = async (req, res) => {
 };
 
 const validateCoupon = async (req, res) => {
-  const { coupon, ticketQuantity } = req.body;
+  const { coupon, allTickets } = req.body;
+  const allT = parseInt(allTickets) || 1;
 
   try {
-    CheckoutService.calculateTotal(ticketQuantity, 0, coupon);
+    CheckoutService.calculateTotal(allT, 0, 0, coupon);
     res.sendResponse(200, true, "Cupom válido", { valid: true });
   } catch (error) {
     res.sendResponse(400, false, error.message, { valid: false });
@@ -154,14 +166,14 @@ const validateCoupon = async (req, res) => {
 };
 
 const calculateTotals = async (req, res) => {
-  const { ticketQuantity, halfTickets, coupon } = req.body;
+  const { allTickets, halfTickets, socialTickets, coupon } = req.body;
+
+  const allT = parseInt(allTickets) || 0;
+  const halfT = parseInt(halfTickets) || 0;
+  const socialT = parseInt(socialTickets) || 0;
 
   try {
-    const totals = CheckoutService.calculateTotal(
-      ticketQuantity,
-      halfTickets,
-      coupon
-    );
+    const totals = CheckoutService.calculateTotal(allT, halfT, socialT, coupon);
     res.sendResponse(200, true, "Totais calculados com sucesso", totals);
   } catch (error) {
     res.sendResponse(
@@ -270,6 +282,56 @@ const addAllTemplatesToPendingEmails = async (req, res) => {
   }
 };
 
+const createManualCheckout = async (req, res) => {
+  const { participants, ...checkoutData } = req.body;
+
+  try {
+    const { buildParticipantsBatch } = require("../utils/normalizeParticipant");
+    const CredentialService = require("../services/CredentialService");
+    const CampaignService = require("../services/CampaignService");
+
+    const checkoutId = await CheckoutRepository.saveCheckout(checkoutData);
+
+    const allTickets = checkoutData.orderDetails?.allTickets ?? 0;
+    const halfTickets = checkoutData.orderDetails?.halfTickets ?? 0;
+
+    const participantsData = buildParticipantsBatch(participants, {
+      checkoutId,
+      allTickets,
+      halfTickets,
+    });
+
+    const participantIds = await CheckoutRepository.saveParticipants(
+      checkoutId,
+      participantsData
+    );
+
+    for (let i = 0; i < participantIds.length; i++) {
+      await CredentialService.generateQRCodesForParticipant(
+        checkoutId,
+        participantIds[i],
+        participants[i].name
+      );
+    }
+
+    await CampaignService.triggerForCheckout({ id: checkoutId, ...checkoutData });
+
+    res.sendResponse(200, true, "Checkout manual criado com sucesso", {
+      checkoutId,
+      participantIds,
+    });
+  } catch (error) {
+    console.error("[PaymentController] Erro ao criar checkout manual:", error.message);
+    res.sendResponse(
+      500,
+      false,
+      "Erro ao criar checkout manual",
+      null,
+      error.message
+    );
+  }
+};
+
 module.exports = {
   processCreditPayment,
   processPixPayment,
@@ -280,4 +342,5 @@ module.exports = {
   verifyPayment,
   verifyAllPayments,
   addAllTemplatesToPendingEmails,
+  createManualCheckout,
 };

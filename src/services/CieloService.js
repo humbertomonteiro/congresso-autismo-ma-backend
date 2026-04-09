@@ -1,12 +1,11 @@
-// src/services/CieloService.js
 const CieloRepository = require("../repositories/CieloRepository");
 const CheckoutRepository = require("../repositories/CheckoutRepository");
-
+const { buildParticipantsBatch } = require("../utils/normalizeParticipant");
 const { toZonedTime } = require("date-fns-tz");
-
 const config = require("../config");
-const EVENT_NAME = config.event.name;
+const logger = require("../logger");
 
+const EVENT_NAME = config.event.name;
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const mapCieloStatusToCustom = (cieloStatus) => {
@@ -15,18 +14,20 @@ const mapCieloStatusToCustom = (cieloStatus) => {
     case 2:
       return "approved";
     case 0:
-    case 10:
+    case 12:
       return "pending";
     case 3:
-    case 9:
+    case 13:
+      return "denied";
+    case 10:
+      return "voided";
     case 11:
-      return "error";
+      return "refunded";
     default:
       return "pending";
   }
 };
 
-// Função para normalizar a bandeira do cartão
 const normalizeBrand = (brand) => {
   const brandMap = {
     visa: "Visa",
@@ -39,14 +40,14 @@ const normalizeBrand = (brand) => {
     aura: "Aura",
     hipercard: "Hipercard",
   };
-  const lowerBrand = brand.toLowerCase();
-  return brandMap[lowerBrand] || brand;
+  return brandMap[brand?.toLowerCase()] || brand;
 };
 
 class CieloService {
   async processCreditPayment(
-    ticketQuantity,
+    allTickets,
     halfTickets,
+    socialTickets,
     coupon,
     participants,
     creditCardData,
@@ -54,212 +55,160 @@ class CieloService {
     payer
   ) {
     let creditResponse;
-    let paymentData;
+    const normalizedBrand = normalizeBrand(creditCardData.brand);
+
+    const paymentData = {
+      MerchantOrderId: `ORDER_${Date.now()}`,
+      Customer: {
+        Name: payer.name,
+        Identity: payer.document.replace(/\D/g, ""),
+        IdentityType: payer.documentType || "cpf",
+      },
+      Payment: {
+        Type: "CreditCard",
+        Amount: totals.totalInCents,
+        Installments: parseInt(creditCardData.installments),
+        SoftDescriptor: EVENT_NAME,
+        Capture: true,
+        CreditCard: {
+          CardNumber: creditCardData.cardNumber.replace(/\s/g, ""),
+          Holder: creditCardData.cardName,
+          ExpirationDate: creditCardData.maturity,
+          SecurityCode: creditCardData.cardCode,
+          Brand: normalizedBrand,
+        },
+      },
+    };
 
     try {
-      // Normalizar o valor da bandeira antes de usar
-      const normalizedBrand = normalizeBrand(creditCardData.brand);
-
-      // Montar paymentData com o brand normalizado
-      paymentData = {
-        MerchantOrderId: `ORDER_${Date.now()}`,
-        Customer: {
-          Name: payer.name,
-          Identity: payer.document.replace(/\D/g, ""),
-          IdentityType: payer.documentType || "cpf",
-        },
-        Payment: {
-          Type: "CreditCard",
-          Amount: totals.totalInCents,
-          Installments: parseInt(creditCardData.installments),
-          SoftDescriptor: EVENT_NAME,
-          Capture: true,
-          CreditCard: {
-            CardNumber: creditCardData.cardNumber.replace(/\s/g, ""),
-            Holder: creditCardData.cardName,
-            ExpirationDate: creditCardData.maturity,
-            SecurityCode: creditCardData.cardCode,
-            Brand: normalizedBrand,
-          },
-        },
-      };
-
-      // Criar pagamento
       creditResponse = await CieloRepository.createCreditPayment(paymentData);
 
-      // Verificar status com loop (igual ao antigo)
-      let statusResponse = {
-        Status: creditResponse.status,
-        ReturnMessage: creditResponse.returnMessage,
-      };
-      const maxAttempts = 5;
+      // Aguarda status final
+      let statusResponse = { Status: creditResponse.status };
+      const finalStatuses = [1, 2, 3, 9, 11, 13];
       let attempts = 0;
-      const finalStatuses = [1, 2, 3, 9, 11];
 
-      do {
+      while (!finalStatuses.includes(statusResponse.Status) && attempts < 5) {
+        await delay(5000);
         statusResponse = await CieloRepository.getPaymentStatus(
           creditResponse.paymentId
         );
-        console.log(
-          `Tentativa ${attempts + 1}/${maxAttempts}: Status ${
-            statusResponse.Status
-          }`
-        );
-        if (finalStatuses.includes(statusResponse.Status)) break;
         attempts++;
-        if (attempts < maxAttempts) {
-          console.log("Aguardando 5 segundos antes da próxima tentativa...");
-          await delay(5000);
-        }
-      } while (attempts < maxAttempts);
+        logger.info(
+          `[Cielo] Tentativa ${attempts}: Status ${statusResponse.Status}`
+        );
+      }
 
       const customStatus = mapCieloStatusToCustom(statusResponse.Status);
-      if (customStatus === "error") {
+      if (customStatus === "denied") {
         throw new Error(
           `Transação não aprovada: ${
-            statusResponse.ReturnMessage || "Erro desconhecido"
+            creditResponse.returnMessage || "Negada pelo banco"
           }`
         );
       }
 
-      const now = new Date();
-      const brasiliaTime = toZonedTime(now, "America/Sao_Paulo");
+      const brasiliaTime = toZonedTime(new Date(), "America/Sao_Paulo");
 
-      // Montar checkoutData
       const checkoutData = {
         transactionId: paymentData.MerchantOrderId,
         timestamp: brasiliaTime.toISOString(),
         status: customStatus,
-        paymentMethod: "creditCard",
-        totalAmount: totals.total,
-        eventName: EVENT_NAME,
-        participants,
+        paymentMethod: "credit",
         paymentId: creditResponse.paymentId,
+        buyerName: payer.name,
+        buyerCpf: payer.document.replace(/\D/g, ""),
+        isCourtesy: false,
+        eventName: EVENT_NAME,
         orderDetails: {
-          ...totals,
-          ticketQuantity,
-          fullTickets: ticketQuantity - halfTickets,
+          allTickets,
           halfTickets,
+          socialTickets,
           coupon: coupon || null,
+          total: totals.total,
+          discount: totals.discount,
+          valueTicketsAll: totals.valueTicketsAll,
+          valueTicketsHalf: totals.valueTicketsHalf,
+          valueTicketsSocial: totals.valueTicketsSocial,
         },
         paymentDetails: {
           creditCard: {
             last4Digits: creditCardData.cardNumber.slice(-4),
-            installments: creditCardData.installments,
+            installments: parseInt(creditCardData.installments),
             brand: normalizedBrand,
           },
         },
-        document: participants[0].document || "",
-        sentEmails: [],
-        qrCodesSent: false,
-        payer: {
-          name: payer.name,
-          document: payer.document,
-          documentType: payer.documentType,
-        },
       };
 
-      // Salvar no Firebase
       const checkoutId = await CheckoutRepository.saveCheckout(checkoutData);
-      // Adicionar todos os pendingEmails
-      await CheckoutRepository.addAllTemplatesToPendingEmails(
+
+      // DEPOIS
+      const CredentialService = require("./CredentialService");
+
+      const participantsData = buildParticipantsBatch(participants, {
         checkoutId,
-        checkoutData.status
+        allTickets,
+        halfTickets,
+      });
+      const participantIds = await CheckoutRepository.saveParticipants(
+        checkoutId,
+        participantsData
       );
 
-      console.log("Response sendo retornado:", {
-        paymentId: checkoutId,
-        transactionId: paymentData.MerchantOrderId,
-        status: customStatus,
-        message:
-          customStatus === "pending"
-            ? "Pagamento em processamento, aguarde a confirmação."
-            : "Pagamento processado com sucesso",
-        success: true,
-      });
+      // ✅ Gera qrToken para cada participante imediatamente após salvar
+      for (let i = 0; i < participantIds.length; i++) {
+        await CredentialService.generateQRCodesForParticipant(
+          checkoutId,
+          participantIds[i],
+          participants[i].name
+        );
+      }
+
+      // Dispara campanhas automáticas se aprovado
+      if (customStatus === "approved") {
+        const CampaignService = require("./CampaignService");
+        await CampaignService.triggerForCheckout({
+          id: checkoutId,
+          ...checkoutData,
+        });
+      }
 
       return {
         paymentId: creditResponse.paymentId,
-        checkoutId: checkoutId,
+        checkoutId,
+        participantIds,
         transactionId: paymentData.MerchantOrderId,
         status: customStatus,
         message:
           customStatus === "pending"
             ? "Pagamento em processamento, aguarde a confirmação."
             : "Pagamento processado com sucesso",
-        success: true,
       };
     } catch (error) {
-      console.error("Erro no CieloService:", error.message);
+      logger.error(`[Cielo] Erro: ${error.message}`);
 
-      // Estornar se pagamento foi aprovado
+      // Estorna se foi aprovado antes do erro
       if (creditResponse?.paymentId) {
         const status = await CieloRepository.getPaymentStatus(
           creditResponse.paymentId
         );
         if ([1, 2].includes(status.Status)) {
           await CieloRepository.voidPayment(creditResponse.paymentId);
-          console.log("Pagamento estornado com sucesso");
+          logger.info("[Cielo] Pagamento estornado");
         }
       }
 
-      // Salvar erro no Firebase
-      const errorCheckoutData = {
-        transactionId: paymentData?.MerchantOrderId || `ORDER_${Date.now()}`,
-        timestamp: new Date().toISOString(),
-        status: "error",
-        paymentMethod: "creditCard",
-        totalAmount: totals?.total || "0.00",
-        eventName: EVENT_NAME,
-        participants: participants || [],
-        paymentId: creditResponse?.paymentId || null,
-        orderDetails: totals
-          ? {
-              ...totals,
-              ticketQuantity,
-              fullTickets: ticketQuantity - halfTickets,
-              halfTickets,
-              coupon: coupon || null,
-            }
-          : {
-              ticketQuantity,
-              fullTickets: ticketQuantity - halfTickets,
-              halfTickets,
-              coupon: coupon || null,
-              totalInCents: 0,
-              total: "0.00",
-            },
-        paymentDetails: {
-          creditCard: {
-            last4Digits: creditCardData?.cardNumber?.slice(-4) || "N/A",
-            installments: creditCardData?.installments || 1,
-            brand: creditCardData?.brand || "Visa",
-          },
-        },
-        sentEmails: [],
-        errorLog: error.message,
-        qrCodesSent: false,
-        payer: {
-          name: payer?.name || "N/A",
-          document: payer?.document || "N/A",
-          documentType: payer?.documentType || "cpf",
-        },
-      };
-
-      const checkoutId = await CheckoutRepository.saveCheckout(
-        errorCheckoutData
-      );
-      // Adicionar todos os pendingEmails
-      await CheckoutRepository.addAllTemplatesToPendingEmails(
-        checkoutId,
-        errorCheckoutData.status
-      );
       throw error;
     }
   }
 
+  async getPaymentStatus(paymentId) {
+    const response = await CieloRepository.getPaymentStatus(paymentId);
+    return mapCieloStatusToCustom(response.Status);
+  }
+
   async fetchCieloSales() {
-    throw new Error("Método fetchCieloSales não implementado ainda");
+    throw new Error("Método fetchCieloSales não implementado");
   }
 }
 

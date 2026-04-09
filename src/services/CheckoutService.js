@@ -1,82 +1,89 @@
 const CheckoutRepository = require("../repositories/CheckoutRepository");
 const BancoDoBrasilService = require("./BancoDoBrasilService");
-const EmailService = require("../services/EmailService"); // Adicionado
-const { toZonedTime, format } = require("date-fns-tz");
-const { startOfDay, endOfDay, parse } = require("date-fns");
-
+const EmailService = require("./EmailService");
+const CieloService = require("./CieloService");
+const { toZonedTime } = require("date-fns-tz");
+const { endOfDay, parse } = require("date-fns");
 const config = require("../config");
+const logger = require("../logger");
+const { calculateTotal } = require("../utils/calculateTotal");
+
 const ALL_TICKET_VALUE = config.valueTickets.allTicket;
 const HALF_TICKET_VALUE = config.valueTickets.halfTicket;
+const SOCIAL_TICKET_VALUE = config.valueTickets.socialTicket;
 
 class CheckoutService {
-  calculateDiscount(fullTickets, halfTickets, valueTicket) {
-    const resultDiscontAllTickets = ALL_TICKET_VALUE - valueTicket;
-    const resultDiscontHalfTickets = HALF_TICKET_VALUE - valueTicket;
+  // ── Cálculos ──────────────────────────────────────────────────────────────
 
-    const discount =
-      fullTickets * resultDiscontAllTickets +
-      halfTickets * resultDiscontHalfTickets;
-
-    return discount;
+  // Desconto aplicado apenas sobre ingressos inteiros (allTickets)
+  calculateDiscount(allTickets, pricePerTicket) {
+    return allTickets * (ALL_TICKET_VALUE - pricePerTicket);
   }
 
-  calculateTotal(ticketQuantity, halfTickets, coupon) {
-    if (!Number.isInteger(ticketQuantity) || ticketQuantity <= 0) {
-      throw new Error("Quantidade de ingressos inválida.");
-    }
-    if (
-      !Number.isInteger(halfTickets) ||
-      halfTickets < 0 ||
-      halfTickets > ticketQuantity
-    ) {
-      throw new Error("Número de ingressos meia inválido.");
-    }
+  // calculateTotal(allTickets, halfTickets, socialTickets, coupon) {
+  //   const a = Number.isInteger(allTickets) && allTickets >= 0;
+  //   const h = Number.isInteger(halfTickets) && halfTickets >= 0;
+  //   const s = Number.isInteger(socialTickets) && socialTickets >= 0;
+  //   if (!a || !h || !s) {
+  //     throw new Error("Quantidade de ingressos inválida.");
+  //   }
+  //   const ticketQuantity = allTickets + halfTickets + socialTickets;
+  //   if (ticketQuantity <= 0) {
+  //     throw new Error("Selecione ao menos 1 ingresso.");
+  //   }
 
-    const fullTickets = ticketQuantity - halfTickets;
-    const valueTicketsAll = fullTickets * ALL_TICKET_VALUE;
-    const valueTicketsHalf = halfTickets * HALF_TICKET_VALUE;
-    let discount = 0;
+  //   const valueTicketsAll = allTickets * ALL_TICKET_VALUE;
+  //   const valueTicketsHalf = halfTickets * HALF_TICKET_VALUE;
+  //   const valueTicketsSocial = socialTickets * SOCIAL_TICKET_VALUE;
 
-    if (coupon === "grupo" && ticketQuantity >= 5) {
-      discount = this.calculateDiscount(fullTickets, halfTickets, 649);
-    } else if (coupon === "grupo2") {
-      discount = this.calculateDiscount(fullTickets, halfTickets, 699);
-    } else if (coupon === "terapeuta") {
-      discount = 50;
-    } else if (coupon === "desconto") {
-      discount = 50;
-    } else if (coupon === "maira") {
-      discount = this.calculateDiscount(fullTickets, halfTickets, 350);
-    } else if (coupon === "vania") {
-      discount = this.calculateDiscount(fullTickets, halfTickets, 349.9);
-    } else if (coupon === "vivian") {
-      discount = this.calculateDiscount(fullTickets, halfTickets, 325.9);
-    } else if (coupon === "ingresso300") {
-      discount = this.calculateDiscount(fullTickets, halfTickets, 300);
-    } else if (coupon === "prevenda") {
-      discount = fullTickets * 50;
-    } else if (coupon === "grupounico") {
-      discount = this.calculateDiscount(fullTickets, halfTickets, 449);
-    } else if (coupon && coupon !== "grupo") {
-      throw new Error("Cupom inválido.");
-    }
+  //   // Cupons aplicam desconto somente nos ingressos inteiros (allTickets)
+  //   const couponMap = {
+  //     grupo: () =>
+  //       allTickets >= 5
+  //         ? this.calculateDiscount(allTickets, 649)
+  //         : (() => {
+  //             throw new Error("Cupom 'grupo' exige mínimo 5 ingressos inteiros.");
+  //           })(),
+  //     grupo2: () => this.calculateDiscount(allTickets, 699),
+  //     grupounico: () => this.calculateDiscount(allTickets, 449),
+  //     terapeuta: () => 50,
+  //     desconto: () => 50,
+  //     prevenda: () => allTickets * 50,
+  //     maira: () => this.calculateDiscount(allTickets, 350),
+  //     vania: () => this.calculateDiscount(allTickets, 349.9),
+  //     vivian: () => this.calculateDiscount(allTickets, 325.9),
+  //     ingresso300: () => this.calculateDiscount(allTickets, 300),
+  //   };
 
-    const total = valueTicketsAll + valueTicketsHalf - discount;
+  //   let discount = 0;
+  //   if (coupon) {
+  //     const fn = couponMap[coupon];
+  //     if (!fn) throw new Error("Cupom inválido.");
+  //     discount = fn();
+  //   }
 
-    return {
-      valueTicketsAll: valueTicketsAll.toFixed(2),
-      valueTicketsHalf: valueTicketsHalf.toFixed(2),
-      discount: discount.toFixed(2),
-      total: total.toFixed(2),
-      totalInCents: Math.round(total * 100),
-    };
+  //   const total = valueTicketsAll + valueTicketsHalf + valueTicketsSocial - discount;
+  //   return {
+  //     allTickets,
+  //     halfTickets,
+  //     socialTickets,
+  //     ticketQuantity,
+  //     valueTicketsAll: valueTicketsAll.toFixed(2),
+  //     valueTicketsHalf: valueTicketsHalf.toFixed(2),
+  //     valueTicketsSocial: valueTicketsSocial.toFixed(2),
+  //     discount: discount.toFixed(2),
+  //     total: total.toFixed(2),
+  //     totalInCents: Math.round(total * 100),
+  //   };
+  // }
+
+  // ── Validações ────────────────────────────────────────────────────────────
+
+  calculateTotal(allTickets, halfTickets, socialTickets, coupon) {
+    return calculateTotal(allTickets, halfTickets, socialTickets, coupon);
   }
 
   validateParticipants(participants, ticketQuantity) {
-    console.log(
-      "[CheckoutService] Participantes recebidos:",
-      JSON.stringify(participants, null, 2)
-    );
     if (
       !Array.isArray(participants) ||
       participants.length !== ticketQuantity
@@ -85,21 +92,18 @@ class CheckoutService {
         "Número de participantes deve igualar a quantidade de ingressos."
       );
     }
-
     participants.forEach((p) => {
-      if (!p.name || !p.email || !p.number || !p.document || !p.documentType) {
-        console.error("[CheckoutService] Participante com campos faltando:", p);
+      if (!p.name || !p.email || !p.document) {
         throw new Error("Todos os campos do participante são obrigatórios.");
       }
       const cleanDoc = p.document.replace(/\D/g, "");
-      if (p.documentType === "cpf" && !/^\d{11}$/.test(cleanDoc)) {
-        throw new Error(`CPF inválido para ${p.name}.`);
-      }
-      if (p.documentType === "cnpj" && !/^\d{14}$/.test(cleanDoc)) {
-        throw new Error(`CNPJ inválido para ${p.name}.`);
+      // Valida CPF (11 dígitos) ou CNPJ (14 dígitos)
+      if (cleanDoc.length !== 11 && cleanDoc.length !== 14) {
+        throw new Error(
+          `Documento inválido para ${p.name}: deve ser CPF (11) ou CNPJ (14) dígitos.`
+        );
       }
     });
-
     return true;
   }
 
@@ -112,208 +116,174 @@ class CheckoutService {
       throw new Error("Número do cartão inválido.");
     }
     if (!/^\d{2}\/\d{4}$/.test(maturity)) {
-      throw new Error(
-        "Data de vencimento inválida (formato MM/AAAA). Ex: 05/2028"
-      );
+      throw new Error("Data de vencimento inválida (formato MM/AAAA).");
     }
     if (!/^\d{3,4}$/.test(cardCode)) {
       throw new Error("Código de segurança inválido.");
     }
-    if (
-      !Number.isInteger(Number(installments)) ||
-      installments < 1 ||
-      installments > 10
-    ) {
-      throw new Error("Número de parcelas deve estar entre 1 e 10.");
-    }
     return true;
   }
 
-  validateBoleto(boletoData) {
-    // const { street, addressNumber, district, zipCode, city, state } =
-    //   boletoData;
-    // if (!street || !addressNumber || !district || !zipCode || !city || !state) {
-    //   throw new Error(
-    //     "Todos os campos de endereço são obrigatórios para boleto."
-    //   );
-    // }
-    // if (!/^\d{8}$/.test(zipCode.replace(/\D/g, ""))) {
-    //   throw new Error("CEP inválido.");
-    // }
-    // if (!/^[A-Z]{2}$/.test(state)) {
-    //   throw new Error("Estado deve ser uma sigla de 2 letras (ex.: SP).");
-    // }
-    return true;
+  validateBoleto() {
+    return true; // endereço é opcional por ora
   }
+
+  // ── Verificação de pagamentos pendentes ───────────────────────────────────
 
   async verifyAllPendingPayments() {
-    console.log(
-      "[CheckoutService] Verificando todos os pagamentos pendentes..."
+    logger.info("[CheckoutService] Verificando pagamentos pendentes...");
+
+    const pendingCheckouts = await CheckoutRepository.getPendingCheckouts();
+    logger.info(
+      `[CheckoutService] ${pendingCheckouts.length} checkout(s) pendente(s)`
     );
 
-    try {
-      const pendingCheckouts = await CheckoutRepository.getPendingCheckouts();
-      console.log(
-        `[CheckoutService] Encontrados ${pendingCheckouts.length} checkouts pendentes`
-      );
+    for (const checkout of pendingCheckouts) {
+      const { id, paymentMethod, paymentId, paymentDetails } = checkout;
 
-      for (const checkout of pendingCheckouts) {
-        const { id, paymentMethod, paymentId, paymentDetails } = checkout;
-        console.log(
-          `[CheckoutService] Processando checkout ${id} - paymentId: ${paymentId}, método: ${paymentMethod}`
-        );
-        // const now = new Date();
+      try {
         const now = toZonedTime(new Date(), "America/Sao_Paulo");
-
         let isExpired = false;
-        if (paymentMethod === "pix" && paymentDetails.pix?.expirationDate) {
+
+        if (paymentMethod === "pix" && paymentDetails?.pix?.expirationDate) {
           isExpired = new Date(paymentDetails.pix.expirationDate) < now;
         } else if (
           paymentMethod === "boleto" &&
-          paymentDetails.boleto?.dataVencimento
+          paymentDetails?.boleto?.dataVencimento
         ) {
           const vencimento = parse(
             paymentDetails.boleto.dataVencimento,
             "dd.MM.yyyy",
-            new Date(),
-            { timeZone: "America/Sao_Paulo" }
+            new Date()
           );
-          const vencimentoEndOfDay = endOfDay(vencimento);
-          isExpired = vencimentoEndOfDay < now;
-          console.log(
-            `[CheckoutService] Boleto ${id}: dataVencimento=${paymentDetails.boleto.dataVencimento}, vencimento=${vencimento}, vencimentoEndOfDay=${vencimentoEndOfDay}, now=${now}, isExpired=${isExpired}`
-          );
-          // isExpired = new Date(paymentDetails.boleto.dataVencimento) < now;
+          isExpired = endOfDay(vencimento) < now;
         }
 
         if (isExpired) {
-          console.log(
-            `[CheckoutService] Checkout ${id} (${paymentMethod}) expirado`
-          );
-          await CheckoutRepository.updateCheckoutStatus(id, "error", null);
-          await CheckoutRepository.resetAndUpdatePendingEmails(id, "error"); // Adicionado aqui
+          logger.info(`[CheckoutService] Checkout ${id} expirado`);
+          await CheckoutRepository.updateCheckoutStatus(id, "expired");
           continue;
         }
 
         let newStatus;
-        try {
-          if (paymentMethod === "pix") {
-            newStatus = await BancoDoBrasilService.getPixStatus(paymentId);
-          } else if (paymentMethod === "boleto") {
-            const boletoNumber = paymentId;
-            console.log(
-              `[CheckoutService] Usando boletoNumber: ${boletoNumber}`
-            );
-            newStatus = await BancoDoBrasilService.getBoletoStatus(
-              boletoNumber
-            );
-          } else {
-            console.log(
-              `[CheckoutService] Método de pagamento desconhecido para checkout ${id}: ${paymentMethod}`
-            );
-            continue;
-          }
-
-          console.log(
-            `[CheckoutService] Status do checkout ${id} (${paymentMethod}): ${newStatus}`
+        if (paymentMethod === "pix") {
+          newStatus = await BancoDoBrasilService.getPixStatus(paymentId);
+        } else if (paymentMethod === "boleto") {
+          newStatus = await BancoDoBrasilService.getBoletoStatus(paymentId);
+        } else if (paymentMethod === "credit") {
+          newStatus = await CieloService.getPaymentStatus(paymentId);
+        } else {
+          logger.warn(
+            `[CheckoutService] Método desconhecido para checkout ${id}: ${paymentMethod}`
           );
-          await CheckoutRepository.updateCheckoutStatus(
-            id,
-            newStatus,
-            newStatus === "approved"
-              ? EmailService.sendEmailConfirmationPayment.bind(EmailService)
-              : null
-          );
-          await CheckoutRepository.resetAndUpdatePendingEmails(id, newStatus);
-        } catch (error) {
-          console.error(
-            `[CheckoutService] Erro ao verificar checkout ${id} (${paymentMethod}): ${error.message}`
-          );
+          continue;
         }
-      }
 
-      console.log("[CheckoutService] Verificação de pendentes concluída");
-    } catch (error) {
-      console.error(
-        "[CheckoutService] Erro geral ao verificar pendentes:",
-        error.message
-      );
-      throw error;
+        logger.info(
+          `[CheckoutService] Checkout ${id} (${paymentMethod}): ${newStatus}`
+        );
+        await CheckoutRepository.updateCheckoutStatus(id, newStatus);
+
+        // Se aprovado, dispara emails de confirmação
+        if (newStatus === "approved") {
+          await this._sendConfirmationEmailsForCheckout(checkout);
+        }
+      } catch (error) {
+        logger.error(
+          `[CheckoutService] Erro no checkout ${id}: ${error.message}`
+        );
+      }
     }
+
+    logger.info("[CheckoutService] Verificação concluída");
   }
 
-  async verifyPaymentById(paymentId) {
-    // console.log(
-    //   `[CheckoutService] Verificando pagamento específico: ${paymentId}`
-    // );
+  async verifyPaymentById(checkoutId) {
+    const checkout = await CheckoutRepository.getCheckoutById(checkoutId);
+    if (!checkout) return { status: "not_found" };
 
-    try {
-      const statusBoleto = BancoDoBrasilService.getBoletoStatus(paymentId);
-      console.log("Status dos boletos:", statusBoleto);
+    const { paymentMethod, paymentId, paymentDetails } = checkout;
+    const now = toZonedTime(new Date(), "America/Sao_Paulo");
 
-      const checkouts = await CheckoutRepository.getPendingCheckouts();
-      const checkout = checkouts.find((c) => c.paymentId === paymentId);
+    // Verifica expiração antes de consultar a API
+    if (paymentMethod === "pix" && paymentDetails?.pix?.expirationDate) {
+      if (new Date(paymentDetails.pix.expirationDate) < now) {
+        await CheckoutRepository.updateCheckoutStatus(checkoutId, "expired");
+        return { status: "expired" };
+      }
+    } else if (
+      paymentMethod === "boleto" &&
+      paymentDetails?.boleto?.dataVencimento
+    ) {
+      const vencimento = parse(
+        paymentDetails.boleto.dataVencimento,
+        "dd.MM.yyyy",
+        new Date()
+      );
+      if (endOfDay(vencimento) < now) {
+        await CheckoutRepository.updateCheckoutStatus(checkoutId, "expired");
+        return { status: "expired" };
+      }
+    }
 
-      if (!checkout) {
-        console.log(
-          `[CheckoutService] Checkout com paymentId ${paymentId} não encontrado ou não está pendente`
+    let newStatus;
+    if (paymentMethod === "pix") {
+      newStatus = await BancoDoBrasilService.getPixStatus(paymentId);
+    } else if (paymentMethod === "boleto") {
+      newStatus = await BancoDoBrasilService.getBoletoStatus(paymentId);
+    } else if (paymentMethod === "credit") {
+      newStatus = await CieloService.getPaymentStatus(paymentId);
+    } else {
+      throw new Error(`Método de pagamento desconhecido: ${paymentMethod}`);
+    }
+
+    await CheckoutRepository.updateCheckoutStatus(checkoutId, newStatus);
+
+    if (newStatus === "approved") {
+      await this._sendConfirmationEmailsForCheckout(checkout);
+    }
+
+    return { status: newStatus };
+  }
+
+  // ── Interno: dispara emails de confirmação após aprovação ─────────────────
+
+  async _sendConfirmationEmailsForCheckout(checkout) {
+    const participants = await CheckoutRepository.getParticipantsByCheckout(
+      checkout.id
+    );
+
+    for (const participant of participants) {
+      if (participant.emailSent) continue;
+      try {
+        await EmailService.sendEmailConfirmationPayment({
+          checkoutId: checkout.id,
+          participantId: participant.id,
+          data: {
+            transactionId:
+              checkout.transactionId || checkout.paymentId || "N/A",
+            fullTickets:
+              checkout.orderDetails?.allTickets ??
+              checkout.orderDetails?.fullTickets ??
+              0,
+            halfTickets: checkout.orderDetails?.halfTickets || 0,
+            socialTickets: checkout.orderDetails?.socialTickets || 0,
+            valueTicketsAll: checkout.orderDetails?.valueTicketsAll || "0.00",
+            valueTicketsHalf: checkout.orderDetails?.valueTicketsHalf || "0.00",
+            valueTicketsSocial:
+              checkout.orderDetails?.valueTicketsSocial || "0.00",
+            total: checkout.orderDetails?.total || "0.00",
+            discount: checkout.orderDetails?.discount || "0.00",
+            coupon: checkout.orderDetails?.coupon || "",
+            installments:
+              checkout.paymentDetails?.creditCard?.installments || 1,
+          },
+        });
+      } catch (err) {
+        logger.error(
+          `[CheckoutService] Erro ao enviar email para ${participant.email}: ${err.message}`
         );
-        return { status: "not_found" };
       }
-
-      const { id, paymentMethod, paymentDetails } = checkout;
-      console.log(
-        `[CheckoutService] Checkout encontrado - ID: ${id}, método: ${paymentMethod}`
-      );
-      const now = new Date();
-
-      let isExpired = false;
-      if (paymentMethod === "pix" && paymentDetails.pix?.expirationDate) {
-        isExpired = new Date(paymentDetails.pix.expirationDate) < now;
-      } else if (
-        paymentMethod === "boleto" &&
-        paymentDetails.boleto?.dataVencimento
-      ) {
-        isExpired = new Date(paymentDetails.boleto.dataVencimento) < now;
-      }
-
-      if (isExpired) {
-        console.log(
-          `[CheckoutService] Checkout ${id} (${paymentMethod}) expirado`
-        );
-        await CheckoutRepository.updateCheckoutStatus(id, "error", null);
-        await CheckoutRepository.resetAndUpdatePendingEmails(id, "error"); // Adicionado aqui
-        return { status: "error" };
-      }
-
-      let newStatus;
-      if (paymentMethod === "pix") {
-        newStatus = await BancoDoBrasilService.getPixStatus(paymentId);
-      } else if (paymentMethod === "boleto") {
-        const boletoNumber = paymentId;
-        console.log(`[CheckoutService] Usando boletoNumber: ${boletoNumber}`);
-        newStatus = await BancoDoBrasilService.getBoletoStatus(boletoNumber);
-      } else {
-        throw new Error(`Método de pagamento desconhecido: ${paymentMethod}`);
-      }
-
-      console.log(
-        `[CheckoutService] Status do checkout ${id} (${paymentMethod}): ${newStatus}`
-      );
-      await CheckoutRepository.updateCheckoutStatus(
-        id,
-        newStatus,
-        newStatus === "approved"
-          ? EmailService.sendEmailConfirmationPayment
-          : null
-      );
-      await CheckoutRepository.resetAndUpdatePendingEmails(id, newStatus); // Adicionado aqui
-      return { status: newStatus };
-    } catch (error) {
-      console.error(
-        `[CheckoutService] Erro ao verificar pagamento ${paymentId}: ${error.message}`
-      );
-      throw error;
     }
   }
 }

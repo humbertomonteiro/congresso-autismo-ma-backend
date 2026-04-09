@@ -1,28 +1,26 @@
 const express = require("express");
 const router = express.Router();
-const emailController = require("../controllers/EmailController");
+const c = require("../controllers/EmailController");
 
-// Rotas de envio de email
-router.post("/send-confirmation-email", emailController.sendEmail);
-router.post(
-  "/send-template-immediately",
-  emailController.sendTemplateImmediately
-);
+// Stats
+router.get("/stats", c.getEmailStats);
 
-router.get("/stats", emailController.getEmailStats);
-router.get("/checkouts/count", emailController.getCheckoutCount);
+// Email individual de confirmação
+router.post("/send-confirmation", c.sendConfirmationEmail);
 
-// Rotas de gerenciamento de templates
-router.post("/templates", emailController.generateEmailTemplate);
-router.get("/templates", emailController.getTemplates);
-router.put("/templates/:templateId", emailController.updateTemplate);
-router.delete("/templates/:templateId", emailController.deleteTemplate);
+// Audiências
+router.post("/audiences", c.createAudience);
+router.get("/audiences", c.getAudiences);
+router.put("/audiences/:audienceId", c.updateAudience);
+router.delete("/audiences/:audienceId", c.deleteAudience);
+router.get("/audiences/:audienceId/estimate", c.estimateAudienceSize);
 
-// Rotas de listas de contatos (mantidas por enquanto)
-router.post("/contact-lists", emailController.createContactList);
-router.post(
-  "/contact-lists/:listId/contacts",
-  emailController.addContactToList
-);
+// Campanhas
+router.post("/campaigns", c.createCampaign);
+router.get("/campaigns", c.getCampaigns);
+router.put("/campaigns/:campaignId", c.updateCampaign);
+router.delete("/campaigns/:campaignId", c.deleteCampaign);
+router.post("/campaigns/:campaignId/dispatch", c.dispatchCampaign);
+router.get("/campaigns/:campaignId/logs", c.getCampaignLogs);
 
 module.exports = router;

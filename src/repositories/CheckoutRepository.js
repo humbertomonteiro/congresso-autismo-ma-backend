@@ -1,348 +1,230 @@
-const config = require("../config");
-const {
-  collection,
-  addDoc,
-  getDocs,
-  getDoc,
-  query,
-  where,
-  doc,
-  updateDoc,
-  arrayRemove,
-  arrayUnion,
-} = require("firebase/firestore");
+const { db, admin } = require("../config").firebase;
 const logger = require("../logger");
 
-const db = config.firebase.db;
+// ─── Estrutura no Firestore ────────────────────────────────────────────────
+//
+// checkouts/{checkoutId}
+//   status, paymentMethod, paymentId, buyerName, buyerEmail, buyerCpf
+//   orderDetails: { fullTickets, halfTickets, total, discount, coupon, installments }
+//   paymentDetails: { boleto?: {...}, pix?: {...}, creditCard?: {...} }
+//   createdAt, updatedAt
+//
+// checkouts/{checkoutId}/participants/{participantId}
+//   checkoutId, name, email, cpf, ticketType: "full"|"half"
+//   qrToken (string única — usada para gerar o QR no momento da leitura)
+//   checkedIn: false, checkedInAt: null
+//   emailSent: false
+//   createdAt
+//
+// ──────────────────────────────────────────────────────────────────────────
 
 class CheckoutRepository {
+  // ── Checkouts ─────────────────────────────────────────────────────────────
+
   async saveCheckout(checkoutData) {
-    const docRef = await addDoc(collection(db, "checkouts"), checkoutData);
-    return docRef.id;
+    const ref = db.collection("checkouts").doc();
+    await ref.set({
+      ...checkoutData,
+      timestamp: admin.firestore.FieldValue.serverTimestamp(),
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
+    return ref.id;
+  }
+
+  async getCheckoutById(checkoutId) {
+    const snap = await db.collection("checkouts").doc(checkoutId).get();
+    if (!snap.exists) throw new Error(`Checkout ${checkoutId} não encontrado`);
+    return { id: snap.id, ...snap.data() };
   }
 
   async fetchCheckouts(filters = {}) {
     try {
-      let q = query(collection(db, "checkouts"));
+      let query = db.collection("checkouts");
       for (const [key, value] of Object.entries(filters)) {
-        q = query(q, where(key, "==", value));
+        query = query.where(key, "==", value);
       }
-      const snapshot = await getDocs(q);
-      const checkouts = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      // logger.info(
-      //   `Fetched ${checkouts.length} checkouts with filters: ${JSON.stringify(
-      //     filters
-      //   )}`
-      // );
-      return checkouts;
+      const snapshot = await query.get();
+      return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
     } catch (error) {
-      logger.error(`[Error fetching checkouts]: ${error.message}`);
-      throw error;
-    }
-  }
-
-  async fetchCheckoutsNeedingTemplate(templateId) {
-    try {
-      const q = query(
-        collection(db, "checkouts"),
-        where("pendingEmails", "array-contains", templateId)
-      );
-      const snapshot = await getDocs(q);
-      const checkouts = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      logger.info(
-        `Fetched ${checkouts.length} checkouts needing template ${templateId}`
-      );
-      return checkouts;
-    } catch (error) {
-      logger.error(
-        `Error fetching checkouts needing template ${templateId}: ${error.message}`
-      );
-      throw error;
-    }
-  }
-
-  async fetchCheckoutByTransactionId(transactionId) {
-    try {
-      const q = query(
-        collection(db, "checkouts"),
-        where("transactionId", "==", transactionId)
-      );
-      const snapshot = await getDocs(q);
-      const checkouts = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      if (checkouts.length === 0) {
-        throw new Error(
-          `Checkout com transactionId ${transactionId} não encontrado`
-        );
-      }
-      const checkout = checkouts[0];
-      logger.info(`Fetched checkout with transactionId: ${transactionId}`);
-      return checkout;
-    } catch (error) {
-      logger.error(
-        `Error fetching checkout by transactionId ${transactionId}: ${error.message}`
-      );
-      throw error;
-    }
-  }
-
-  async updateParticipant(checkoutId, participantIndex, data) {
-    try {
-      const checkoutRef = doc(db, "checkouts", checkoutId);
-      const checkoutSnap = await getDoc(checkoutRef);
-      if (!checkoutSnap.exists()) {
-        throw new Error(`Checkout ${checkoutId} não encontrado`);
-      }
-      const checkoutData = checkoutSnap.data();
-      checkoutData.participants[participantIndex] = {
-        ...checkoutData.participants[participantIndex],
-        ...data,
-      };
-      await updateDoc(checkoutRef, { participants: checkoutData.participants });
-      logger.info(
-        `Updated participant ${participantIndex} in checkout ${checkoutId}`
-      );
-    } catch (error) {
-      logger.error(
-        `Error updating participant ${participantIndex} in checkout ${checkoutId}: ${error.message}`
-      );
+      logger.error(`[CheckoutRepository] fetchCheckouts: ${error.message}`);
       throw error;
     }
   }
 
   async getPendingCheckouts() {
-    const checkoutsRef = collection(db, "checkouts");
-    const q = query(checkoutsRef, where("status", "==", "pending"));
-    const querySnapshot = await getDocs(q);
-    const checkouts = [];
-    querySnapshot.forEach((doc) => {
-      checkouts.push({ id: doc.id, ...doc.data() });
-    });
-    return checkouts;
+    const snapshot = await db
+      .collection("checkouts")
+      .where("status", "==", "pending")
+      .get();
+    return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
   }
 
-  async updateCheckoutStatus(
-    checkoutId,
-    newStatus,
-    sendEmailConfirmationPayment = null
-  ) {
-    const checkoutRef = doc(db, "checkouts", checkoutId);
-    await updateDoc(checkoutRef, { status: newStatus });
-
-    if (newStatus === "approved" && sendEmailConfirmationPayment) {
-      const checkoutSnap = await getDoc(checkoutRef);
-      if (!checkoutSnap.exists()) {
-        console.error(`Checkout ${checkoutId} não encontrado.`);
-        return;
-      }
-      const checkoutData = checkoutSnap.data();
-
-      const emailResponses = [];
-      for (const participant of checkoutData.participants || []) {
-        console.log(`[DEBUG] Enviando e-mail para: ${participant.email}`);
-        const emailData = {
-          checkoutId: checkoutId,
-          from: process.env.EMAIL_USER_1,
-          to: participant.email,
-          subject: "Confirmação de Pagamento - Congresso Autismo MA 2026",
-          data: {
-            name: participant.name || "Participante",
-            transactionId: checkoutData.transactionId || "N/A",
-            fullTickets:
-              checkoutData.fullTickets ||
-              checkoutData.orderDetails?.fullTickets ||
-              0,
-            valueTicketsAll:
-              checkoutData.valueTicketsAll ||
-              checkoutData.orderDetails?.fullTicketsValue ||
-              "0.00",
-            halfTickets:
-              checkoutData.halfTickets ||
-              checkoutData.orderDetails?.halfTickets ||
-              0,
-            valueTicketsHalf:
-              checkoutData.valueTicketsHalf ||
-              checkoutData.orderDetails?.halfTicketsValue ||
-              "0.00",
-            total: checkoutData.total || checkoutData.totalAmount || "0.00",
-            coupon:
-              checkoutData.coupon || checkoutData.orderDetails?.coupon || "",
-            discount:
-              checkoutData.discount ||
-              checkoutData.orderDetails?.discount ||
-              "0.00",
-            installments:
-              checkoutData.installments ||
-              checkoutData.paymentDetails?.creditCard?.installments ||
-              1,
-          },
-        };
-
-        console.log(
-          "Enviando email de confirmação para:",
-          participant.email,
-          "com:",
-          emailData
-        );
-        try {
-          const emailResponse = await sendEmailConfirmationPayment(emailData);
-          console.log(
-            "Email enviado com sucesso para:",
-            participant.email,
-            "Resposta:",
-            emailResponse
-          );
-          emailResponses.push(emailResponse);
-        } catch (error) {
-          console.error(
-            "Erro ao enviar email de confirmação para:",
-            participant.email,
-            ":",
-            error.message
-          );
-        }
-      }
+  async fetchCheckoutByTransactionId(transactionId) {
+    const snapshot = await db
+      .collection("checkouts")
+      .where("transactionId", "==", transactionId)
+      .get();
+    if (snapshot.empty) {
+      throw new Error(
+        `Checkout com transactionId ${transactionId} não encontrado`
+      );
     }
-  }
-
-  async saveCieloSales(sales) {
-    for (const sale of sales) {
-      const checkoutData = {
-        transactionId: sale.Payment.PaymentId,
-        status:
-          sale.Payment.Status === 1 || sale.Payment.Status === 2
-            ? "approved"
-            : "pending",
-        paymentMethod: sale.Payment.Type,
-        totalAmount: (sale.Payment.Amount / 100).toFixed(2),
-        participants: [
-          { email: "cliente@exemplo.com", name: "Cliente Exemplo" },
-        ],
-        orderDetails: {
-          fullTickets: 1,
-          halfTickets: 0,
-          fullTicketsValue: (sale.Payment.Amount / 100).toFixed(2),
-          halfTicketsValue: "0.00",
-          discount: "0.00",
-        },
-        timestamp: new Date().toISOString(),
-      };
-      await addDoc(collection(db, "checkouts"), checkoutData);
-    }
+    const doc = snapshot.docs[0];
+    return { id: doc.id, ...doc.data() };
   }
 
   async updateCheckout(checkoutId, data) {
-    try {
-      const checkoutRef = doc(db, "checkouts", checkoutId);
-      await updateDoc(checkoutRef, data);
+    await db
+      .collection("checkouts")
+      .doc(checkoutId)
+      .update({
+        ...data,
+        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+    logger.info(`[CheckoutRepository] Checkout ${checkoutId} atualizado`);
+  }
+
+  async updateCheckoutStatus(checkoutId, newStatus) {
+    await this.updateCheckout(checkoutId, { status: newStatus });
+    logger.info(
+      `[CheckoutRepository] Checkout ${checkoutId} → status: ${newStatus}`
+    );
+  }
+
+  // ── Participants ──────────────────────────────────────────────────────────
+
+  async saveParticipants(checkoutId, participants) {
+    const batch = db.batch();
+    const refs = [];
+
+    for (const participant of participants) {
+      const ref = db
+        .collection("checkouts")
+        .doc(checkoutId)
+        .collection("participants")
+        .doc();
+      refs.push(ref.id);
+      batch.set(ref, {
+        ...participant,
+        checkoutId,
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+    }
+
+    await batch.commit();
+    logger.info(
+      `[CheckoutRepository] ${participants.length} participante(s) salvos em ${checkoutId}`
+    );
+    return refs;
+  }
+
+  async getParticipantsByCheckout(checkoutId) {
+    const snapshot = await db
+      .collection("checkouts")
+      .doc(checkoutId)
+      .collection("participants")
+      .get();
+    return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+  }
+
+  async getParticipantById(checkoutId, participantId) {
+    const snap = await db
+      .collection("checkouts")
+      .doc(checkoutId)
+      .collection("participants")
+      .doc(participantId)
+      .get();
+    if (!snap.exists)
+      throw new Error(`Participante ${participantId} não encontrado`);
+    return { id: snap.id, ...snap.data() };
+  }
+
+  async updateParticipant(checkoutId, participantId, data) {
+    await db
+      .collection("checkouts")
+      .doc(checkoutId)
+      .collection("participants")
+      .doc(participantId)
+      .update(data);
+    logger.info(
+      `[CheckoutRepository] Participante ${participantId} atualizado`
+    );
+  }
+
+  // Busca participante por documento (CPF/CNPJ) dentro de um checkout
+  async getParticipantByCpf(checkoutId, cpf) {
+    const cleanDoc = cpf.replace(/\D/g, "");
+    const snapshot = await db
+      .collection("checkouts")
+      .doc(checkoutId)
+      .collection("participants")
+      .where("document", "==", cleanDoc)
+      .get();
+    if (snapshot.empty) return null;
+    const doc = snapshot.docs[0];
+    return { id: doc.id, ...doc.data() };
+  }
+
+  // Busca participante por qrToken (para check-in)
+  async getParticipantByQrToken(qrToken) {
+    // Busca em todos os checkouts — necessário para o scanner
+    const checkoutsSnap = await db.collection("checkouts").get();
+    for (const checkoutDoc of checkoutsSnap.docs) {
+      const snap = await checkoutDoc.ref
+        .collection("participants")
+        .where("qrToken", "==", qrToken)
+        .get();
+      if (!snap.empty) {
+        const p = snap.docs[0];
+        return { id: p.id, checkoutId: checkoutDoc.id, ...p.data() };
+      }
+    }
+    return null;
+  }
+
+  // ── Migração — converte array de participants embutido para subcoleção ────
+
+  async migrateParticipantsToSubcollection(checkoutId) {
+    const checkoutRef = db.collection("checkouts").doc(checkoutId);
+    const snap = await checkoutRef.get();
+    if (!snap.exists) throw new Error(`Checkout ${checkoutId} não encontrado`);
+
+    const data = snap.data();
+    const participants = data.participants;
+
+    if (!Array.isArray(participants) || participants.length === 0) {
       logger.info(
-        `Updated checkout ${checkoutId} with: ${JSON.stringify(data)}`
+        `[Migration] Checkout ${checkoutId} não tem participants para migrar`
       );
-    } catch (error) {
-      logger.error(`Error updating checkout ${checkoutId}: ${error.message}`);
-      throw error;
+      return 0;
     }
-  }
 
-  // Método auxiliar pra buscar templates ativos por status
-  async getActiveTemplatesByStatus(status) {
-    try {
-      const q = query(
-        collection(db, "emailTemplates"),
-        where("statusFilter", "==", status),
-        where("progress", "<", 100)
-      );
-      const snapshot = await getDocs(q);
-      const templates = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      logger.info(
-        `Fetched ${templates.length} active templates for status ${status}`
-      );
-      return templates;
-    } catch (error) {
-      logger.error(
-        `Error fetching templates for status ${status}: ${error.message}`
-      );
-      return [];
+    const batch = db.batch();
+    for (const p of participants) {
+      const ref = checkoutRef.collection("participants").doc();
+      batch.set(ref, {
+        checkoutId,
+        name: p.name || "",
+        email: p.email || "",
+        cpf: (p.document || p.cpf || "").replace(/\D/g, ""),
+        ticketType: p.ticketType || "full",
+        qrToken: p.qrRawData ? Object.values(p.qrRawData)[0] || "" : "",
+        checkedIn: p.validated
+          ? Object.values(p.validated).some(Boolean)
+          : false,
+        checkedInAt: null,
+        emailSent: p.emailSent || false,
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        _legacy: p, // preserva dados originais para auditoria
+      });
     }
-  }
 
-  // Adiciona todos os templates ativos ao pendingEmails
-  async addAllTemplatesToPendingEmails(checkoutId, status) {
-    try {
-      const templates = await this.getActiveTemplatesByStatus(status);
-      if (templates.length > 0) {
-        const templateIds = templates.map((t) => t.id);
-        const checkoutRef = doc(db, "checkouts", checkoutId);
-        await updateDoc(checkoutRef, {
-          pendingEmails: arrayUnion(...templateIds),
-        });
-        logger.info(
-          `Added templates to pendingEmails for checkout ${checkoutId}: ${templateIds}`
-        );
-      } else {
-        logger.info(
-          `No active templates found for status ${status} in checkout ${checkoutId}`
-        );
-      }
-    } catch (error) {
-      logger.error(
-        `Error adding templates to checkout ${checkoutId}: ${error.message}`
-      );
-    }
-  }
-
-  // Reseta pendingEmails e adiciona os correspondentes ao novo status
-  async resetAndUpdatePendingEmails(checkoutId, newStatus) {
-    try {
-      const checkoutRef = doc(db, "checkouts", checkoutId);
-      const checkoutSnap = await getDoc(checkoutRef);
-      if (!checkoutSnap.exists()) {
-        throw new Error(`Checkout ${checkoutId} not found`);
-      }
-      const checkoutData = checkoutSnap.data();
-      const currentPendingEmails = checkoutData.pendingEmails || [];
-
-      // Remove todos os pendingEmails atuais
-      if (currentPendingEmails.length > 0) {
-        await updateDoc(checkoutRef, {
-          pendingEmails: arrayRemove(...currentPendingEmails),
-        });
-        logger.info(
-          `Removed pendingEmails from checkout ${checkoutId}: ${currentPendingEmails}`
-        );
-      }
-
-      // Adiciona os novos templates
-      const templates = await this.getActiveTemplatesByStatus(newStatus);
-      if (templates.length > 0) {
-        const templateIds = templates.map((t) => t.id);
-        await updateDoc(checkoutRef, {
-          pendingEmails: arrayUnion(...templateIds),
-        });
-        logger.info(
-          `Updated pendingEmails for checkout ${checkoutId}: ${templateIds}`
-        );
-      } else {
-        logger.info(
-          `No active templates found for status ${newStatus} in checkout ${checkoutId}`
-        );
-      }
-    } catch (error) {
-      logger.error(
-        `Error resetting and updating pendingEmails for checkout ${checkoutId}: ${error.message}`
-      );
-    }
+    await batch.commit();
+    logger.info(
+      `[Migration] ${participants.length} participantes migrados do checkout ${checkoutId}`
+    );
+    return participants.length;
   }
 }
 

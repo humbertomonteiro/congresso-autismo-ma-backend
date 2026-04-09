@@ -1,259 +1,205 @@
-// backend/src/controllers/EmailController.js
 const EmailService = require("../services/EmailService");
-require("dotenv").config();
+const CampaignService = require("../services/CampaignService");
+const AudienceService = require("../services/AudienceService");
 
-const sendEmail = async (req, res) => {
-  const { checkoutId, from, to, subject, data } = req.body;
-
-  try {
-    const result = await EmailService.sendEmailConfirmationPayment({
-      checkoutId,
-      from,
-      to,
-      subject,
-      data,
-    });
-    res.status(200).json({
-      success: true,
-      message: "Email de confirmação enviado com sucesso",
-    });
-  } catch (error) {
-    console.error(
-      "Erro ao processar envio de email de confirmação:",
-      error.message,
-      error.stack
-    );
-    res.status(500).json({
-      success: false,
-      message: "Erro ao enviar email de confirmação",
-      error: error.message,
-    });
-  }
-};
-
-const generateEmailTemplate = async (req, res) => {
-  const {
-    subject,
-    title,
-    body,
-    sendType,
-    singleEmail,
-    statusFilter,
-    includeQRCodes = false,
-  } = req.body;
-
-  try {
-    if (!subject || !body || !sendType)
-      throw new Error("Assunto, corpo e tipo de envio são obrigatórios");
-
-    const templateData = {
-      subject,
-      title: title || "",
-      body,
-      sendType,
-      singleEmail: sendType === "single" ? singleEmail : null,
-      statusFilter: sendType === "status" ? statusFilter : null,
-      includeQRCodes,
-    };
-
-    const { templateId } = await EmailService.createTemplateByStatus(
-      templateData
-    );
-    res.status(201).json({
-      success: true,
-      message: "Template criado com sucesso",
-      templateId,
-    });
-  } catch (error) {
-    console.error("Erro ao criar template:", error.message, error.stack);
-    res.status(500).json({
-      success: false,
-      message: "Erro ao criar template",
-      error: error.message,
-    });
-  }
-};
-
-const getTemplates = async (req, res) => {
-  try {
-    const templates = await EmailService.getAllTemplates(); // Adicionar no EmailService
-    res.status(200).json({ success: true, data: templates });
-  } catch (error) {
-    console.error("Erro ao listar templates:", error.message, error.stack);
-    res.status(500).json({
-      success: false,
-      message: "Erro ao listar templates",
-      error: error.message,
-    });
-  }
-};
-
-const updateTemplate = async (req, res) => {
-  const { templateId } = req.params;
-  const {
-    subject,
-    title,
-    body,
-    sendType,
-    singleEmail,
-    statusFilter,
-    includeQRCodes,
-  } = req.body;
-
-  try {
-    if (!templateId || !subject || !body || !sendType)
-      throw new Error("ID, assunto, corpo e tipo de envio são obrigatórios");
-
-    const templateData = {
-      subject,
-      title: title || "",
-      body,
-      sendType,
-      singleEmail: sendType === "single" ? singleEmail : null,
-      statusFilter: sendType === "status" ? statusFilter : null,
-      includeQRCodes,
-    };
-
-    await EmailService.updateTemplate(templateId, templateData); // Adicionar no EmailService
-    res
-      .status(200)
-      .json({ success: true, message: "Template atualizado com sucesso" });
-  } catch (error) {
-    console.error("Erro ao atualizar template:", error.message, error.stack);
-    res.status(500).json({
-      success: false,
-      message: "Erro ao atualizar template",
-      error: error.message,
-    });
-  }
-};
-
-const deleteTemplate = async (req, res) => {
-  const { templateId } = req.params;
-
-  try {
-    if (!templateId) throw new Error("ID do template é obrigatório");
-
-    await EmailService.deleteTemplate(templateId); // Adicionar no EmailService
-    res
-      .status(200)
-      .json({ success: true, message: "Template deletado com sucesso" });
-  } catch (error) {
-    console.error("Erro ao deletar template:", error.message, error.stack);
-    res.status(500).json({
-      success: false,
-      message: "Erro ao deletar template",
-      error: error.message,
-    });
-  }
-};
-
-const sendTemplateImmediately = async (req, res) => {
-  const { templateId } = req.body;
-
-  try {
-    if (!templateId) throw new Error("ID do template é obrigatório");
-
-    await EmailService.processAutomaticEmails([templateId]); // Ajustado pra usar processAutomaticEmails
-    res.status(200).json({
-      success: true,
-      message: "Template enviado imediatamente com sucesso",
-    });
-  } catch (error) {
-    console.error(
-      "Erro ao enviar template imediatamente:",
-      error.message,
-      error.stack
-    );
-    res.status(500).json({
-      success: false,
-      message: "Erro ao enviar template imediatamente",
-      error: error.message,
-    });
-  }
-};
-
-const createContactList = async (req, res) => {
-  const { name, description } = req.body;
-
-  try {
-    if (!name) throw new Error("Nome da lista é obrigatório");
-
-    const list = await EmailService.createContactList(name, description);
-    res
-      .status(200)
-      .json({ success: true, message: "Lista criada com sucesso", data: list });
-  } catch (error) {
-    console.error("Erro ao criar lista de contatos:", error.message);
-    res.status(500).json({
-      success: false,
-      message: "Erro ao criar lista de contatos",
-      error: error.message,
-    });
-  }
-};
-
-const addContactToList = async (req, res) => {
-  const { listId, email } = req.body;
-
-  try {
-    if (!listId || !email)
-      throw new Error("ID da lista e email são obrigatórios");
-
-    await EmailService.addContactToList(listId, email);
-    res
-      .status(200)
-      .json({ success: true, message: "Contato adicionado com sucesso" });
-  } catch (error) {
-    console.error("Erro ao adicionar contato à lista:", error.message);
-    res.status(500).json({
-      success: false,
-      message: "Erro ao adicionar contato à lista",
-      error: error.message,
-    });
-  }
-};
+// ── Stats ─────────────────────────────────────────────────────────────────
 
 const getEmailStats = async (req, res) => {
   try {
     const stats = await EmailService.getEmailStats();
     res.status(200).json({ success: true, data: stats });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Erro ao buscar estatísticas",
-      error: error.message,
-    });
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: "Erro ao buscar estatísticas",
+        error: error.message,
+      });
   }
 };
 
-const getCheckoutCount = async (req, res) => {
-  const { status } = req.query;
+// ── Email de confirmação individual ───────────────────────────────────────
+
+const sendConfirmationEmail = async (req, res) => {
+  const { checkoutId, participantId, data } = req.body;
   try {
-    const checkouts = await CheckoutRepository.fetchCheckouts({ status });
-    const targetCount =
-      status === "approved"
-        ? checkouts.reduce((sum, c) => sum + c.participants.length, 0)
-        : checkouts.length;
-    res.status(200).json({ success: true, data: { targetCount } });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Erro ao contar checkouts",
-      error: error.message,
+    if (!checkoutId || !participantId) {
+      throw new Error("checkoutId e participantId são obrigatórios.");
+    }
+    const result = await EmailService.sendEmailConfirmationPayment({
+      checkoutId,
+      participantId,
+      data,
     });
+    res.status(200).json({ success: true, data: result });
+  } catch (error) {
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: "Erro ao enviar email",
+        error: error.message,
+      });
+  }
+};
+
+// ── Audiências ────────────────────────────────────────────────────────────
+
+const createAudience = async (req, res) => {
+  try {
+    const { name, description, filters } = req.body;
+    const audienceId = await AudienceService.createAudience({
+      name,
+      description,
+      filters,
+    });
+    res
+      .status(201)
+      .json({
+        success: true,
+        message: "Audiência criada",
+        data: { audienceId },
+      });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+const getAudiences = async (req, res) => {
+  try {
+    const audiences = await AudienceService.getAllAudiences();
+    res.status(200).json({ success: true, data: audiences });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+const updateAudience = async (req, res) => {
+  try {
+    const { audienceId } = req.params;
+    await AudienceService.updateAudience(audienceId, req.body);
+    res.status(200).json({ success: true, message: "Audiência atualizada" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+const deleteAudience = async (req, res) => {
+  try {
+    const { audienceId } = req.params;
+    await AudienceService.deleteAudience(audienceId);
+    res.status(200).json({ success: true, message: "Audiência deletada" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+const estimateAudienceSize = async (req, res) => {
+  try {
+    const { audienceId } = req.params;
+    const count = await AudienceService.estimateAudienceSize(audienceId);
+    res.status(200).json({ success: true, data: { count } });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// ── Campanhas ─────────────────────────────────────────────────────────────
+
+const createCampaign = async (req, res) => {
+  try {
+    const { name, audienceId, subject, htmlBody, includeTicket, sendOnNew } =
+      req.body;
+    const campaignId = await CampaignService.createCampaign({
+      name,
+      audienceId,
+      subject,
+      htmlBody,
+      includeTicket,
+      sendOnNew,
+    });
+    res
+      .status(201)
+      .json({
+        success: true,
+        message: "Campanha criada",
+        data: { campaignId },
+      });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+const getCampaigns = async (req, res) => {
+  try {
+    const campaigns = await CampaignService.getAllCampaigns();
+    res.status(200).json({ success: true, data: campaigns });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+const updateCampaign = async (req, res) => {
+  try {
+    const { campaignId } = req.params;
+    await CampaignService.updateCampaign(campaignId, req.body);
+    res.status(200).json({ success: true, message: "Campanha atualizada" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+const deleteCampaign = async (req, res) => {
+  try {
+    const { campaignId } = req.params;
+    await CampaignService.deleteCampaign(campaignId);
+    res.status(200).json({ success: true, message: "Campanha deletada" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+const dispatchCampaign = async (req, res) => {
+  try {
+    const { campaignId } = req.params;
+    const result = await CampaignService.dispatchCampaign(campaignId);
+    res
+      .status(200)
+      .json({ success: true, message: "Campanha disparada", data: result });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+const getCampaignLogs = async (req, res) => {
+  try {
+    const { campaignId } = req.params;
+    const { limit } = req.query;
+    const logs = await CampaignService.getCampaignLogs(
+      campaignId,
+      limit ? parseInt(limit) : 100
+    );
+    res.status(200).json({ success: true, data: logs });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
 module.exports = {
-  sendEmail,
-  generateEmailTemplate,
-  getTemplates,
-  updateTemplate,
-  deleteTemplate,
-  sendTemplateImmediately,
-  createContactList,
-  addContactToList,
   getEmailStats,
-  getCheckoutCount,
+  sendConfirmationEmail,
+  // Audiências
+  createAudience,
+  getAudiences,
+  updateAudience,
+  deleteAudience,
+  estimateAudienceSize,
+  // Campanhas
+  createCampaign,
+  getCampaigns,
+  updateCampaign,
+  deleteCampaign,
+  dispatchCampaign,
+  getCampaignLogs,
 };

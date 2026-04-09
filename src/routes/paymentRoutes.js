@@ -15,5 +15,6 @@ router.post(
   "/add-templates-to-pending-emails",
   paymentController.addAllTemplatesToPendingEmails
 );
+router.post("/manual", paymentController.createManualCheckout);
 
 module.exports = router;

@@ -1,32 +1,30 @@
-const { initializeApp } = require("firebase/app");
-const { getFirestore } = require("firebase/firestore");
+const admin = require("firebase-admin");
 const dotenv = require("dotenv");
 
-// Carrega variáveis de ambiente
 dotenv.config();
 
-// Configuração do ambiente
 const env = process.env.BB_ENV || "sandbox";
 const isProduction = env === "production";
 
 console.log("Ambiente (BB_ENV):", env);
 console.log("isProduction:", isProduction);
 
-// Configuração do Firebase
-const firebaseConfig = {
-  apiKey: process.env.API_KEY,
-  authDomain: process.env.AUTH_DOMAIN,
-  projectId: process.env.PROJECT_ID,
-  storageBucket: process.env.STORAGE_BUCKET,
-  messagingSenderId: process.env.MESSAGING_SENDER_ID,
-  appId: process.env.APP_ID,
-  measurementId: process.env.MEASUREMENT_ID,
-};
+// Firebase Admin SDK — usa a Service Account via variável de ambiente
+// No .env: FIREBASE_SERVICE_ACCOUNT={"type":"service_account",...} (conteúdo do JSON em uma linha)
+const path = require("path");
+const serviceAccount = require(path.resolve(
+  process.env.FIREBASE_SERVICE_ACCOUNT_PATH
+));
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+  });
+}
 
-// Configuração da Cielo
+const db = admin.firestore();
+db.settings({ ignoreUndefinedProperties: true });
+
 const cieloConfig = {
   merchantId: isProduction
     ? process.env.CIELO_MERCHANT_ID_PRODUCTION
@@ -42,7 +40,6 @@ const cieloConfig = {
     : "https://apiquerysandbox.cieloecommerce.cielo.com.br",
 };
 
-// Configuração do Banco do Brasil
 const bancoDoBrasilConfig = {
   clientId: isProduction
     ? process.env.BB_CLIENT_ID_PRODUCTION
@@ -68,6 +65,9 @@ const bancoDoBrasilConfig = {
   cnpj: isProduction
     ? process.env.BB_CNPJ_PRODUCTION
     : process.env.BB_CNPJ_SANDBOX,
+  pixKey: isProduction
+    ? process.env.BB_PIX_KEY_PRODUCTION
+    : process.env.BB_PIX_KEY_SANDBOX,
   numeroVariacaoCarteira: isProduction
     ? process.env.BB_NUMERO_VARIACAO_CARTEIRA_PRODUCTION || 35
     : process.env.BB_NUMERO_VARIACAO_CARTEIRA_SANDBOX || 35,
@@ -77,30 +77,24 @@ const bancoDoBrasilConfig = {
   authBaseUrl: isProduction
     ? "https://oauth.bb.com.br"
     : "https://oauth.sandbox.bb.com.br",
-  certificadoPfx: process.env.BB_CERTIFICADO_PFX,
-  certificadoSenha: process.env.BB_CERTIFICADO_SENHA,
 };
 
 const eventConfig = {
   name: "Congresso Autismo MA 2026",
   dates: ["2026-05-16", "2026-05-17"],
+  // Para novos eventos, atualize apenas aqui
 };
 
 const valueTickets = {
-  allTicket: 297,
-  halfTicket: 144.5,
+  allTicket: 674,
+  halfTicket: 337,
+  socialTicket: 347,
 };
 
-// Exportação das configurações
 module.exports = {
-  port: process.env.PORT || 5000, // Adicionado para o index.js
-  env: {
-    name: env,
-    isProduction,
-  },
-  firebase: {
-    db,
-  },
+  port: process.env.PORT || 5000,
+  env: { name: env, isProduction },
+  firebase: { db, admin },
   cielo: cieloConfig,
   bancoDoBrasil: bancoDoBrasilConfig,
   event: eventConfig,
