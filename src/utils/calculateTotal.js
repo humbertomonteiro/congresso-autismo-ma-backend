@@ -15,19 +15,15 @@ const calculateTotal = (allTickets, halfTickets, socialTickets, coupon) => {
   const couponMap = {
     grupo: () =>
       allTickets >= 5
-        ? allTickets * (ALL_TICKET_VALUE - 649)
+        ? allTickets * (ALL_TICKET_VALUE - 347.9)
         : (() => {
             throw new Error("Cupom 'grupo' exige mínimo 5 ingressos inteiros.");
           })(),
-    grupo2: () => allTickets * (ALL_TICKET_VALUE - 699),
-    grupounico: () => allTickets * (ALL_TICKET_VALUE - 449),
     terapeuta: () => 50,
     desconto: () => 50,
     prevenda: () => allTickets * 50,
-    maira: () => allTickets * (ALL_TICKET_VALUE - 350),
-    vania: () => allTickets * (ALL_TICKET_VALUE - 349.9),
-    vivian: () => allTickets * (ALL_TICKET_VALUE - 325.9),
-    ingresso300: () => allTickets * (ALL_TICKET_VALUE - 300),
+    maira: () => allTickets * (ALL_TICKET_VALUE - 347.9),
+    anapaula: () => allTickets * (ALL_TICKET_VALUE - 300),
   };
 
   let discount = 0;
