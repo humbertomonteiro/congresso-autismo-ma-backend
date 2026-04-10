@@ -9,12 +9,16 @@ const isProduction = env === "production";
 console.log("Ambiente (BB_ENV):", env);
 console.log("isProduction:", isProduction);
 
-// Firebase Admin SDK — usa a Service Account via variável de ambiente
-// No .env: FIREBASE_SERVICE_ACCOUNT={"type":"service_account",...} (conteúdo do JSON em uma linha)
-const path = require("path");
-const serviceAccount = require(path.resolve(
-  process.env.FIREBASE_SERVICE_ACCOUNT_PATH
-));
+// Firebase Admin SDK — usa a Service Account via variável de ambiente (JSON) ou arquivo local
+let serviceAccount;
+if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
+  serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
+} else {
+  const path = require("path");
+  serviceAccount = require(path.resolve(
+    process.env.FIREBASE_SERVICE_ACCOUNT_PATH
+  ));
+}
 
 if (!admin.apps.length) {
   admin.initializeApp({
