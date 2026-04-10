@@ -19,11 +19,11 @@ const calculateTotal = (allTickets, halfTickets, socialTickets, coupon) => {
         : (() => {
             throw new Error("Cupom 'grupo' exige mínimo 5 ingressos inteiros.");
           })(),
-    terapeuta: () => 50,
-    desconto: () => 50,
-    prevenda: () => allTickets * 50,
     maira: () => allTickets * (ALL_TICKET_VALUE - 347.9),
     anapaula: () => allTickets * (ALL_TICKET_VALUE - 300),
+    terapeuta: () => allTickets * (ALL_TICKET_VALUE - 297),
+    vargemgrande: () => allTickets * (ALL_TICKET_VALUE - 349.9),
+    testepagamento: () => allTickets * (ALL_TICKET_VALUE - 1),
   };
 
   let discount = 0;
