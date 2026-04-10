@@ -11,13 +11,13 @@ console.log("isProduction:", isProduction);
 
 // Firebase Admin SDK — usa a Service Account via variável de ambiente (JSON) ou arquivo local
 let serviceAccount;
-if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
-  serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
+const serviceAccountJson =
+  process.env.FIREBASE_SERVICE_ACCOUNT_JSON || process.env.FIREBASE_SERVICE_ACCOUNT;
+if (serviceAccountJson) {
+  serviceAccount = JSON.parse(serviceAccountJson);
 } else {
   const path = require("path");
-  serviceAccount = require(path.resolve(
-    process.env.FIREBASE_SERVICE_ACCOUNT_PATH
-  ));
+  serviceAccount = require(path.resolve(process.env.FIREBASE_SERVICE_ACCOUNT_PATH));
 }
 
 if (!admin.apps.length) {
