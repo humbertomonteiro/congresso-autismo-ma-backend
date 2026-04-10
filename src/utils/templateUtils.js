@@ -40,13 +40,8 @@ const generateTicketPDF = async (recipient, qrCodes) => {
     .replace(/{{TIME}}/g, "08:00 - 18:00")
     .replace(/{{SUPPORT_EMAIL}}/g, "suporte@congressoautismoma.com.br");
 
-  const executablePath =
-    process.env.NODE_ENV === "production"
-      ? "/usr/local/chromium/chrome"
-      : undefined;
   const browser = await puppeteer.launch({
     headless: true,
-    executablePath,
     args: [
       "--no-sandbox",
       "--disable-setuid-sandbox",
@@ -181,13 +176,8 @@ const generateBoletoPDF = async (
   const pdfPath = path.join(tempDir, `boleto_${response.numero}.pdf`);
   await fs.mkdir(tempDir, { recursive: true });
 
-  const executablePath =
-    process.env.NODE_ENV === "production"
-      ? "/usr/local/chromium/chrome"
-      : undefined;
   const browser = await puppeteer.launch({
     headless: true,
-    executablePath,
     args: [
       "--no-sandbox",
       "--disable-setuid-sandbox",
@@ -225,13 +215,8 @@ const generateCertificatePDF = async (cpf, name, templateHTML) => {
     .replace(/{{EVENT_NAME}}/g, "CONGRESSO AUTISMO MA 2026")
     .replace(/{{ISSUE_DATE}}/g, formatDate(new Date()));
 
-  const executablePath =
-    process.env.NODE_ENV === "production"
-      ? "/usr/local/chromium/chrome"
-      : undefined;
   const browser = await puppeteer.launch({
     headless: true,
-    executablePath,
     args: [
       "--no-sandbox",
       "--disable-setuid-sandbox",
