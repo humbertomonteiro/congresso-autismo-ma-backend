@@ -105,6 +105,32 @@ const estimateAudienceSize = async (req, res) => {
   }
 };
 
+// Nomes de eventos distintos disponíveis nos checkouts
+const getEventNames = async (req, res) => {
+  try {
+    const { db } = require("../config").firebase;
+    // Usa field mask para não trazer o documento inteiro
+    const snap = await db.collection("checkouts").select("eventName").get();
+    const names = [
+      ...new Set(snap.docs.map((d) => d.data().eventName).filter(Boolean)),
+    ].sort();
+    res.status(200).json({ success: true, data: names });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// Estimativa por filtros sem criar audiência (usado no formulário em tempo real)
+const estimateByFilters = async (req, res) => {
+  try {
+    const { filters } = req.body;
+    const count = await AudienceService.estimateWithFilters(filters || {});
+    res.status(200).json({ success: true, data: { count } });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 // ── Campanhas ─────────────────────────────────────────────────────────────
 
 const createCampaign = async (req, res) => {
@@ -195,6 +221,8 @@ module.exports = {
   updateAudience,
   deleteAudience,
   estimateAudienceSize,
+  estimateByFilters,
+  getEventNames,
   // Campanhas
   createCampaign,
   getCampaigns,

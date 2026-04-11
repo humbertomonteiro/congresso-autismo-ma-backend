@@ -249,67 +249,19 @@ class CampaignService {
     const campaign = await this.getCampaignById(campaignId);
     if (!campaign.active) throw new Error("Campanha inativa.");
 
-    const audience = await AudienceService.getAudienceById(campaign.audienceId);
-    const { filters } = audience;
-
-    // Busca checkouts com filtros do Firestore
-    let query = db.collection("checkouts");
-    if (filters.checkoutStatus)
-      query = query.where("status", "==", filters.checkoutStatus);
-    if (filters.paymentMethod)
-      query = query.where("paymentMethod", "==", filters.paymentMethod);
-
-    const checkoutsSnap = await query.get();
     const results = { sent: 0, skipped: 0, errors: [] };
-    const DELAY = 150; // ms entre envios
+    const DELAY = 150; // ms entre envios para não sobrecarregar o Resend
 
-    for (const checkoutDoc of checkoutsSnap.docs) {
-      const checkout = { id: checkoutDoc.id, ...checkoutDoc.data() };
-
-      // Filtros que o Firestore não resolve nativamente
-      if (filters.excludeCourtesy && checkout.isCourtesy === true) continue;
-      if (filters.coupon !== undefined && filters.coupon !== null) {
-        if ((checkout.orderDetails?.coupon || "") !== filters.coupon) continue;
-      }
-      if (filters.notes) {
-        if (
-          !(checkout.notes || "")
-            .toLowerCase()
-            .includes(filters.notes.toLowerCase())
-        )
-          continue;
-      }
-
-      // Busca participantes com filtro de ticketType se necessário
-      let participantsQuery = checkoutDoc.ref.collection("participants");
-      if (filters.ticketType) {
-        participantsQuery = participantsQuery.where(
-          "ticketType",
-          "==",
-          filters.ticketType
-        );
-      }
-      const participantsSnap = await participantsQuery.get();
-
-      for (const participantDoc of participantsSnap.docs) {
-        const participant = { id: participantDoc.id, ...participantDoc.data() };
-
+    await AudienceService.forEachMatchingParticipant(
+      campaign.audienceId,
+      async (checkout, participant) => {
         const stats = await EmailService.getEmailStats();
         if (stats.available <= 0) {
-          logger.error("[CampaignService] Limite diário atingido");
-          return {
-            ...results,
-            success: false,
-            message: "Limite diário atingido",
-          };
+          throw new Error("Limite diário de envios atingido.");
         }
 
         try {
-          const result = await this.sendToParticipant(
-            campaign,
-            checkout,
-            participant
-          );
+          const result = await this.sendToParticipant(campaign, checkout, participant);
           if (result.skipped) results.skipped++;
           else results.sent++;
         } catch (err) {
@@ -318,7 +270,7 @@ class CampaignService {
 
         await new Promise((r) => setTimeout(r, DELAY));
       }
-    }
+    );
 
     logger.info(
       `[CampaignService] Disparo concluído — enviados: ${results.sent}, pulados: ${results.skipped}, erros: ${results.errors.length}`

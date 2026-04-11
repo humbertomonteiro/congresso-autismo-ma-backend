@@ -14,6 +14,8 @@ router.get("/audiences", c.getAudiences);
 router.put("/audiences/:audienceId", c.updateAudience);
 router.delete("/audiences/:audienceId", c.deleteAudience);
 router.get("/audiences/:audienceId/estimate", c.estimateAudienceSize);
+router.post("/audiences/estimate-filters", c.estimateByFilters);
+router.get("/audiences/event-names", c.getEventNames);
 
 // Campanhas
 router.post("/campaigns", c.createCampaign);

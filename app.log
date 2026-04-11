@@ -30574,3 +30574,17 @@
 2026-04-11T15:00:01.800Z [INFO]: [CheckoutService] Verificando pagamentos pendentes...
 2026-04-11T15:00:02.239Z [INFO]: [CheckoutService] 0 checkout(s) pendente(s)
 2026-04-11T15:00:02.240Z [INFO]: [CheckoutService] Verificação concluída
+2026-04-11T17:58:10.000Z [INFO]: [CheckoutService] Verificando pagamentos pendentes...
+2026-04-11T17:58:10.971Z [INFO]: [CheckoutService] 0 checkout(s) pendente(s)
+2026-04-11T17:58:10.971Z [INFO]: [CheckoutService] Verificação concluída
+2026-04-11T18:14:11.804Z [INFO]: [AudienceService] Audiência criada: 08R35SpQHk6Y4FjsQ9IC
+2026-04-11T18:21:14.342Z [INFO]: [AudienceService] Audiência 08R35SpQHk6Y4FjsQ9IC atualizada
+2026-04-11T18:32:46.001Z [INFO]: [AudienceService] Audiência criada: IAQ1taytUG93odKtJ84o
+2026-04-11T18:35:01.567Z [INFO]: [CampaignService] Campanha criada: ieYUJVGX7S6jiL6izL4N
+2026-04-11T18:35:27.492Z [INFO]: [EmailService] Email enviado para bertohf5@gmail.com — id: b7b359c2-0ed0-4a65-9303-02c6dc51bf17
+2026-04-11T18:35:27.683Z [INFO]: [CampaignService] Campanha ieYUJVGX7S6jiL6izL4N → bertohf5@gmail.com
+2026-04-11T18:35:27.841Z [INFO]: [CampaignService] Disparo concluído — enviados: 1, pulados: 0, erros: 0
+2026-04-11T18:50:39.626Z [INFO]: [EmailService] Email enviado para humbertoaraf@gmail.com — id: 90b132ba-c439-4f54-b262-e3f1e8ba6204
+2026-04-11T18:50:39.962Z [INFO]: [CampaignService] Campanha ieYUJVGX7S6jiL6izL4N → humbertoaraf@gmail.com
+2026-04-11T18:50:40.629Z [INFO]: [CampaignService] bertohf5@gmail.com já recebeu campanha ieYUJVGX7S6jiL6izL4N
+2026-04-11T18:50:40.784Z [INFO]: [CampaignService] Disparo concluído — enviados: 1, pulados: 1, erros: 0
