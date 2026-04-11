@@ -79,7 +79,7 @@ class CheckoutService {
 
   // ── Validações ────────────────────────────────────────────────────────────
 
-  calculateTotal(allTickets, halfTickets, socialTickets, coupon) {
+  async calculateTotal(allTickets, halfTickets, socialTickets, coupon) {
     return calculateTotal(allTickets, halfTickets, socialTickets, coupon);
   }
 

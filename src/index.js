@@ -7,6 +7,8 @@ const emailRoutes = require("./routes/emailRoutes");
 const credentialRoutes = require("./routes/credentialRoutes");
 const certificateRoutes = require("./routes/certificateRoutes");
 const clientRegistrationRoutes = require("./routes/clientRegistrationRoutes");
+const userRoutes = require("./routes/userRoutes");
+const couponRoutes = require("./routes/couponRoutes");
 
 const responseMiddleware = require("./middleware/response");
 const path = require("path");
@@ -38,6 +40,8 @@ app.get("/", (req, res) => {
   res.sendResponse(200, true, "OK");
 });
 
+app.use("/api/users", userRoutes);
+app.use("/api/coupons", couponRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/email", emailRoutes);
 app.use("/api/credentials", credentialRoutes);

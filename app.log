@@ -30541,3 +30541,36 @@
 2026-04-09T23:12:10.974Z [INFO]: [EmailService] Email enviado para fsantiago369@gmail.com — id: d5efdf8f-9b88-4412-bca8-c808ad74cbe0
 2026-04-09T23:12:11.077Z [INFO]: [CheckoutRepository] Participante l9CxYjE9qErkvAGYwEHy atualizado
 2026-04-09T23:12:11.079Z [INFO]: [EmailService] Confirmação enviada para fsantiago369@gmail.com
+2026-04-10T13:53:33.395Z [INFO]: [CheckoutService] Verificando pagamentos pendentes...
+2026-04-10T13:53:38.382Z [INFO]: [CheckoutService] 0 checkout(s) pendente(s)
+2026-04-10T13:53:38.383Z [INFO]: [CheckoutService] Verificação concluída
+2026-04-10T21:11:43.952Z [INFO]: [CheckoutService] Verificando pagamentos pendentes...
+2026-04-10T21:11:44.126Z [INFO]: [CheckoutService] 0 checkout(s) pendente(s)
+2026-04-10T21:11:44.127Z [INFO]: [CheckoutService] Verificação concluída
+2026-04-10T22:45:40.227Z [INFO]: [CheckoutService] Verificando pagamentos pendentes...
+2026-04-10T22:45:41.467Z [INFO]: [CheckoutService] 0 checkout(s) pendente(s)
+2026-04-10T22:45:41.488Z [INFO]: [CheckoutService] Verificação concluída
+2026-04-10T22:45:44.120Z [INFO]: [CheckoutService] Verificando pagamentos pendentes...
+2026-04-10T22:45:44.214Z [INFO]: [CheckoutService] 0 checkout(s) pendente(s)
+2026-04-10T22:45:44.215Z [INFO]: [CheckoutService] Verificação concluída
+2026-04-10T22:45:59.204Z [INFO]: [CheckoutService] Verificando pagamentos pendentes...
+2026-04-10T22:45:59.336Z [INFO]: [CheckoutService] 0 checkout(s) pendente(s)
+2026-04-10T22:45:59.336Z [INFO]: [CheckoutService] Verificação concluída
+2026-04-10T22:46:05.101Z [INFO]: [CheckoutService] Verificando pagamentos pendentes...
+2026-04-10T22:46:05.266Z [INFO]: [CheckoutService] 0 checkout(s) pendente(s)
+2026-04-10T22:46:05.267Z [INFO]: [CheckoutService] Verificação concluída
+2026-04-10T23:04:29.095Z [INFO]: [CheckoutService] Verificando pagamentos pendentes...
+2026-04-10T23:04:30.391Z [INFO]: [CheckoutService] 0 checkout(s) pendente(s)
+2026-04-10T23:04:30.392Z [INFO]: [CheckoutService] Verificação concluída
+2026-04-11T05:08:58.248Z [INFO]: [CheckoutService] Verificando pagamentos pendentes...
+2026-04-11T05:08:59.766Z [INFO]: [CheckoutService] 0 checkout(s) pendente(s)
+2026-04-11T05:08:59.767Z [INFO]: [CheckoutService] Verificação concluída
+2026-04-11T05:28:39.038Z [INFO]: [CheckoutService] Verificando pagamentos pendentes...
+2026-04-11T05:28:40.377Z [INFO]: [CheckoutService] 0 checkout(s) pendente(s)
+2026-04-11T05:28:40.378Z [INFO]: [CheckoutService] Verificação concluída
+2026-04-11T12:52:00.053Z [INFO]: [CheckoutService] Verificando pagamentos pendentes...
+2026-04-11T12:52:00.208Z [INFO]: [CheckoutService] 0 checkout(s) pendente(s)
+2026-04-11T12:52:00.209Z [INFO]: [CheckoutService] Verificação concluída
+2026-04-11T15:00:01.800Z [INFO]: [CheckoutService] Verificando pagamentos pendentes...
+2026-04-11T15:00:02.239Z [INFO]: [CheckoutService] 0 checkout(s) pendente(s)
+2026-04-11T15:00:02.240Z [INFO]: [CheckoutService] Verificação concluída

@@ -26,7 +26,7 @@ const processCreditPayment = async (req, res) => {
     // Validações
     CheckoutService.validateParticipants(participants, ticketQuantity);
     CheckoutService.validateCreditCard(creditCardData);
-    const totals = CheckoutService.calculateTotal(allT, halfT, socialT, coupon);
+    const totals = await CheckoutService.calculateTotal(allT, halfT, socialT, coupon);
 
     // Processar pagamento com cartão
     const result = await CieloService.processCreditPayment(
@@ -70,7 +70,7 @@ const processPixPayment = async (req, res) => {
 
   try {
     CheckoutService.validateParticipants(participants, ticketQuantity);
-    const totals = CheckoutService.calculateTotal(allT, halfT, socialT, coupon);
+    const totals = await CheckoutService.calculateTotal(allT, halfT, socialT, coupon);
 
     const pixResponse = await BancoDoBrasilService.createPixPayment(
       totals.totalInCents,
@@ -111,7 +111,7 @@ const processBoletoPayment = async (req, res) => {
   try {
     CheckoutService.validateParticipants(participants, ticketQuantity);
     CheckoutService.validateBoleto(payer);
-    const totals = CheckoutService.calculateTotal(allT, halfT, socialT, coupon);
+    const totals = await CheckoutService.calculateTotal(allT, halfT, socialT, coupon);
 
     if (!payer.document) {
       throw new Error("Documento do pagador é obrigatório.");
@@ -158,7 +158,7 @@ const validateCoupon = async (req, res) => {
   const allT = parseInt(allTickets) || 1;
 
   try {
-    CheckoutService.calculateTotal(allT, 0, 0, coupon);
+    await CheckoutService.calculateTotal(allT, 0, 0, coupon);
     res.sendResponse(200, true, "Cupom válido", { valid: true });
   } catch (error) {
     res.sendResponse(400, false, error.message, { valid: false });
@@ -173,7 +173,7 @@ const calculateTotals = async (req, res) => {
   const socialT = parseInt(socialTickets) || 0;
 
   try {
-    const totals = CheckoutService.calculateTotal(allT, halfT, socialT, coupon);
+    const totals = await CheckoutService.calculateTotal(allT, halfT, socialT, coupon);
     res.sendResponse(200, true, "Totais calculados com sucesso", totals);
   } catch (error) {
     res.sendResponse(

@@ -71,7 +71,7 @@ const generateBoletoPDF = async (
   dataVencimento
 ) => {
   const fullTickets = ticketQuantity - halfTickets - socialTickets;
-  const calculation = calculateTotal(
+  const calculation = await calculateTotal(
     fullTickets,
     halfTickets,
     socialTickets,
