@@ -58,15 +58,25 @@ const CouponService = {
       );
     }
 
-    const config = require('../config');
-    const ALL_TICKET_VALUE = config.valueTickets.allTicket;
-    const HALF_TICKET_VALUE = config.valueTickets.halfTicket;
-    const SOCIAL_TICKET_VALUE = config.valueTickets.socialTicket;
+    const { firebase } = require('../config');
+    const DEFAULT_PRICES = { full: 499.9, half: 399.9, social: 199.9 };
+    let prices = DEFAULT_PRICES;
+    try {
+      const snap = await firebase.db.doc('config/eventConfig').get();
+      if (snap.exists) {
+        const p = snap.data().ticketPrices || {};
+        prices = {
+          full:   p.full   ?? DEFAULT_PRICES.full,
+          half:   p.half   ?? DEFAULT_PRICES.half,
+          social: p.social ?? DEFAULT_PRICES.social,
+        };
+      }
+    } catch (_) { /* use defaults */ }
 
     const subtotal =
-      allTickets * ALL_TICKET_VALUE +
-      halfTickets * HALF_TICKET_VALUE +
-      socialTickets * SOCIAL_TICKET_VALUE;
+      allTickets    * prices.full +
+      halfTickets   * prices.half +
+      socialTickets * prices.social;
 
     let discount = 0;
     if (coupon.discountType === 'fixed') {

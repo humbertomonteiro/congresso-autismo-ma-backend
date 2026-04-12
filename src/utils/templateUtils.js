@@ -6,6 +6,32 @@ const QRCode = require("qrcode");
 const config = require("../config");
 const { calculateTotal } = require("./calculateTotal");
 
+const CONFIG_DOC = config.firebase.db.doc("config/eventConfig");
+
+const DEFAULT_EVENT = {
+  name: "CONGRESSO AUTISMO MA 2026",
+  dates: ["2026-05-16", "2026-05-17"],
+};
+
+async function getEventConfig() {
+  try {
+    const snap = await CONFIG_DOC.get();
+    if (snap.exists) {
+      const data = snap.data();
+      return {
+        name:  (data.eventName  || DEFAULT_EVENT.name).toUpperCase(),
+        dates: data.eventDates  || DEFAULT_EVENT.dates,
+      };
+    }
+  } catch (_) { /* use defaults */ }
+  return DEFAULT_EVENT;
+}
+
+const formatDateDot = (isoDate) => {
+  const [y, m, d] = isoDate.split("-");
+  return `${d}.${m}.${y}`;
+};
+
 const formatDate = (date) => {
   const day = String(date.getDate()).padStart(2, "0");
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -22,9 +48,13 @@ const generateTicketPDF = async (recipient, qrCodes) => {
 
   await fs.mkdir(tempDir, { recursive: true });
 
+  const event = await getEventConfig();
+  const date1 = event.dates[0] || DEFAULT_EVENT.dates[0];
+  const date2 = event.dates[1] || DEFAULT_EVENT.dates[1];
+
   // Assume que qrCodes já vem em base64 (data:image/png;base64,...)
-  const qrCodeDay1 = qrCodes["2026-05-16"];
-  const qrCodeDay2 = qrCodes["2026-05-17"];
+  const qrCodeDay1 = qrCodes[date1];
+  const qrCodeDay2 = qrCodes[date2];
 
   const templatePath = path.join(__dirname, "../templates/ticketTemplate.html");
   const htmlTemplate = await fs.readFile(templatePath, "utf8");
@@ -33,9 +63,9 @@ const generateTicketPDF = async (recipient, qrCodes) => {
     .replace(/{{PARTICIPANT_NAME}}/g, recipient.participantName.toUpperCase())
     .replace(/{{QRCODE_DAY1}}/g, qrCodeDay1)
     .replace(/{{QRCODE_DAY2}}/g, qrCodeDay2)
-    .replace(/{{EVENT_NAME}}/g, "CONGRESSO AUTISMO MA 2026")
-    .replace(/{{DATE_DAY1}}/g, "16.05.2026")
-    .replace(/{{DATE_DAY2}}/g, "17.05.2026")
+    .replace(/{{EVENT_NAME}}/g, event.name)
+    .replace(/{{DATE_DAY1}}/g, formatDateDot(date1))
+    .replace(/{{DATE_DAY2}}/g, formatDateDot(date2))
     .replace(/{{LOCATION}}/g, "CENTRO DE CONVENÇÕES MA")
     .replace(/{{TIME}}/g, "08:00 - 18:00")
     .replace(/{{SUPPORT_EMAIL}}/g, "suporte@congressoautismoma.com.br");
@@ -210,9 +240,11 @@ const generateCertificatePDF = async (cpf, name, templateHTML) => {
   );
   const htmlTemplate = await fs.readFile(templatePath, "utf8");
 
+  const event = await getEventConfig();
+
   const htmlContent = htmlTemplate
     .replace(/{{PARTICIPANT_NAME}}/g, name.toUpperCase())
-    .replace(/{{EVENT_NAME}}/g, "CONGRESSO AUTISMO MA 2026")
+    .replace(/{{EVENT_NAME}}/g, event.name)
     .replace(/{{ISSUE_DATE}}/g, formatDate(new Date()));
 
   const browser = await puppeteer.launch({

@@ -1,12 +1,31 @@
-const config = require('../config');
+const { firebase } = require('../config');
 const CouponService = require('../services/CouponService');
+const logger = require('../logger');
 
-const ALL_TICKET_VALUE = config.valueTickets.allTicket;
-const HALF_TICKET_VALUE = config.valueTickets.halfTicket;
-const SOCIAL_TICKET_VALUE = config.valueTickets.socialTicket;
+const CONFIG_DOC = firebase.db.doc('config/eventConfig');
+
+// Fallback prices if Firestore config is unavailable
+const DEFAULT_PRICES = { full: 499.9, half: 399.9, social: 199.9 };
+
+async function getTicketPrices() {
+  try {
+    const snap = await CONFIG_DOC.get();
+    if (snap.exists) {
+      const prices = snap.data().ticketPrices || {};
+      return {
+        full:   prices.full   ?? DEFAULT_PRICES.full,
+        half:   prices.half   ?? DEFAULT_PRICES.half,
+        social: prices.social ?? DEFAULT_PRICES.social,
+      };
+    }
+  } catch (err) {
+    logger.warn('[calculateTotal] Falha ao ler preços do Firestore, usando defaults:', err.message);
+  }
+  return DEFAULT_PRICES;
+}
 
 /**
- * Calcula o total da compra, aplicando desconto do cupom se informado.
+ * Calcula o total da compra usando os preços configurados no Firestore.
  * O cupom é validado contra o Firestore — não mais hardcoded.
  *
  * @param {number} allTickets
@@ -19,9 +38,11 @@ const calculateTotal = async (allTickets, halfTickets, socialTickets, coupon) =>
   const ticketQuantity = allTickets + halfTickets + socialTickets;
   if (ticketQuantity <= 0) throw new Error('Selecione ao menos 1 ingresso.');
 
-  const valueTicketsAll = allTickets * ALL_TICKET_VALUE;
-  const valueTicketsHalf = halfTickets * HALF_TICKET_VALUE;
-  const valueTicketsSocial = socialTickets * SOCIAL_TICKET_VALUE;
+  const prices = await getTicketPrices();
+
+  const valueTicketsAll    = allTickets    * prices.full;
+  const valueTicketsHalf   = halfTickets   * prices.half;
+  const valueTicketsSocial = socialTickets * prices.social;
 
   let discount = 0;
 

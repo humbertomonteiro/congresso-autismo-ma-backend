@@ -30588,3 +30588,18 @@
 2026-04-11T18:50:39.962Z [INFO]: [CampaignService] Campanha ieYUJVGX7S6jiL6izL4N → humbertoaraf@gmail.com
 2026-04-11T18:50:40.629Z [INFO]: [CampaignService] bertohf5@gmail.com já recebeu campanha ieYUJVGX7S6jiL6izL4N
 2026-04-11T18:50:40.784Z [INFO]: [CampaignService] Disparo concluído — enviados: 1, pulados: 1, erros: 0
+2026-04-12T11:33:40.583Z [INFO]: [CheckoutService] Verificando pagamentos pendentes...
+2026-04-12T11:33:47.577Z [INFO]: [CheckoutService] 0 checkout(s) pendente(s)
+2026-04-12T11:33:47.578Z [INFO]: [CheckoutService] Verificação concluída
+2026-04-12T12:14:13.220Z [INFO]: [CheckoutService] Verificando pagamentos pendentes...
+2026-04-12T12:14:23.001Z [INFO]: [CheckoutService] 0 checkout(s) pendente(s)
+2026-04-12T12:14:23.002Z [INFO]: [CheckoutService] Verificação concluída
+2026-04-12T12:14:23.007Z [INFO]: [CheckoutService] Verificando pagamentos pendentes...
+2026-04-12T12:14:23.119Z [INFO]: [CheckoutService] 0 checkout(s) pendente(s)
+2026-04-12T12:14:23.120Z [INFO]: [CheckoutService] Verificação concluída
+2026-04-12T12:23:27.369Z [INFO]: [ConfigController] Config atualizada por test@gmail.com
+2026-04-12T12:28:02.620Z [INFO]: [CheckoutService] Verificando pagamentos pendentes...
+2026-04-12T12:28:03.159Z [INFO]: [CheckoutService] 0 checkout(s) pendente(s)
+2026-04-12T12:28:03.160Z [INFO]: [CheckoutService] Verificação concluída
+2026-04-12T12:28:49.852Z [INFO]: [AudienceService] Audiência IAQ1taytUG93odKtJ84o deletada
+2026-04-12T12:28:52.170Z [INFO]: [AudienceService] Audiência 08R35SpQHk6Y4FjsQ9IC deletada

@@ -8,10 +8,28 @@ const { toZonedTime } = require("date-fns-tz");
 const config = require("../config");
 const logger = require("../logger");
 
-const ALL_TICKET_VALUE = config.valueTickets.allTicket;
-const HALF_TICKET_VALUE = config.valueTickets.halfTicket;
-const SOCIAL_TICKET_VALUE = config.valueTickets.socialTicket;
-const EVENT_NAME = config.event.name;
+const CONFIG_DOC = config.firebase.db.doc("config/eventConfig");
+const DEFAULT_PRICES = { full: 499.9, half: 399.9, social: 199.9 };
+const DEFAULT_EVENT_NAME = config.event.name;
+
+async function getEventFirestoreConfig() {
+  try {
+    const snap = await CONFIG_DOC.get();
+    if (snap.exists) {
+      const data = snap.data();
+      const p = data.ticketPrices || {};
+      return {
+        prices: {
+          full:   p.full   ?? DEFAULT_PRICES.full,
+          half:   p.half   ?? DEFAULT_PRICES.half,
+          social: p.social ?? DEFAULT_PRICES.social,
+        },
+        eventName: data.eventName || DEFAULT_EVENT_NAME,
+      };
+    }
+  } catch (_) { /* fall through */ }
+  return { prices: DEFAULT_PRICES, eventName: DEFAULT_EVENT_NAME };
+}
 
 // Códigos de estado do boleto BB:
 // 1 = Normal (em aberto/pendente)
@@ -105,6 +123,8 @@ class BancoDoBrasilService {
     participants
   ) {
     const ticketQuantity = allTickets + halfTickets + socialTickets;
+    const { prices, eventName: EVENT_NAME } = await getEventFirestoreConfig();
+    const { full: ALL_TICKET_VALUE, half: HALF_TICKET_VALUE, social: SOCIAL_TICKET_VALUE } = prices;
     const token = await this.getAccessToken();
     const boletoEndpoint = `${this.apiBaseUrl}/boletos?gw-dev-app-key=${config.bancoDoBrasil.developerApiKey}`;
 
@@ -257,6 +277,8 @@ class BancoDoBrasilService {
     participants
   ) {
     const ticketQuantity = allTickets + halfTickets + socialTickets;
+    const { prices, eventName: EVENT_NAME } = await getEventFirestoreConfig();
+    const { full: ALL_TICKET_VALUE, half: HALF_TICKET_VALUE, social: SOCIAL_TICKET_VALUE } = prices;
     const token = await this.getAccessToken();
     const pixEndpoint = `${this.apiBaseUrl}/pix/v2/cob?gw-dev-app-key=${config.bancoDoBrasil.developerApiKey}`;
 

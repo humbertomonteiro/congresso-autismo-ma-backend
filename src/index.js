@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const config = require("./config");
 const paymentRoutes = require("./routes/paymentRoutes");
 const emailRoutes = require("./routes/emailRoutes");
+const configRoutes = require("./routes/configRoutes");
 const credentialRoutes = require("./routes/credentialRoutes");
 const certificateRoutes = require("./routes/certificateRoutes");
 const clientRegistrationRoutes = require("./routes/clientRegistrationRoutes");
@@ -40,6 +41,7 @@ app.get("/", (req, res) => {
   res.sendResponse(200, true, "OK");
 });
 
+app.use("/api/config", configRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/coupons", couponRoutes);
 app.use("/api/payments", paymentRoutes);
