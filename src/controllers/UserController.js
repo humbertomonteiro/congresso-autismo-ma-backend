@@ -19,7 +19,7 @@ const UserController = {
         return res.sendResponse(400, false, 'Campos obrigatórios: name, email, password, role');
       }
 
-      const validRoles = ['adm', 'viewer', 'scanner', 'vendedor'];
+      const validRoles = ['adm', 'viewer', 'scanner', 'vendedor', 'suporte'];
       if (!validRoles.includes(role)) {
         return res.sendResponse(400, false, `Role inválida. Use: ${validRoles.join(', ')}`);
       }
@@ -63,7 +63,7 @@ const UserController = {
       const { uid } = req.params;
       const { name, role, sellerId, sellerName } = req.body;
 
-      const validRoles = ['adm', 'viewer', 'scanner', 'vendedor'];
+      const validRoles = ['adm', 'viewer', 'scanner', 'vendedor', 'suporte'];
       if (role && !validRoles.includes(role)) {
         return res.sendResponse(400, false, `Role inválida. Use: ${validRoles.join(', ')}`);
       }

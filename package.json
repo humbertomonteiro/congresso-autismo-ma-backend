@@ -5,7 +5,9 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
-    "test-email-auto": "node testAutomaticEmails.js"
+    "test-email-auto": "node testAutomaticEmails.js",
+    "export-event": "node exportEventData.js",
+    "export-event:2025": "node exportEventData.js \"Congresso Autismo MA 2025\""
   },
   "keywords": [],
   "author": "",
