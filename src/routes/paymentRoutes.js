@@ -2,6 +2,7 @@
 const express = require("express");
 const router = express.Router();
 const paymentController = require("../controllers/PaymentController");
+const { verifyToken, requireManualCheckoutAccess } = require("../middleware/authMiddleware");
 
 router.post("/credit", paymentController.processCreditPayment);
 router.post("/pix", paymentController.processPixPayment);
@@ -15,6 +16,6 @@ router.post(
   "/add-templates-to-pending-emails",
   paymentController.addAllTemplatesToPendingEmails
 );
-router.post("/manual", paymentController.createManualCheckout);
+router.post("/manual", verifyToken, requireManualCheckoutAccess, paymentController.createManualCheckout);
 
 module.exports = router;

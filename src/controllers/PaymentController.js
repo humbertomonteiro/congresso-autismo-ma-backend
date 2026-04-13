@@ -283,14 +283,22 @@ const addAllTemplatesToPendingEmails = async (req, res) => {
 };
 
 const createManualCheckout = async (req, res) => {
-  const { participants, ...checkoutData } = req.body;
+  // eslint-disable-next-line no-unused-vars
+  const { participants, status: _ignoredStatus, ...checkoutData } = req.body;
+
+  // O status é determinado pelo backend com base na role real do usuário,
+  // nunca pelo valor enviado pelo frontend.
+  // adm / suporte → aprovado imediatamente
+  // vendedor      → pendente até aprovação manual do admin
+  const role = req.userRole; // anexado pelo middleware requireManualCheckoutAccess
+  const status = role === "vendedor" ? "pending" : "approved";
 
   try {
     const { buildParticipantsBatch } = require("../utils/normalizeParticipant");
     const CredentialService = require("../services/CredentialService");
     const CampaignService = require("../services/CampaignService");
 
-    const checkoutId = await CheckoutRepository.saveCheckout(checkoutData);
+    const checkoutId = await CheckoutRepository.saveCheckout({ ...checkoutData, status });
 
     const allTickets = checkoutData.orderDetails?.allTickets ?? 0;
     const halfTickets = checkoutData.orderDetails?.halfTickets ?? 0;
@@ -314,7 +322,7 @@ const createManualCheckout = async (req, res) => {
       );
     }
 
-    await CampaignService.triggerForCheckout({ id: checkoutId, ...checkoutData });
+    await CampaignService.triggerForCheckout({ id: checkoutId, ...checkoutData, status });
 
     res.sendResponse(200, true, "Checkout manual criado com sucesso", {
       checkoutId,
