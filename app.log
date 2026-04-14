@@ -30660,3 +30660,19 @@
 2026-04-13T20:39:14.860Z [INFO]: [CheckoutService] Verificando pagamentos pendentes...
 2026-04-13T20:39:14.944Z [INFO]: [CheckoutService] 0 checkout(s) pendente(s)
 2026-04-13T20:39:14.944Z [INFO]: [CheckoutService] Verificação concluída
+2026-04-13T20:46:08.010Z [INFO]: [CheckoutService] Verificando pagamentos pendentes...
+2026-04-13T20:46:08.104Z [INFO]: [CheckoutService] 0 checkout(s) pendente(s)
+2026-04-13T20:46:08.105Z [INFO]: [CheckoutService] Verificação concluída
+2026-04-13T20:46:27.302Z [INFO]: [CheckoutRepository] 1 participante(s) salvos em KjiwY28jQBRHetwt9TXY
+2026-04-13T20:46:27.510Z [INFO]: [CheckoutRepository] Participante 691V0SiDrSoQ4tRTcxAV atualizado
+2026-04-13T20:46:27.675Z [INFO]: [CredentialService] QR Token gerado para participante 691V0SiDrSoQ4tRTcxAV
+2026-04-13T20:46:29.024Z [INFO]: [EmailService] Email enviado para humbertoaraf@gmail.com — id: ad82267c-2d2b-4e82-8178-4caf9bbbfd84
+2026-04-13T20:46:29.115Z [INFO]: [CheckoutRepository] Participante 691V0SiDrSoQ4tRTcxAV atualizado
+2026-04-13T20:46:29.116Z [INFO]: [EmailService] Confirmação enviada para humbertoaraf@gmail.com
+2026-04-13T20:47:08.375Z [INFO]: [CheckoutService] Verificando pagamentos pendentes...
+2026-04-13T20:47:08.519Z [INFO]: [CheckoutService] 1 checkout(s) pendente(s)
+2026-04-13T20:47:08.523Z [WARN]: [CheckoutService] Método desconhecido para checkout KjiwY28jQBRHetwt9TXY: cash
+2026-04-13T20:47:08.523Z [INFO]: [CheckoutService] Verificação concluída
+2026-04-13T21:00:00.067Z [INFO]: [CheckoutService] Verificando pagamentos pendentes...
+2026-04-13T21:00:00.385Z [INFO]: [CheckoutService] 0 checkout(s) pendente(s)
+2026-04-13T21:00:00.386Z [INFO]: [CheckoutService] Verificação concluída

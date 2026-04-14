@@ -1,10 +1,36 @@
 const fs = require("fs").promises;
 const path = require("path");
-const puppeteer = require("puppeteer");
 const bwipjs = require("bwip-js");
 const QRCode = require("qrcode");
 const config = require("../config");
 const { calculateTotal } = require("./calculateTotal");
+
+/**
+ * Retorna uma instância do browser Puppeteer compatível com o ambiente atual.
+ *
+ * Prioridade:
+ *  1. PUPPETEER_EXECUTABLE_PATH  — caminho explícito via variável de ambiente
+ *     (ex: /usr/bin/google-chrome-stable no Render após instalar o Chrome)
+ *  2. puppeteer padrão (bundled Chromium) — funciona localmente quando o
+ *     Chrome foi instalado com `npx puppeteer browsers install chrome`
+ */
+async function launchBrowser() {
+  const puppeteer = require("puppeteer");
+  const args = [
+    "--no-sandbox",
+    "--disable-setuid-sandbox",
+    "--disable-dev-shm-usage",
+    "--disable-gpu",
+    "--single-process",       // necessário em alguns ambientes containerizados
+  ];
+
+  const executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
+  if (executablePath) {
+    return puppeteer.launch({ headless: true, executablePath, args });
+  }
+
+  return puppeteer.launch({ headless: true, args });
+}
 
 const CONFIG_DOC = config.firebase.db.doc("config/eventConfig");
 
@@ -70,15 +96,7 @@ const generateTicketPDF = async (recipient, qrCodes) => {
     .replace(/{{TIME}}/g, "08:00 - 18:00")
     .replace(/{{SUPPORT_EMAIL}}/g, "suporte@congressoautismoma.com.br");
 
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: [
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
-      "--disable-dev-shm-usage",
-      "--disable-gpu",
-    ],
-  });
+  const browser = await launchBrowser();
 
   const page = await browser.newPage();
   await page.setContent(htmlContent, { waitUntil: "networkidle0" });
@@ -206,15 +224,7 @@ const generateBoletoPDF = async (
   const pdfPath = path.join(tempDir, `boleto_${response.numero}.pdf`);
   await fs.mkdir(tempDir, { recursive: true });
 
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: [
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
-      "--disable-dev-shm-usage",
-      "--disable-gpu",
-    ],
-  });
+  const browser = await launchBrowser();
 
   const page = await browser.newPage();
   await page.setContent(htmlContent, { waitUntil: "networkidle0" });
@@ -247,15 +257,7 @@ const generateCertificatePDF = async (cpf, name, templateHTML) => {
     .replace(/{{EVENT_NAME}}/g, event.name)
     .replace(/{{ISSUE_DATE}}/g, formatDate(new Date()));
 
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: [
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
-      "--disable-dev-shm-usage",
-      "--disable-gpu",
-    ],
-  });
+  const browser = await launchBrowser();
 
   const page = await browser.newPage();
   // await page.setViewport({ width: 842, height: 595 });

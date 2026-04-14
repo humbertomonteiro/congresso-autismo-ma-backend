@@ -128,22 +128,19 @@ const processBoletoPayment = async (req, res) => {
       participants
     );
 
-    if (!fs.existsSync(boletoResponse.boletoFile)) {
-      throw new Error(
-        `Arquivo PDF não encontrado: ${boletoResponse.boletoFile}`
-      );
+    // PDF é opcional — se não foi gerado, o cliente ainda pode pagar pela
+    // linha digitável ou QR code PIX exibidos na página de confirmação.
+    let boletoUrl = null;
+    if (boletoResponse.boletoFile && fs.existsSync(boletoResponse.boletoFile)) {
+      const boletoFileName = path.basename(boletoResponse.boletoFile);
+      boletoUrl = `${req.protocol}://${req.get("host")}/boletos/${boletoFileName}`;
     }
-
-    const boletoFileName = path.basename(boletoResponse.boletoFile);
-    const boletoUrl = `${req.protocol}://${req.get(
-      "host"
-    )}/boletos/${boletoFileName}`;
 
     res.status(200).json({
       success: true,
       paymentId: boletoResponse.numeroBoleto,
       checkoutId: boletoResponse.checkoutId,
-      boletoUrl: boletoUrl,
+      boletoUrl,                           // null se o PDF não foi gerado
       linhaDigitavel: boletoResponse.boletoUrl,
       qrCodePix: boletoResponse.qrCodePix || null,
     });

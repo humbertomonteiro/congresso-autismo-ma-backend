@@ -186,20 +186,10 @@ class BancoDoBrasilService {
       }
     );
 
-    const boletoFilePath = await generateBoletoPDF(
-      boletoResponse,
-      payer,
-      customer,
-      ticketQuantity,
-      halfTickets,
-      socialTickets,
-      coupon,
-      participants,
-      dataVencimentoDate
-    );
-
     const numeroBoleto = boletoResponse.numero;
 
+    // ── Salva o checkout ANTES de tentar gerar o PDF ──────────────────────────
+    // Isso garante que o boleto não seja perdido mesmo se o PDF falhar.
     const checkoutData = {
       status: "pending",
       paymentMethod: "boleto",
@@ -226,12 +216,36 @@ class BancoDoBrasilService {
           qrCodePix:
             boletoResponse.qrCode?.url || boletoResponse.qrCode?.emv || null,
           dataVencimento,
-          pdfFilePath: boletoFilePath,
+          pdfFilePath: null, // preenchido abaixo se a geração for bem-sucedida
         },
       },
     };
 
     const checkoutId = await CheckoutRepository.saveCheckout(checkoutData);
+
+    // ── Gera o PDF após salvar (falha aqui não compromete o checkout) ─────────
+    let boletoFilePath = null;
+    try {
+      boletoFilePath = await generateBoletoPDF(
+        boletoResponse,
+        payer,
+        customer,
+        ticketQuantity,
+        halfTickets,
+        socialTickets,
+        coupon,
+        participants,
+        dataVencimentoDate
+      );
+      // Atualiza o caminho do PDF no checkout já salvo
+      await CheckoutRepository.updateCheckout(checkoutId, {
+        "paymentDetails.boleto.pdfFilePath": boletoFilePath,
+      });
+    } catch (pdfErr) {
+      logger.warn(
+        `[BB] PDF do boleto não gerado (checkout ${checkoutId} salvo): ${pdfErr.message}`
+      );
+    }
 
     // DEPOIS
     const CredentialService = require("./CredentialService");
