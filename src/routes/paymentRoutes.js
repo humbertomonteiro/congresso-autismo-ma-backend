@@ -17,5 +17,6 @@ router.post(
   paymentController.addAllTemplatesToPendingEmails
 );
 router.post("/manual", verifyToken, requireManualCheckoutAccess, paymentController.createManualCheckout);
+router.get("/boleto/:checkoutId/pdf", paymentController.downloadBoletoPDF);
 
 module.exports = router;

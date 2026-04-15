@@ -163,15 +163,11 @@ class BancoDoBrasilService {
       desconto: { tipo: 0 },
       jurosMora: { tipo: 1, valor: 1.0, porcentagem: 0 },
       multa: { tipo: 0, dados: "", porcentagem: 0, valor: 0 },
+      protesto: { tipo: 0 },   // sem protesto / sem cartório
       pagador: {
         tipoInscricao,
         numeroInscricao: cleanIdentity,
         nome: customer.Name.toUpperCase(),
-      },
-      beneficiarioFinal: {
-        tipoInscricao: 2,
-        numeroInscricao: parseInt(config.bancoDoBrasil.cnpj),
-        nome: "CONGRESSO AUTISMO MA LTDA",
       },
       indicadorPix: "S",
       textoEnderecoEmail: "saludcuidarmais@gmail.com",
@@ -197,6 +193,7 @@ class BancoDoBrasilService {
       buyerName: customer.Name,
       buyerCpf: cleanIdentity,
       eventName: EVENT_NAME,
+      payerAddress: payer || null,
       orderDetails: {
         allTickets,
         halfTickets,
@@ -213,6 +210,8 @@ class BancoDoBrasilService {
           numeroBoleto,
           numeroBoletoBancario: boletoResponse.numeroBoletoBancario || null,
           linhaDigitavel: boletoResponse.linhaDigitavel || null,
+          codigoBarraNumerico: boletoResponse.codigoBarraNumerico || null,
+          qrCodeEmv: boletoResponse.qrCode?.emv || null,
           qrCodePix:
             boletoResponse.qrCode?.url || boletoResponse.qrCode?.emv || null,
           dataVencimento,

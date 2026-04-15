@@ -3,6 +3,7 @@ const CheckoutService = require("../services/CheckoutService");
 const CieloService = require("../services/CieloService");
 const BancoDoBrasilService = require("../services/BancoDoBrasilService");
 const CheckoutRepository = require("../repositories/CheckoutRepository");
+const { generateBoletoPDF } = require("../utils/templateUtils");
 const fs = require("fs");
 const path = require("path");
 
@@ -337,6 +338,76 @@ const createManualCheckout = async (req, res) => {
   }
 };
 
+const downloadBoletoPDF = async (req, res) => {
+  const { checkoutId } = req.params;
+
+  try {
+    const checkout = await CheckoutRepository.getCheckoutById(checkoutId);
+    const boleto = checkout.paymentDetails?.boleto;
+
+    if (!boleto) {
+      return res.status(404).json({ error: "Boleto não encontrado para este checkout." });
+    }
+
+    // Serve o arquivo existente se ainda estiver no disco
+    if (boleto.pdfFilePath && fs.existsSync(boleto.pdfFilePath)) {
+      return res.download(boleto.pdfFilePath, `boleto_${boleto.numeroBoleto}.pdf`);
+    }
+
+    // Reconstrói o response a partir dos dados salvos no Firestore
+    const fakeResponse = {
+      numero: boleto.numeroBoleto,
+      linhaDigitavel: boleto.linhaDigitavel || "",
+      codigoBarraNumerico: boleto.codigoBarraNumerico || "00000000000000000000000000000000000000000000",
+      qrCodeEmv: boleto.qrCodeEmv || null,
+      qrCode: boleto.qrCodeEmv ? { emv: boleto.qrCodeEmv } : null,
+    };
+
+    const customer = {
+      Name: checkout.buyerName || "",
+      Identity: checkout.buyerCpf || "",
+      IdentityType: (checkout.buyerCpf || "").replace(/\D/g, "").length === 11 ? "cpf" : "cnpj",
+    };
+
+    const payer = checkout.payerAddress || {};
+    const { allTickets = 0, halfTickets = 0, socialTickets = 0, coupon } = checkout.orderDetails || {};
+    const ticketQuantity = allTickets + halfTickets + socialTickets;
+
+    const participants = await CheckoutRepository.getParticipantsByCheckout(checkoutId);
+
+    // dataVencimento pode ser "DD.MM.YYYY" — converte para Date
+    let dataVencimentoDate = new Date();
+    if (boleto.dataVencimento) {
+      const parts = boleto.dataVencimento.split(".");
+      if (parts.length === 3) {
+        dataVencimentoDate = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
+      }
+    }
+
+    const pdfPath = await generateBoletoPDF(
+      fakeResponse,
+      payer,
+      customer,
+      ticketQuantity,
+      halfTickets,
+      socialTickets,
+      coupon || null,
+      participants.map((p) => ({ name: p.name })),
+      dataVencimentoDate
+    );
+
+    // Atualiza o caminho no Firestore para próximos downloads enquanto o arquivo existir
+    await CheckoutRepository.updateCheckout(checkoutId, {
+      "paymentDetails.boleto.pdfFilePath": pdfPath,
+    });
+
+    res.download(pdfPath, `boleto_${boleto.numeroBoleto}.pdf`);
+  } catch (error) {
+    console.error("[PaymentController] Erro ao baixar boleto PDF:", error.message);
+    res.status(500).json({ error: "Erro ao gerar o PDF do boleto. Tente novamente." });
+  }
+};
+
 module.exports = {
   processCreditPayment,
   processPixPayment,
@@ -348,4 +419,5 @@ module.exports = {
   verifyAllPayments,
   addAllTemplatesToPendingEmails,
   createManualCheckout,
+  downloadBoletoPDF,
 };

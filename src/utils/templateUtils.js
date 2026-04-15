@@ -21,7 +21,6 @@ async function launchBrowser() {
     "--disable-setuid-sandbox",
     "--disable-dev-shm-usage",
     "--disable-gpu",
-    "--single-process",       // necessário em alguns ambientes containerizados
   ];
 
   const executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
@@ -139,9 +138,11 @@ const generateBoletoPDF = async (
     );
   });
 
-  const qrCodeBuffer = await QRCode.toBuffer(response.qrCode.emv, { scale: 5 });
+  const qrCodeEmv = response.qrCode?.emv || response.qrCodeEmv || null;
+  const qrCodeBase64 = qrCodeEmv
+    ? (await QRCode.toBuffer(qrCodeEmv, { scale: 5 })).toString("base64")
+    : null;
   const barcodeBase64 = barcodeBuffer.toString("base64");
-  const qrCodeBase64 = qrCodeBuffer.toString("base64");
 
   const templatePath = path.join(__dirname, "../templates/boletoTemplate.html");
   const htmlTemplate = await fs.readFile(templatePath, "utf8");
@@ -210,8 +211,8 @@ const generateBoletoPDF = async (
       "APÓS O VENCIMENTO, MULTA DE 3,00% E MORA DIÁRIA DE R$ 1,00<br>CNPJ DO BENEFICIÁRIO: 27.943.639/0001-67"
     )
     .replace(/{{CODIGO_BARRAS_URL}}/g, `data:image/png;base64,${barcodeBase64}`)
-    .replace(/{{QRCODE_URL}}/g, `data:image/png;base64,${qrCodeBase64}`)
-    .replace(/{{QRCODE_EMV}}/g, response.qrCode.emv || "Não disponível")
+    .replace(/{{QRCODE_URL}}/g, qrCodeBase64 ? `data:image/png;base64,${qrCodeBase64}` : "")
+    .replace(/{{QRCODE_EMV}}/g, qrCodeEmv || "Não disponível")
     .replace(/{{TICKET_QUANTITY_FULL}}/g, fullTickets.toString())
     .replace(/{{TICKET_QUANTITY_HALF}}/g, halfTickets.toString())
     .replace(/{{VALUE_TICKETS_ALL}}/g, calculation.valueTicketsAll)

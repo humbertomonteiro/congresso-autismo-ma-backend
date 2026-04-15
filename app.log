@@ -30676,3 +30676,25 @@
 2026-04-13T21:00:00.067Z [INFO]: [CheckoutService] Verificando pagamentos pendentes...
 2026-04-13T21:00:00.385Z [INFO]: [CheckoutService] 0 checkout(s) pendente(s)
 2026-04-13T21:00:00.386Z [INFO]: [CheckoutService] Verificação concluída
+2026-04-15T00:35:34.326Z [WARN]: [BB] PDF do boleto não gerado (checkout qbAnxbdOgDhkiC3hWalX salvo): Protocol error (Page.printToPDF): Target closed
+2026-04-15T00:35:34.441Z [INFO]: [CheckoutRepository] 1 participante(s) salvos em qbAnxbdOgDhkiC3hWalX
+2026-04-15T00:35:34.653Z [INFO]: [CheckoutRepository] Participante FPiaqL0uLeJS4Sc3XOs2 atualizado
+2026-04-15T00:35:34.779Z [INFO]: [CredentialService] QR Token gerado para participante FPiaqL0uLeJS4Sc3XOs2
+2026-04-15T00:35:34.780Z [INFO]: [BB] Boleto criado — checkout: qbAnxbdOgDhkiC3hWalX, numero: 00037412306213309440
+2026-04-15T00:51:14.974Z [ERROR]: [BB] Tentativa 1 falhou: Request failed with status code 400
+2026-04-15T00:51:14.979Z [ERROR]: [BB] Resposta: {"erros":[{"codigo":"4500947","versao":"1","mensagem":"O CNPJ informado para o beneficiário final está inválido.","providencia":"Informe um CNPJ válido.","ocorrencia":"9999"}]}
+2026-04-15T00:51:16.373Z [ERROR]: [BB] Tentativa 2 falhou: Request failed with status code 400
+2026-04-15T00:51:16.377Z [ERROR]: [BB] Resposta: {"erros":[{"codigo":"4500947","versao":"1","mensagem":"O CNPJ informado para o beneficiário final está inválido.","providencia":"Informe um CNPJ válido.","ocorrencia":"9999"}]}
+2026-04-15T00:51:18.777Z [ERROR]: [BB] Tentativa 3 falhou: Request failed with status code 400
+2026-04-15T00:51:18.780Z [ERROR]: [BB] Resposta: {"erros":[{"codigo":"4500947","versao":"1","mensagem":"O CNPJ informado para o beneficiário final está inválido.","providencia":"Informe um CNPJ válido.","ocorrencia":"9999"}]}
+2026-04-15T00:56:40.862Z [ERROR]: [BB] Tentativa 1 falhou: Request failed with status code 400
+2026-04-15T00:56:40.863Z [ERROR]: [BB] Resposta: {"erros":[{"codigo":"4500947","versao":"1","mensagem":"O CNPJ informado para o pagador está inválido.","providencia":"Informe um CNPJ válido.","ocorrencia":"9999"}]}
+2026-04-15T00:56:42.326Z [ERROR]: [BB] Tentativa 2 falhou: Request failed with status code 400
+2026-04-15T00:56:42.327Z [ERROR]: [BB] Resposta: {"erros":[{"codigo":"4500947","versao":"1","mensagem":"O CNPJ informado para o pagador está inválido.","providencia":"Informe um CNPJ válido.","ocorrencia":"9999"}]}
+2026-04-15T00:56:44.869Z [ERROR]: [BB] Tentativa 3 falhou: Request failed with status code 400
+2026-04-15T00:56:44.870Z [ERROR]: [BB] Resposta: {"erros":[{"codigo":"4500947","versao":"1","mensagem":"O CNPJ informado para o pagador está inválido.","providencia":"Informe um CNPJ válido.","ocorrencia":"9999"}]}
+2026-04-15T01:11:13.186Z [WARN]: [BB] PDF do boleto não gerado (checkout JnqZLhZWxBTANVF5oOz0 salvo): Protocol error (Page.printToPDF): Target closed
+2026-04-15T01:11:13.299Z [INFO]: [CheckoutRepository] 1 participante(s) salvos em JnqZLhZWxBTANVF5oOz0
+2026-04-15T01:11:13.526Z [INFO]: [CheckoutRepository] Participante aQvRxhxIg1cB7KfCzJ6h atualizado
+2026-04-15T01:11:13.604Z [INFO]: [CredentialService] QR Token gerado para participante aQvRxhxIg1cB7KfCzJ6h
+2026-04-15T01:11:13.604Z [INFO]: [BB] Boleto criado — checkout: JnqZLhZWxBTANVF5oOz0, numero: 00031285576215443043
