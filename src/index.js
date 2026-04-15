@@ -28,7 +28,36 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors());
+const allowedOrigins = [
+  "https://congressoautismoma.com.br",
+  "https://www.congressoautismoma.com.br",
+  "https://congressoautismoma.vercel.app",
+  "http://localhost:5173",
+  "http://localhost:5174",
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // Permite requisições sem origin (como Postman/curl)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        console.log("❌ CORS bloqueado para origem:", origin);
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true, // Importante se você usa cookies/sessões
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+  })
+);
+
+// Garantir que OPTIONS seja tratado corretamente
+app.options("*", cors());
+
 app.use(express.json());
 app.use(responseMiddleware);
 app.use(express.urlencoded({ extended: true }));
