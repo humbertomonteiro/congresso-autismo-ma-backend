@@ -30699,3 +30699,67 @@
 2026-04-15T01:11:13.604Z [INFO]: [CredentialService] QR Token gerado para participante aQvRxhxIg1cB7KfCzJ6h
 2026-04-15T01:11:13.604Z [INFO]: [BB] Boleto criado — checkout: JnqZLhZWxBTANVF5oOz0, numero: 00031285576215443043
 2026-04-15T01:14:51.582Z [INFO]: [CheckoutRepository] Checkout JnqZLhZWxBTANVF5oOz0 atualizado
+2026-04-15T17:47:33.489Z [INFO]: [CheckoutService] Verificando pagamentos pendentes...
+2026-04-15T17:47:38.571Z [INFO]: [CheckoutService] 0 checkout(s) pendente(s)
+2026-04-15T17:47:38.571Z [INFO]: [CheckoutService] Verificação concluída
+2026-04-15T18:20:44.542Z [INFO]: [CampaignService] Campanha criada: Ctr7MSFDz4JOMvZESB7j
+2026-04-15T18:26:10.487Z [INFO]: [CheckoutService] Verificando pagamentos pendentes...
+2026-04-15T18:26:10.750Z [INFO]: [CheckoutService] 1 checkout(s) pendente(s)
+2026-04-15T18:26:13.529Z [ERROR]: [BB] Erro ao consultar boleto 00037412306276238681: Request failed with status code 400
+2026-04-15T18:26:13.530Z [ERROR]: [BB] Detalhe: {"errors":[{"code":"4678420.1","message":"Campo nosso número preenchido com dados inválidos.","action":"Ajuste o campo e tente novamente."}]}
+2026-04-15T18:26:13.558Z [ERROR]: [CheckoutService] Erro no checkout qKG35pIc2NP6aeI35Cj8: Request failed with status code 400
+2026-04-15T18:26:13.559Z [INFO]: [CheckoutService] Verificação concluída
+2026-04-15T18:26:30.238Z [INFO]: [AudienceService] Audiência UmR69FJGnKRtugO8k4tv atualizada
+2026-04-15T18:26:48.561Z [INFO]: [CheckoutService] Verificando pagamentos pendentes...
+2026-04-15T18:26:48.653Z [INFO]: [CheckoutService] 1 checkout(s) pendente(s)
+2026-04-15T18:26:49.566Z [ERROR]: [BB] Erro ao consultar boleto 00037412306276238681: Request failed with status code 400
+2026-04-15T18:26:49.567Z [ERROR]: [BB] Detalhe: {"errors":[{"code":"4678420.1","message":"Campo nosso número preenchido com dados inválidos.","action":"Ajuste o campo e tente novamente."}]}
+2026-04-15T18:26:49.567Z [ERROR]: [CheckoutService] Erro no checkout qKG35pIc2NP6aeI35Cj8: Request failed with status code 400
+2026-04-15T18:26:49.567Z [INFO]: [CheckoutService] Verificação concluída
+2026-04-15T18:27:03.381Z [INFO]: [AudienceService] Audiência UmR69FJGnKRtugO8k4tv atualizada
+2026-04-15T18:27:23.469Z [INFO]: [AudienceService] Audiência UmR69FJGnKRtugO8k4tv atualizada
+2026-04-15T18:27:30.863Z [INFO]: [CampaignService] Disparo concluído — enviados: 0, pulados: 0, erros: 0
+2026-04-15T18:28:51.575Z [INFO]: [CheckoutService] Verificando pagamentos pendentes...
+2026-04-15T18:28:52.103Z [INFO]: [CheckoutService] 1 checkout(s) pendente(s)
+2026-04-15T18:28:53.473Z [ERROR]: [BB] Erro ao consultar boleto 00037412306276238681: Request failed with status code 400
+2026-04-15T18:28:53.473Z [ERROR]: [BB] Detalhe: {"errors":[{"code":"4678420.1","message":"Campo nosso número preenchido com dados inválidos.","action":"Ajuste o campo e tente novamente."}]}
+2026-04-15T18:28:53.475Z [ERROR]: [CheckoutService] Erro no checkout qKG35pIc2NP6aeI35Cj8: Request failed with status code 400
+2026-04-15T18:28:53.476Z [INFO]: [CheckoutService] Verificação concluída
+2026-04-15T18:32:32.651Z [INFO]: [AudienceService] Audiência TNkq0nR3Jfnyc9qYQcMc deletada
+2026-04-15T18:32:34.577Z [INFO]: [AudienceService] Audiência UmR69FJGnKRtugO8k4tv deletada
+2026-04-15T19:32:15.425Z [INFO]: [AudienceService] Audiência criada: 0ZuhIsqbdOD8yNWrzrzB
+2026-04-15T19:33:15.441Z [INFO]: [AudienceService] Audiência criada: AsLZzgZATiwMu8G7w4nK
+2026-04-15T21:00:00.937Z [INFO]: [CheckoutService] Verificando pagamentos pendentes...
+2026-04-15T21:00:01.352Z [INFO]: [CheckoutService] 4 checkout(s) pendente(s)
+2026-04-15T21:00:05.594Z [ERROR]: [BB] Erro ao consultar boleto 00037412306285470464: Request failed with status code 400
+2026-04-15T21:00:05.594Z [ERROR]: [BB] Detalhe: {"errors":[{"code":"4678420.1","message":"Campo nosso número preenchido com dados inválidos.","action":"Ajuste o campo e tente novamente."}]}
+2026-04-15T21:00:05.594Z [ERROR]: [CheckoutService] Erro no checkout HCvQhdFhH7WQrTk6rkr6: Request failed with status code 400
+2026-04-15T21:00:06.570Z [ERROR]: [BB] Erro ao consultar boleto 00037412306284678665: Request failed with status code 400
+2026-04-15T21:00:06.570Z [ERROR]: [BB] Detalhe: {"errors":[{"code":"4678420.1","message":"Campo nosso número preenchido com dados inválidos.","action":"Ajuste o campo e tente novamente."}]}
+2026-04-15T21:00:06.570Z [ERROR]: [CheckoutService] Erro no checkout VwwQIPI88vUojltugwBI: Request failed with status code 400
+2026-04-15T21:00:07.381Z [ERROR]: [BB] Erro ao consultar boleto 00037412306276238681: Request failed with status code 400
+2026-04-15T21:00:07.382Z [ERROR]: [BB] Detalhe: {"errors":[{"code":"4678420.1","message":"Campo nosso número preenchido com dados inválidos.","action":"Ajuste o campo e tente novamente."}]}
+2026-04-15T21:00:07.382Z [ERROR]: [CheckoutService] Erro no checkout qKG35pIc2NP6aeI35Cj8: Request failed with status code 400
+2026-04-15T21:00:08.524Z [ERROR]: [BB] Erro ao consultar boleto 00037412306284852192: Request failed with status code 400
+2026-04-15T21:00:08.524Z [ERROR]: [BB] Detalhe: {"errors":[{"code":"4678420.1","message":"Campo nosso número preenchido com dados inválidos.","action":"Ajuste o campo e tente novamente."}]}
+2026-04-15T21:00:08.524Z [ERROR]: [CheckoutService] Erro no checkout tpICYCjIDvY6BrW5qTsL: Request failed with status code 400
+2026-04-15T21:00:08.525Z [INFO]: [CheckoutService] Verificação concluída
+2026-04-15T21:09:47.404Z [INFO]: [AudienceService] Audiência AsLZzgZATiwMu8G7w4nK deletada
+2026-04-15T21:09:52.863Z [INFO]: [AudienceService] Audiência 0ZuhIsqbdOD8yNWrzrzB atualizada
+2026-04-15T21:10:03.481Z [INFO]: [AudienceService] Audiência 0ZuhIsqbdOD8yNWrzrzB atualizada
+2026-04-15T21:10:14.464Z [INFO]: [CheckoutService] Verificando pagamentos pendentes...
+2026-04-15T21:10:14.641Z [INFO]: [CheckoutService] 4 checkout(s) pendente(s)
+2026-04-15T21:10:17.704Z [ERROR]: [BB] Erro ao consultar boleto 00037412306285470464: Request failed with status code 400
+2026-04-15T21:10:17.705Z [ERROR]: [BB] Detalhe: {"errors":[{"code":"4678420.1","message":"Campo nosso número preenchido com dados inválidos.","action":"Ajuste o campo e tente novamente."}]}
+2026-04-15T21:10:17.705Z [ERROR]: [CheckoutService] Erro no checkout HCvQhdFhH7WQrTk6rkr6: Request failed with status code 400
+2026-04-15T21:10:18.802Z [ERROR]: [BB] Erro ao consultar boleto 00037412306284678665: Request failed with status code 400
+2026-04-15T21:10:18.802Z [ERROR]: [BB] Detalhe: {"errors":[{"code":"4678420.1","message":"Campo nosso número preenchido com dados inválidos.","action":"Ajuste o campo e tente novamente."}]}
+2026-04-15T21:10:18.802Z [ERROR]: [CheckoutService] Erro no checkout VwwQIPI88vUojltugwBI: Request failed with status code 400
+2026-04-15T21:10:19.908Z [ERROR]: [BB] Erro ao consultar boleto 00037412306276238681: Request failed with status code 400
+2026-04-15T21:10:19.908Z [ERROR]: [BB] Detalhe: {"errors":[{"code":"4678420.1","message":"Campo nosso número preenchido com dados inválidos.","action":"Ajuste o campo e tente novamente."}]}
+2026-04-15T21:10:19.909Z [ERROR]: [CheckoutService] Erro no checkout qKG35pIc2NP6aeI35Cj8: Request failed with status code 400
+2026-04-15T21:10:20.960Z [ERROR]: [BB] Erro ao consultar boleto 00037412306284852192: Request failed with status code 400
+2026-04-15T21:10:20.962Z [ERROR]: [BB] Detalhe: {"errors":[{"code":"4678420.1","message":"Campo nosso número preenchido com dados inválidos.","action":"Ajuste o campo e tente novamente."}]}
+2026-04-15T21:10:20.962Z [ERROR]: [CheckoutService] Erro no checkout tpICYCjIDvY6BrW5qTsL: Request failed with status code 400
+2026-04-15T21:10:20.962Z [INFO]: [CheckoutService] Verificação concluída
+2026-04-15T21:10:36.798Z [INFO]: [AudienceService] Audiência 0ZuhIsqbdOD8yNWrzrzB atualizada
