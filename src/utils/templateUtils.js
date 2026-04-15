@@ -23,11 +23,22 @@ async function launchBrowser() {
     "--disable-gpu",
   ];
 
+  // 1. Caminho explícito via env var (opcional no Render)
   const executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
   if (executablePath) {
     return puppeteer.launch({ headless: true, executablePath, args });
   }
 
+  // 2. Chromium instalado pelo próprio puppeteer (npx puppeteer browsers install chrome)
+  //    puppeteer.executablePath() resolve o caminho correto independente do SO / versão
+  try {
+    const builtinPath = puppeteer.executablePath();
+    if (builtinPath) {
+      return puppeteer.launch({ headless: true, executablePath: builtinPath, args });
+    }
+  } catch (_) { /* ignora se executablePath() não estiver disponível */ }
+
+  // 3. Fallback: deixa o puppeteer descobrir sozinho
   return puppeteer.launch({ headless: true, args });
 }
 

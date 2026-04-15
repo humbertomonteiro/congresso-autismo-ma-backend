@@ -30698,3 +30698,4 @@
 2026-04-15T01:11:13.526Z [INFO]: [CheckoutRepository] Participante aQvRxhxIg1cB7KfCzJ6h atualizado
 2026-04-15T01:11:13.604Z [INFO]: [CredentialService] QR Token gerado para participante aQvRxhxIg1cB7KfCzJ6h
 2026-04-15T01:11:13.604Z [INFO]: [BB] Boleto criado — checkout: JnqZLhZWxBTANVF5oOz0, numero: 00031285576215443043
+2026-04-15T01:14:51.582Z [INFO]: [CheckoutRepository] Checkout JnqZLhZWxBTANVF5oOz0 atualizado
