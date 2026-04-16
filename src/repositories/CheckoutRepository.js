@@ -24,6 +24,7 @@ class CheckoutRepository {
   async saveCheckout(checkoutData) {
     const ref = db.collection("checkouts").doc();
     await ref.set({
+      isCourtesy: false, // default; sobrescrito pelo caller quando for cortesia
       ...checkoutData,
       timestamp: admin.firestore.FieldValue.serverTimestamp(),
       createdAt: admin.firestore.FieldValue.serverTimestamp(),

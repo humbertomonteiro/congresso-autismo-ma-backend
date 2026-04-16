@@ -296,7 +296,10 @@ const createManualCheckout = async (req, res) => {
     const CredentialService = require("../services/CredentialService");
     const CampaignService = require("../services/CampaignService");
 
-    const checkoutId = await CheckoutRepository.saveCheckout({ ...checkoutData, status });
+    const isCourtesy = checkoutData.paymentDetails?.courtesy === true ||
+      checkoutData.paymentDetails?.paymentMethod === "courtesy";
+
+    const checkoutId = await CheckoutRepository.saveCheckout({ ...checkoutData, status, isCourtesy });
 
     const allTickets = checkoutData.orderDetails?.allTickets ?? 0;
     const halfTickets = checkoutData.orderDetails?.halfTickets ?? 0;

@@ -109,13 +109,19 @@ class AudienceService {
     }
 
     // participantEmailSent: true → só quem JÁ recebeu; false → só quem NÃO recebeu
-    if (filters.participantEmailSent !== undefined && filters.participantEmailSent !== null) {
+    if (
+      filters.participantEmailSent !== undefined &&
+      filters.participantEmailSent !== null
+    ) {
       const emailSent = participant.emailSent === true;
       if (filters.participantEmailSent !== emailSent) return false;
     }
 
     // participantCheckedIn: true → só quem JÁ fez check-in; false → quem NÃO fez
-    if (filters.participantCheckedIn !== undefined && filters.participantCheckedIn !== null) {
+    if (
+      filters.participantCheckedIn !== undefined &&
+      filters.participantCheckedIn !== null
+    ) {
       const checkedIn = participant.checkedIn === true;
       if (filters.participantCheckedIn !== checkedIn) return false;
     }
@@ -138,12 +144,18 @@ class AudienceService {
     }
 
     // emailSent pode ser consultado direto no Firestore
-    if (filters.participantEmailSent !== undefined && filters.participantEmailSent !== null) {
+    if (
+      filters.participantEmailSent !== undefined &&
+      filters.participantEmailSent !== null
+    ) {
       q = q.where("emailSent", "==", filters.participantEmailSent === true);
     }
 
     // checkedIn pode ser consultado direto no Firestore
-    if (filters.participantCheckedIn !== undefined && filters.participantCheckedIn !== null) {
+    if (
+      filters.participantCheckedIn !== undefined &&
+      filters.participantCheckedIn !== null
+    ) {
       q = q.where("checkedIn", "==", filters.participantCheckedIn === true);
     }
 
@@ -169,10 +181,6 @@ class AudienceService {
     if (filters.paymentMethod) {
       query = query.where("paymentMethod", "==", filters.paymentMethod);
     }
-    if (filters.excludeCourtesy) {
-      query = query.where("isCourtesy", "!=", true);
-    }
-
     const checkoutsSnap = await query.get();
     let count = 0;
 
@@ -180,6 +188,10 @@ class AudienceService {
       const checkout = { id: checkoutDoc.id, ...checkoutDoc.data() };
 
       // Filtros que o Firestore não resolve nativamente
+      // excludeCourtesy é feito em memória pois "!= true" no Firestore exclui
+      // documentos que não possuem o campo, zerando resultados incorretamente.
+      if (filters.excludeCourtesy && checkout.isCourtesy === true) continue;
+
       if (filters.coupon !== undefined && filters.coupon !== null) {
         const checkoutCoupon = checkout.orderDetails?.coupon || "";
         if (filters.coupon !== checkoutCoupon) continue;
@@ -190,7 +202,10 @@ class AudienceService {
       }
 
       // Busca participantes com filtros do Firestore
-      const participantsQuery = this._buildParticipantQuery(checkoutDoc.ref, filters);
+      const participantsQuery = this._buildParticipantQuery(
+        checkoutDoc.ref,
+        filters
+      );
       const participantsSnap = await participantsQuery.get();
 
       // Filtros de participante que o Firestore não resolve (checkedInDate)
@@ -222,13 +237,13 @@ class AudienceService {
       query = query.where("eventName", "==", filters.eventName);
     if (filters.paymentMethod)
       query = query.where("paymentMethod", "==", filters.paymentMethod);
-    if (filters.excludeCourtesy)
-      query = query.where("isCourtesy", "!=", true);
 
     const checkoutsSnap = await query.get();
 
     for (const checkoutDoc of checkoutsSnap.docs) {
       const checkout = { id: checkoutDoc.id, ...checkoutDoc.data() };
+
+      if (filters.excludeCourtesy && checkout.isCourtesy === true) continue;
 
       if (filters.coupon !== undefined && filters.coupon !== null) {
         if ((checkout.orderDetails?.coupon || "") !== filters.coupon) continue;
@@ -242,7 +257,10 @@ class AudienceService {
           continue;
       }
 
-      const participantsQuery = this._buildParticipantQuery(checkoutDoc.ref, filters);
+      const participantsQuery = this._buildParticipantQuery(
+        checkoutDoc.ref,
+        filters
+      );
       const participantsSnap = await participantsQuery.get();
 
       for (const pDoc of participantsSnap.docs) {
