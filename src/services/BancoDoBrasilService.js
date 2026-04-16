@@ -57,6 +57,7 @@ class BancoDoBrasilService {
   constructor() {
     this.authBaseUrl = config.bancoDoBrasil.authBaseUrl;
     this.apiBaseUrl = config.bancoDoBrasil.baseUrl;
+    this.pixBaseUrl = config.bancoDoBrasil.pixBaseUrl;
     this.agent = new https.Agent({ rejectUnauthorized: false });
   }
 
@@ -80,6 +81,29 @@ class BancoDoBrasilService {
       new URLSearchParams({
         grant_type: "client_credentials",
         scope: "cobrancas.boletos-info cobrancas.boletos-requisicao",
+      }),
+      {
+        headers: {
+          Authorization: `Basic ${auth}`,
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        httpsAgent: this.agent,
+      }
+    );
+    return response.data.access_token;
+  }
+
+  // Token específico para a API PIX (scopes diferentes dos do boleto)
+  async getPixAccessToken() {
+    const auth = Buffer.from(
+      `${config.bancoDoBrasil.clientId}:${config.bancoDoBrasil.clientSecret}`
+    ).toString("base64");
+
+    const response = await axios.post(
+      `${this.authBaseUrl}/oauth/token`,
+      new URLSearchParams({
+        grant_type: "client_credentials",
+        scope: "cob.write cob.read",
       }),
       {
         headers: {
@@ -292,22 +316,29 @@ class BancoDoBrasilService {
     const ticketQuantity = allTickets + halfTickets + socialTickets;
     const { prices, eventName: EVENT_NAME } = await getEventFirestoreConfig();
     const { full: ALL_TICKET_VALUE, half: HALF_TICKET_VALUE, social: SOCIAL_TICKET_VALUE } = prices;
-    const token = await this.getAccessToken();
-    const pixEndpoint = `${this.apiBaseUrl}/pix/v2/cob?gw-dev-app-key=${config.bancoDoBrasil.developerApiKey}`;
+    const token = await this.getPixAccessToken();
+    const pixEndpoint = `${this.pixBaseUrl}/cob?gw-dev-app-key=${config.bancoDoBrasil.developerApiKey}`;
 
     const payer = participants[0];
     const cleanIdentity = payer.document.replace(/\D/g, "");
+    const isCnpj = cleanIdentity.length === 14;
+
+    const pixKey = config.bancoDoBrasil.pixKey;
+    if (!pixKey) {
+      throw new Error(
+        "Chave PIX não configurada. Defina BB_PIX_KEY_PRODUCTION ou BB_PIX_KEY_SANDBOX no .env."
+      );
+    }
 
     const payload = {
       calendario: { expiracao: 3600 },
-      devedor: {
-        cpf: cleanIdentity,
-        nome: payer.name,
-      },
+      devedor: isCnpj
+        ? { cnpj: cleanIdentity, nome: payer.name }
+        : { cpf: cleanIdentity, nome: payer.name },
       valor: {
         original: (amount / 100).toFixed(2),
       },
-      chave: config.bancoDoBrasil.pixKey,
+      chave: pixKey,
       solicitacaoPagador: `Pagamento ${EVENT_NAME}`,
       infoAdicionais: [{ nome: "Evento", valor: EVENT_NAME }],
     };
@@ -420,8 +451,8 @@ class BancoDoBrasilService {
   }
 
   async getPixStatus(txId) {
-    const token = await this.getAccessToken();
-    const endpoint = `${this.apiBaseUrl}/pix/v2/cob/${txId}?gw-dev-app-key=${config.bancoDoBrasil.developerApiKey}`;
+    const token = await this.getPixAccessToken();
+    const endpoint = `${this.pixBaseUrl}/cob/${txId}?gw-dev-app-key=${config.bancoDoBrasil.developerApiKey}`;
 
     const response = await axios.get(endpoint, {
       headers: {

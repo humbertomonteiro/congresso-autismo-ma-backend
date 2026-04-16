@@ -5,7 +5,7 @@ const CONFIG_DOC = db.doc("config/eventConfig");
 const AUDIT_COL = db.collection("eventConfigAudit");
 
 // ── Validação ──────────────────────────────────────────────────────────────────
-function validateEventConfig({ eventName, eventDates, ticketPrices }) {
+function validateEventConfig({ eventName, eventDates, ticketPrices, ticketBatches }) {
   const errors = [];
 
   if (!eventName || !eventName.trim()) {
@@ -51,6 +51,22 @@ function validateEventConfig({ eventName, eventDates, ticketPrices }) {
     }
   }
 
+  if (ticketBatches !== undefined) {
+    for (const key of ["full", "half", "social"]) {
+      const batch = (ticketBatches || {})[key];
+      if (batch !== undefined) {
+        if (batch.label !== undefined && typeof batch.label !== "string")
+          errors.push(`ticketBatches.${key}.label deve ser uma string.`);
+        if (batch.label !== undefined && batch.label.length > 60)
+          errors.push(`ticketBatches.${key}.label deve ter no máximo 60 caracteres.`);
+        if (batch.availableUntil !== undefined && typeof batch.availableUntil !== "string")
+          errors.push(`ticketBatches.${key}.availableUntil deve ser uma string.`);
+        if (batch.availableUntil !== undefined && batch.availableUntil.length > 80)
+          errors.push(`ticketBatches.${key}.availableUntil deve ter no máximo 80 caracteres.`);
+      }
+    }
+  }
+
   return errors;
 }
 
@@ -74,9 +90,9 @@ const getEventConfig = async (req, res) => {
 // ── PUT /api/config/event (requer verifyToken + requireAdm) ──────────────────
 const updateEventConfig = async (req, res) => {
   try {
-    const { eventName, eventDates, ticketPrices } = req.body;
+    const { eventName, eventDates, ticketPrices, ticketBatches } = req.body;
 
-    const errors = validateEventConfig({ eventName, eventDates, ticketPrices });
+    const errors = validateEventConfig({ eventName, eventDates, ticketPrices, ticketBatches });
     if (errors.length > 0) {
       return res
         .status(400)
@@ -96,6 +112,11 @@ const updateEventConfig = async (req, res) => {
         social: parseFloat(
           parseFloat(ticketPrices?.social ?? 199.9).toFixed(2)
         ),
+      },
+      ticketBatches: {
+        full:   { label: (ticketBatches?.full?.label   ?? "2° Lote").trim(), availableUntil: (ticketBatches?.full?.availableUntil   ?? "").trim() },
+        half:   { label: (ticketBatches?.half?.label   ?? "2° Lote").trim(), availableUntil: (ticketBatches?.half?.availableUntil   ?? "").trim() },
+        social: { label: (ticketBatches?.social?.label ?? "2° Lote").trim(), availableUntil: (ticketBatches?.social?.availableUntil ?? "").trim() },
       },
       updatedAt: admin.firestore.FieldValue.serverTimestamp(),
       updatedBy: req.user.email || req.user.uid,

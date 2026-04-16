@@ -6,6 +6,7 @@
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
     "postinstall": "npx puppeteer browsers install chrome",
+    "test-pix-sandbox": "node testPixSandbox.js",
     "test-email-auto": "node testAutomaticEmails.js",
     "export-event": "node exportEventData.js",
     "export-event:2025": "node exportEventData.js \"Congresso Autismo MA 2025\""

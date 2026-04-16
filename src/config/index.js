@@ -78,6 +78,9 @@ const bancoDoBrasilConfig = {
   baseUrl: isProduction
     ? "https://api.bb.com.br/cobrancas/v2"
     : "https://api.hm.bb.com.br/cobrancas/v2",
+  pixBaseUrl: isProduction
+    ? "https://api.bb.com.br/pix/v2"
+    : "https://api.hm.bb.com.br/pix/v2",
   authBaseUrl: isProduction
     ? "https://oauth.bb.com.br"
     : "https://oauth.sandbox.bb.com.br",

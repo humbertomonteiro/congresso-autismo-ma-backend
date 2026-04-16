@@ -1,11 +1,11 @@
-const { firebase } = require('../config');
-const CouponService = require('../services/CouponService');
-const logger = require('../logger');
+const { firebase } = require("../config");
+const CouponService = require("../services/CouponService");
+const logger = require("../logger");
 
-const CONFIG_DOC = firebase.db.doc('config/eventConfig');
+const CONFIG_DOC = firebase.db.doc("config/eventConfig");
 
 // Fallback prices if Firestore config is unavailable
-const DEFAULT_PRICES = { full: 499.9, half: 399.9, social: 199.9 };
+const DEFAULT_PRICES = { full: 798, half: 399, social: 479.28 };
 
 async function getTicketPrices() {
   try {
@@ -13,13 +13,16 @@ async function getTicketPrices() {
     if (snap.exists) {
       const prices = snap.data().ticketPrices || {};
       return {
-        full:   prices.full   ?? DEFAULT_PRICES.full,
-        half:   prices.half   ?? DEFAULT_PRICES.half,
+        full: prices.full ?? DEFAULT_PRICES.full,
+        half: prices.half ?? DEFAULT_PRICES.half,
         social: prices.social ?? DEFAULT_PRICES.social,
       };
     }
   } catch (err) {
-    logger.warn('[calculateTotal] Falha ao ler preços do Firestore, usando defaults:', err.message);
+    logger.warn(
+      "[calculateTotal] Falha ao ler preços do Firestore, usando defaults:",
+      err.message
+    );
   }
   return DEFAULT_PRICES;
 }
@@ -34,26 +37,35 @@ async function getTicketPrices() {
  * @param {string} coupon — código do cupom (opcional)
  * @returns {Promise<object>}
  */
-const calculateTotal = async (allTickets, halfTickets, socialTickets, coupon) => {
+const calculateTotal = async (
+  allTickets,
+  halfTickets,
+  socialTickets,
+  coupon
+) => {
   const ticketQuantity = allTickets + halfTickets + socialTickets;
-  if (ticketQuantity <= 0) throw new Error('Selecione ao menos 1 ingresso.');
+  if (ticketQuantity <= 0) throw new Error("Selecione ao menos 1 ingresso.");
 
   const prices = await getTicketPrices();
 
-  const valueTicketsAll    = allTickets    * prices.full;
-  const valueTicketsHalf   = halfTickets   * prices.half;
+  const valueTicketsAll = allTickets * prices.full;
+  const valueTicketsHalf = halfTickets * prices.half;
   const valueTicketsSocial = socialTickets * prices.social;
 
   let discount = 0;
 
   if (coupon && coupon.trim()) {
     const result = await CouponService.validateAndCalculate(
-      coupon, allTickets, halfTickets, socialTickets
+      coupon,
+      allTickets,
+      halfTickets,
+      socialTickets
     );
     discount = result.discount;
   }
 
-  const total = valueTicketsAll + valueTicketsHalf + valueTicketsSocial - discount;
+  const total =
+    valueTicketsAll + valueTicketsHalf + valueTicketsSocial - discount;
 
   return {
     allTickets,

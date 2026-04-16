@@ -96,8 +96,10 @@ const processPixPayment = async (req, res) => {
       }
     );
   } catch (error) {
-    console.error("Erro ao processar Pix:", error.message);
-    res.sendResponse(500, false, "Erro ao gerar Pix", null, error.message);
+    const bbDetail = error.response?.data?.detail || error.response?.data?.message;
+    const userMessage = bbDetail || error.message;
+    console.error("Erro ao processar Pix:", userMessage);
+    res.sendResponse(500, false, "Erro ao gerar Pix", null, userMessage);
   }
 };
 
