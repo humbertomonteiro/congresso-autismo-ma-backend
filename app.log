@@ -36823,3 +36823,5 @@
 2026-04-16T21:20:19.514Z [ERROR]: [BB] Resposta: {"type":"https://api.hm.bb.com.br/pix/v2/error/OperacaoInvalida","title":"Bad Request","status":400,"detail":"A chave Pix informada não foi localizada.","correlationId":"API-BB-838b5026-9606-454b-bdb7-a375064a9cd8","numeroOcorrencia":0,"code":"305","msgCorrelationId":"000000000000000000442385","userHelp":"Verifique se a chave está correta e tente novamente."}
 2026-04-16T21:20:21.967Z [ERROR]: [BB] Tentativa 3 falhou: Request failed with status code 400
 2026-04-16T21:20:21.969Z [ERROR]: [BB] Resposta: {"type":"https://api.hm.bb.com.br/pix/v2/error/OperacaoInvalida","title":"Bad Request","status":400,"detail":"A chave Pix informada não foi localizada.","correlationId":"API-BB-3816381f-0dbe-4419-9dd3-7049d9d43358","numeroOcorrencia":0,"code":"305","msgCorrelationId":"000000000000000000428408","userHelp":"Verifique se a chave está correta e tente novamente."}
+2026-04-16T21:37:55.236Z [INFO]: [CheckoutRepository] 1 participante(s) salvos em zfazE6SSx3xZDmUe9dj9
+2026-04-16T21:37:55.238Z [INFO]: [BB] PIX criado — checkout: zfazE6SSx3xZDmUe9dj9, txId: 2qqM3IWASFzKDXU6AeicNaxemZxIXHk7KOd
