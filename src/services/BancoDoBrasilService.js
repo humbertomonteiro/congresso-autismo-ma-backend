@@ -20,14 +20,16 @@ async function getEventFirestoreConfig() {
       const p = data.ticketPrices || {};
       return {
         prices: {
-          full:   p.full   ?? DEFAULT_PRICES.full,
-          half:   p.half   ?? DEFAULT_PRICES.half,
+          full: p.full ?? DEFAULT_PRICES.full,
+          half: p.half ?? DEFAULT_PRICES.half,
           social: p.social ?? DEFAULT_PRICES.social,
         },
         eventName: data.eventName || DEFAULT_EVENT_NAME,
       };
     }
-  } catch (_) { /* fall through */ }
+  } catch (_) {
+    /* fall through */
+  }
   return { prices: DEFAULT_PRICES, eventName: DEFAULT_EVENT_NAME };
 }
 
@@ -148,14 +150,18 @@ class BancoDoBrasilService {
   ) {
     const ticketQuantity = allTickets + halfTickets + socialTickets;
     const { prices, eventName: EVENT_NAME } = await getEventFirestoreConfig();
-    const { full: ALL_TICKET_VALUE, half: HALF_TICKET_VALUE, social: SOCIAL_TICKET_VALUE } = prices;
+    const {
+      full: ALL_TICKET_VALUE,
+      half: HALF_TICKET_VALUE,
+      social: SOCIAL_TICKET_VALUE,
+    } = prices;
     const token = await this.getAccessToken();
     const boletoEndpoint = `${this.apiBaseUrl}/boletos?gw-dev-app-key=${config.bancoDoBrasil.developerApiKey}`;
 
     const now = toZonedTime(new Date(), "America/Sao_Paulo");
     const hour = now.getHours();
     // Após 21h o BB não aceita boleto para o mesmo dia — vence amanhã
-    const dataVencimentoDate = hour >= 21 ? addDays(now, 1) : now;
+    const dataVencimentoDate = hour >= 21 ? addDays(now, 2) : now;
     const dataVencimento = this.formatDate(dataVencimentoDate);
     const dataEmissao = this.formatDate(now);
 
@@ -187,7 +193,7 @@ class BancoDoBrasilService {
       desconto: { tipo: 0 },
       jurosMora: { tipo: 1, valor: 1.0, porcentagem: 0 },
       multa: { tipo: 0, dados: "", porcentagem: 0, valor: 0 },
-      protesto: { tipo: 0 },   // sem protesto / sem cartório
+      protesto: { tipo: 0 }, // sem protesto / sem cartório
       pagador: {
         tipoInscricao,
         numeroInscricao: cleanIdentity,
@@ -315,7 +321,11 @@ class BancoDoBrasilService {
   ) {
     const ticketQuantity = allTickets + halfTickets + socialTickets;
     const { prices, eventName: EVENT_NAME } = await getEventFirestoreConfig();
-    const { full: ALL_TICKET_VALUE, half: HALF_TICKET_VALUE, social: SOCIAL_TICKET_VALUE } = prices;
+    const {
+      full: ALL_TICKET_VALUE,
+      half: HALF_TICKET_VALUE,
+      social: SOCIAL_TICKET_VALUE,
+    } = prices;
     const token = await this.getPixAccessToken();
     const pixEndpoint = `${this.pixBaseUrl}/cob?gw-dev-app-key=${config.bancoDoBrasil.developerApiKey}`;
 

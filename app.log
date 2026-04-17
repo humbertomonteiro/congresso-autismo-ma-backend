@@ -36825,3 +36825,10 @@
 2026-04-16T21:20:21.969Z [ERROR]: [BB] Resposta: {"type":"https://api.hm.bb.com.br/pix/v2/error/OperacaoInvalida","title":"Bad Request","status":400,"detail":"A chave Pix informada não foi localizada.","correlationId":"API-BB-3816381f-0dbe-4419-9dd3-7049d9d43358","numeroOcorrencia":0,"code":"305","msgCorrelationId":"000000000000000000428408","userHelp":"Verifique se a chave está correta e tente novamente."}
 2026-04-16T21:37:55.236Z [INFO]: [CheckoutRepository] 1 participante(s) salvos em zfazE6SSx3xZDmUe9dj9
 2026-04-16T21:37:55.238Z [INFO]: [BB] PIX criado — checkout: zfazE6SSx3xZDmUe9dj9, txId: 2qqM3IWASFzKDXU6AeicNaxemZxIXHk7KOd
+2026-04-16T22:01:14.307Z [INFO]: [CheckoutRepository] 1 participante(s) salvos em T5ULuFUopuWO7ECjQjyc
+2026-04-16T22:01:14.309Z [INFO]: [BB] PIX criado — checkout: T5ULuFUopuWO7ECjQjyc, txId: 6cfaCZMQdf18hOZTCPy2ygiEuvbstd1KNu8
+2026-04-16T22:19:25.010Z [WARN]: [BB] PDF do boleto não gerado (checkout QABDdUwWEswgNXiqoeIr salvo): Browser was not found at the configured executablePath (D:\humberto\projetos_react\landing-pages\cuidar-mais\backend\.cache\puppeteer\chrome\win64-134.0.6998.35\chrome-win64\chrome.exe)
+2026-04-16T22:19:25.120Z [INFO]: [CheckoutRepository] 1 participante(s) salvos em QABDdUwWEswgNXiqoeIr
+2026-04-16T22:19:25.355Z [INFO]: [CheckoutRepository] Participante NFdtuKRm5W6CaWK5MD2j atualizado
+2026-04-16T22:19:25.468Z [INFO]: [CredentialService] QR Token gerado para participante NFdtuKRm5W6CaWK5MD2j
+2026-04-16T22:19:25.469Z [INFO]: [BB] Boleto criado — checkout: QABDdUwWEswgNXiqoeIr, numero: 00031285576377959782
