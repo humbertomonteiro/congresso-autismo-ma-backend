@@ -161,7 +161,7 @@ class BancoDoBrasilService {
     const now = toZonedTime(new Date(), "America/Sao_Paulo");
     const hour = now.getHours();
     // Após 21h o BB não aceita boleto para o mesmo dia — vence amanhã
-    const dataVencimentoDate = hour >= 21 ? addDays(now, 2) : now;
+    const dataVencimentoDate = hour >= 21 ? addDays(now, 4) : addDays(now, 3);
     const dataVencimento = this.formatDate(dataVencimentoDate);
     const dataEmissao = this.formatDate(now);
 
