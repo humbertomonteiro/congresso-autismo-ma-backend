@@ -57,6 +57,12 @@ class CieloService {
     let creditResponse;
     const normalizedBrand = normalizeBrand(creditCardData.brand);
 
+    // Converte MM/AA → MM/YYYY para a API Cielo
+    const rawMaturity = creditCardData.maturity || "";
+    const expirationDate = /^\d{2}\/\d{2}$/.test(rawMaturity)
+      ? `${rawMaturity.slice(0, 3)}20${rawMaturity.slice(3)}`
+      : rawMaturity;
+
     const paymentData = {
       MerchantOrderId: `ORDER_${Date.now()}`,
       Customer: {
@@ -73,7 +79,7 @@ class CieloService {
         CreditCard: {
           CardNumber: creditCardData.cardNumber.replace(/\s/g, ""),
           Holder: creditCardData.cardName,
-          ExpirationDate: creditCardData.maturity,
+          ExpirationDate: expirationDate,
           SecurityCode: creditCardData.cardCode,
           Brand: normalizedBrand,
         },

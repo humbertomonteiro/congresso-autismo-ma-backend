@@ -36832,3 +36832,61 @@
 2026-04-16T22:19:25.355Z [INFO]: [CheckoutRepository] Participante NFdtuKRm5W6CaWK5MD2j atualizado
 2026-04-16T22:19:25.468Z [INFO]: [CredentialService] QR Token gerado para participante NFdtuKRm5W6CaWK5MD2j
 2026-04-16T22:19:25.469Z [INFO]: [BB] Boleto criado — checkout: QABDdUwWEswgNXiqoeIr, numero: 00031285576377959782
+2026-04-17T11:55:20.922Z [WARN]: [BB] PDF do boleto não gerado (checkout No2MMtLMLuaxuUyeZRSa salvo): Browser was not found at the configured executablePath (D:\humberto\projetos_react\landing-pages\cuidar-mais\backend\.cache\puppeteer\chrome\win64-134.0.6998.35\chrome-win64\chrome.exe)
+2026-04-17T11:55:21.038Z [INFO]: [CheckoutRepository] 1 participante(s) salvos em No2MMtLMLuaxuUyeZRSa
+2026-04-17T11:55:21.263Z [INFO]: [CheckoutRepository] Participante 9o9rCbJ1AbaObeXdZjMP atualizado
+2026-04-17T11:55:21.363Z [INFO]: [CredentialService] QR Token gerado para participante 9o9rCbJ1AbaObeXdZjMP
+2026-04-17T11:55:21.365Z [INFO]: [BB] Boleto criado — checkout: No2MMtLMLuaxuUyeZRSa, numero: 00031285576426914689
+2026-04-17T15:00:01.121Z [INFO]: [CheckoutService] Verificando pagamentos pendentes...
+2026-04-17T15:00:01.707Z [INFO]: [CheckoutService] 3 checkout(s) pendente(s)
+2026-04-17T15:00:05.600Z [ERROR]: [BB] Erro ao consultar boleto 00037412306429632310: Request failed with status code 400
+2026-04-17T15:00:05.601Z [ERROR]: [BB] Detalhe: {"errors":[{"code":"4678420.1","message":"Campo nosso número preenchido com dados inválidos.","action":"Ajuste o campo e tente novamente."}]}
+2026-04-17T15:00:05.601Z [ERROR]: [CheckoutService] Erro no checkout JMrxpKZF7vMsASUBMWid: Request failed with status code 400
+2026-04-17T15:00:06.527Z [INFO]: [BB] Boleto 00031285576426914689 — codigoEstado: 1 → status: pending (HUMBERTO MONTEIRO)
+2026-04-17T15:00:06.528Z [INFO]: [CheckoutService] Checkout No2MMtLMLuaxuUyeZRSa (boleto): pending
+2026-04-17T15:00:06.706Z [INFO]: [CheckoutRepository] Checkout No2MMtLMLuaxuUyeZRSa atualizado
+2026-04-17T15:00:06.707Z [INFO]: [CheckoutRepository] Checkout No2MMtLMLuaxuUyeZRSa → status: pending
+2026-04-17T15:00:07.827Z [ERROR]: [BB] Erro ao consultar boleto 00037412306426706914: Request failed with status code 400
+2026-04-17T15:00:07.828Z [ERROR]: [BB] Detalhe: {"errors":[{"code":"4678420.1","message":"Campo nosso número preenchido com dados inválidos.","action":"Ajuste o campo e tente novamente."}]}
+2026-04-17T15:00:07.828Z [ERROR]: [CheckoutService] Erro no checkout Wqimy8CBrWNpkNsenka5: Request failed with status code 400
+2026-04-17T15:00:07.829Z [INFO]: [CheckoutService] Verificação concluída
+2026-04-17T21:00:01.154Z [INFO]: [CheckoutService] Verificando pagamentos pendentes...
+2026-04-17T21:00:02.480Z [INFO]: [CheckoutService] 3 checkout(s) pendente(s)
+2026-04-17T21:00:07.305Z [ERROR]: [BB] Erro ao consultar boleto 00037412306429632310: Request failed with status code 400
+2026-04-17T21:00:07.306Z [ERROR]: [BB] Detalhe: {"errors":[{"code":"4678420.1","message":"Campo nosso número preenchido com dados inválidos.","action":"Ajuste o campo e tente novamente."}]}
+2026-04-17T21:00:07.308Z [ERROR]: [CheckoutService] Erro no checkout JMrxpKZF7vMsASUBMWid: Request failed with status code 400
+2026-04-17T21:00:09.651Z [INFO]: [BB] Boleto 00031285576426914689 — codigoEstado: 1 → status: pending (HUMBERTO MONTEIRO)
+2026-04-17T21:00:09.653Z [INFO]: [CheckoutService] Checkout No2MMtLMLuaxuUyeZRSa (boleto): pending
+2026-04-17T21:00:09.881Z [INFO]: [CheckoutRepository] Checkout No2MMtLMLuaxuUyeZRSa atualizado
+2026-04-17T21:00:09.882Z [INFO]: [CheckoutRepository] Checkout No2MMtLMLuaxuUyeZRSa → status: pending
+2026-04-17T21:00:10.748Z [ERROR]: [BB] Erro ao consultar boleto 00037412306426706914: Request failed with status code 400
+2026-04-17T21:00:10.749Z [ERROR]: [BB] Detalhe: {"errors":[{"code":"4678420.1","message":"Campo nosso número preenchido com dados inválidos.","action":"Ajuste o campo e tente novamente."}]}
+2026-04-17T21:00:10.750Z [ERROR]: [CheckoutService] Erro no checkout Wqimy8CBrWNpkNsenka5: Request failed with status code 400
+2026-04-17T21:00:10.751Z [INFO]: [CheckoutService] Verificação concluída
+2026-04-18T09:00:01.887Z [INFO]: [CheckoutService] Verificando pagamentos pendentes...
+2026-04-18T09:00:02.967Z [INFO]: [CheckoutService] 0 checkout(s) pendente(s)
+2026-04-18T09:00:02.968Z [INFO]: [CheckoutService] Verificação concluída
+2026-04-18T11:26:41.237Z [INFO]: [CheckoutService] Verificando pagamentos pendentes...
+2026-04-18T11:26:42.555Z [INFO]: [CheckoutService] 0 checkout(s) pendente(s)
+2026-04-18T11:26:42.555Z [INFO]: [CheckoutService] Verificação concluída
+2026-04-18T11:37:23.753Z [INFO]: [CheckoutService] Verificando pagamentos pendentes...
+2026-04-18T11:37:24.588Z [INFO]: [CheckoutService] 0 checkout(s) pendente(s)
+2026-04-18T11:37:24.589Z [INFO]: [CheckoutService] Verificação concluída
+2026-04-18T11:41:39.005Z [INFO]: [CheckoutService] Verificando pagamentos pendentes...
+2026-04-18T11:41:39.107Z [INFO]: [CheckoutService] 0 checkout(s) pendente(s)
+2026-04-18T11:41:39.108Z [INFO]: [CheckoutService] Verificação concluída
+2026-04-18T11:44:07.055Z [INFO]: [CheckoutService] Verificando pagamentos pendentes...
+2026-04-18T11:44:07.159Z [INFO]: [CheckoutService] 0 checkout(s) pendente(s)
+2026-04-18T11:44:07.159Z [INFO]: [CheckoutService] Verificação concluída
+2026-04-20T12:19:24.649Z [INFO]: [CheckoutRepository] 1 participante(s) salvos em etSSUXJ1ht919hQGYH3U
+2026-04-20T12:19:24.850Z [INFO]: [CheckoutRepository] Participante o2cHqoFgZOcnx5y6E1bt atualizado
+2026-04-20T12:19:24.970Z [INFO]: [CredentialService] QR Token gerado para participante o2cHqoFgZOcnx5y6E1bt
+2026-04-20T12:19:26.300Z [INFO]: [EmailService] Email enviado para bertohf5@gmail.com — id: fbdd16e3-6347-4a4a-a521-fb8a3c39ac2d
+2026-04-20T12:19:26.403Z [INFO]: [CheckoutRepository] Participante o2cHqoFgZOcnx5y6E1bt atualizado
+2026-04-20T12:19:26.403Z [INFO]: [EmailService] Confirmação enviada para bertohf5@gmail.com
+2026-04-20T12:20:07.681Z [INFO]: [CheckoutService] Verificando pagamentos pendentes...
+2026-04-20T12:20:07.792Z [INFO]: [CheckoutService] 1 checkout(s) pendente(s)
+2026-04-20T12:20:09.647Z [ERROR]: [BB] Erro ao consultar boleto 00037412306685262608: Request failed with status code 400
+2026-04-20T12:20:09.650Z [ERROR]: [BB] Detalhe: {"errors":[{"code":"4678420.1","message":"Campo nosso número preenchido com dados inválidos.","action":"Ajuste o campo e tente novamente."}]}
+2026-04-20T12:20:09.651Z [ERROR]: [CheckoutService] Erro no checkout CQpRUE2wPAhvQ5hXKr0F: Request failed with status code 400
+2026-04-20T12:20:09.652Z [INFO]: [CheckoutService] Verificação concluída

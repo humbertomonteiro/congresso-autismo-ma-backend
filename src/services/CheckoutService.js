@@ -115,8 +115,8 @@ class CheckoutService {
     if (!/^\d{13,19}$/.test(cardNumber.replace(/\s/g, ""))) {
       throw new Error("Número do cartão inválido.");
     }
-    if (!/^\d{2}\/\d{4}$/.test(maturity)) {
-      throw new Error("Data de vencimento inválida (formato MM/AAAA).");
+    if (!/^\d{2}\/\d{2}$/.test(maturity)) {
+      throw new Error("Data de vencimento inválida (formato MM/AA).");
     }
     if (!/^\d{3,4}$/.test(cardCode)) {
       throw new Error("Código de segurança inválido.");
