@@ -278,6 +278,16 @@ class CredentialService {
         throw new Error("Participante sem QR Code gerado.");
       }
 
+      // Ingresso transferido — QR Code do titular antigo não é mais válido
+      if (participant.status === "transferred") {
+        return {
+          isValid: false,
+          transferred: true,
+          message: `Ingresso transferido para ${participant.transferredTo?.name || "outro participante"}. Este QR Code não é mais válido.`,
+          participant: { name: participant.name },
+        };
+      }
+
       // Verifica se já fez check-in hoje
       const checkedInDates = participant.checkedInDates || {};
       if (checkedInDates[date]) {

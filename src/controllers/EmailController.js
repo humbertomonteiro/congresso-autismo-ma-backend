@@ -44,6 +44,21 @@ const sendConfirmationEmail = async (req, res) => {
   }
 };
 
+// ── E-mail de transferência de ingresso ──────────────────────────────────
+
+const sendTransferEmail = async (req, res) => {
+  const { checkoutId, participantId } = req.body;
+  try {
+    if (!checkoutId || !participantId) {
+      throw new Error("checkoutId e participantId são obrigatórios.");
+    }
+    const result = await EmailService.sendTransferEmail({ checkoutId, participantId });
+    res.status(200).json({ success: true, data: result });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Erro ao enviar e-mail de transferência", error: error.message });
+  }
+};
+
 // ── Audiências ────────────────────────────────────────────────────────────
 
 const createAudience = async (req, res) => {
@@ -215,6 +230,7 @@ const getCampaignLogs = async (req, res) => {
 module.exports = {
   getEmailStats,
   sendConfirmationEmail,
+  sendTransferEmail,
   // Audiências
   createAudience,
   getAudiences,

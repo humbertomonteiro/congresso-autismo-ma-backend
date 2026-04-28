@@ -158,6 +158,49 @@ class EmailService {
     return { success: true, message: `Email enviado para ${participant.name}` };
   }
 
+  // ── E-mail de confirmação de transferência de ingresso ───────────────────
+
+  async sendTransferEmail({ checkoutId, participantId }) {
+    const participant = await CheckoutRepository.getParticipantById(checkoutId, participantId);
+
+    if (!participant.email) {
+      throw new Error("Novo participante sem e-mail cadastrado.");
+    }
+
+    // Gera o qrToken para o novo titular
+    const { qrToken } = await CredentialService.generateQRCodesForParticipant(
+      checkoutId,
+      participantId,
+      participant.name
+    );
+
+    const templatePath = path.join(__dirname, "../templates/emailTemplateTransfer.html");
+    let html = await fs.readFile(templatePath, "utf-8");
+
+    const ticketUrl = process.env.FRONTEND_URL
+      ? `${process.env.FRONTEND_URL}/ingressos`
+      : `https://congressoautismoma.com.br/ingressos`;
+
+    html = html
+      .replace(/{{nome}}/g, participant.name || "Participante")
+      .replace(/{{ticketUrl}}/g, ticketUrl);
+
+    await this.sendEmail({
+      to: participant.email,
+      subject: `Seu ingresso foi transferido — ${config.event.name}`,
+      html,
+    });
+
+    await CheckoutRepository.updateParticipant(checkoutId, participantId, {
+      qrToken,
+      emailSent: true,
+      emailSentAt: new Date().toISOString(),
+    });
+
+    logger.info(`[EmailService] E-mail de transferência enviado para ${participant.email}`);
+    return { success: true, message: `E-mail enviado para ${participant.name}` };
+  }
+
   // ── Envio em massa para todos os participantes de checkouts aprovados ─────
 
   async sendBulkEmailToCheckouts({

@@ -8,6 +8,9 @@ router.get("/stats", c.getEmailStats);
 // Email individual de confirmação
 router.post("/send-confirmation", c.sendConfirmationEmail);
 
+// Email de confirmação de transferência de ingresso
+router.post("/send-transfer-confirmation", c.sendTransferEmail);
+
 // Audiências
 router.post("/audiences", c.createAudience);
 router.get("/audiences", c.getAudiences);
