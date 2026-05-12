@@ -132,7 +132,14 @@ class BancoDoBrasilService {
         if (error.response) {
           logger.error(`[BB] Resposta: ${JSON.stringify(error.response.data)}`);
         }
-        if (attempt === retries) throw error;
+        if (attempt === retries) {
+          const bbErrors = error.response?.data?.erros;
+          if (bbErrors?.length > 0) {
+            const msg = bbErrors.map((e) => e.mensagem).filter(Boolean).join(" | ");
+            throw new Error(msg);
+          }
+          throw error;
+        }
         await new Promise((r) => setTimeout(r, delayMs * attempt));
       }
     }
