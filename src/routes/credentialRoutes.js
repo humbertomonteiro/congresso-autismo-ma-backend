@@ -9,5 +9,6 @@ router.post(
   credentialController.generateQRCodesForParticipant
 );
 router.post("/validate-qr-code", credentialController.validateQRCode);
+router.post("/regenerate-qr", credentialController.regenerateQRCode);
 
 module.exports = router;

@@ -11,6 +11,7 @@
 const path = require("path");
 const XLSX = require("xlsx");
 const CheckoutRepository = require("../../repositories/CheckoutRepository");
+const CredentialService = require("../../services/CredentialService");
 const { firebase } = require("../../config");
 
 const { db, admin } = firebase;
@@ -172,6 +173,15 @@ const writeCheckout = async (p) => {
   };
 
   const checkoutRef = db.collection("checkouts").doc(p.code);
+
+  // Delete existing participants before re-saving (idempotent re-runs)
+  const existingSnap = await checkoutRef.collection("participants").get();
+  if (!existingSnap.empty) {
+    const delBatch = db.batch();
+    existingSnap.docs.forEach((d) => delBatch.delete(d.ref));
+    await delBatch.commit();
+  }
+
   await checkoutRef.set({
     status: "approved",
     eventName: "Congresso Autismo MA 2026",
@@ -193,7 +203,7 @@ const writeCheckout = async (p) => {
     {
       name: p.name || "",
       phone: p.phone || "",
-      document: (p.cpf || "").replace(/\D/g, ""), // digits only — matches the search in /ingressos
+      document: (p.cpf || "").replace(/\D/g, ""), // digits only — matches search in /ingressos
       email: "",
       ticketType,
       emailSent: false,
@@ -219,7 +229,16 @@ const writeCheckout = async (p) => {
     });
   }
 
-  await CheckoutRepository.saveParticipants(p.code, participantsList);
+  const participantIds = await CheckoutRepository.saveParticipants(p.code, participantsList);
+
+  // Generate qrToken for each participant so /ingressos works immediately
+  for (let i = 0; i < participantIds.length; i++) {
+    await CredentialService.generateQRCodesForParticipant(
+      p.code,
+      participantIds[i],
+      participantsList[i].name || `Participante ${i + 1}`
+    );
+  }
 
   return participantsList.length;
 };
