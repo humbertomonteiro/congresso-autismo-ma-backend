@@ -4,13 +4,14 @@ class CertificateController {
   async generateCertificate(req, res) {
     try {
       //templateHTML: cientifica, monitoria, organizadora
-      const { cpf, name, templateHTML } = req.body;
+      const { cpf, name, templateHTML, eventName } = req.body;
 
       // Chama o service para gerar o PDF
       const { buffer, fileName } = await CertificateService.generateCertificate(
         cpf,
         name,
-        templateHTML
+        templateHTML,
+        eventName
       );
 
       // Configura os cabeçalhos da resposta

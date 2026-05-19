@@ -243,7 +243,7 @@ class CredentialService {
   }
 
   // Valida um QR Code escaneado no dia do evento
-  async validateQRCode(qrData) {
+  async validateQRCode(qrData, operator = null) {
     try {
       let parsedData;
       try {
@@ -311,6 +311,7 @@ class CredentialService {
         checkedIn: true,
         checkedInAt: updatedDates[date],
         checkedInDates: updatedDates,
+        ...(operator ? { checkedInBy: operator } : {}),
       });
 
       logger.info(

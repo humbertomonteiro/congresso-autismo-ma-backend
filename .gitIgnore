@@ -4,3 +4,4 @@ src/config/serviceAccount.json
 *.log
 *.stackdump
 .cache/
+backups/

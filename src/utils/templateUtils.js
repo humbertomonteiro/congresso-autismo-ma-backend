@@ -43,11 +43,43 @@ async function launchBrowser() {
 }
 
 const CONFIG_DOC = config.firebase.db.doc("config/eventConfig");
+const CERT_CONFIG_DOC = config.firebase.db.doc("config/certificateConfig");
 
 const DEFAULT_EVENT = {
   name: "CONGRESSO AUTISMO MA 2026",
   dates: ["2026-05-16", "2026-05-17"],
 };
+
+const FRONTEND_URL = "https://congressoautismoma.com.br";
+
+// Fallback URLs por template type (usados quando o Firestore não tem config)
+const FALLBACK_BACKGROUND_URLS = {
+  default:      `${FRONTEND_URL}/assets/certificate-k6vpepnP.png`,
+  cientifica:   `${FRONTEND_URL}/assets/certificate-cientifica-0WDywksV.png`,
+  monitoria:    `${FRONTEND_URL}/assets/certificate-monitoria-BBuHPPDa.png`,
+  organizadora: `${FRONTEND_URL}/assets/certificate-organizadora-CPpBqw_N.png`,
+};
+
+// Cache em memória do certificateConfig com TTL de 5 min
+let _certConfigCache = null;
+let _certConfigCachedAt = 0;
+
+async function getCertificateBackgroundUrl(eventName, templateType) {
+  const now = Date.now();
+  if (!_certConfigCache || now - _certConfigCachedAt > 5 * 60 * 1000) {
+    try {
+      const snap = await CERT_CONFIG_DOC.get();
+      _certConfigCache = snap.exists ? snap.data() : {};
+      _certConfigCachedAt = now;
+    } catch (_) {
+      _certConfigCache = {};
+    }
+  }
+
+  const type = templateType || "participante";
+  const url = _certConfigCache?.events?.[eventName]?.[type];
+  return url || FALLBACK_BACKGROUND_URLS[type] || `${FRONTEND_URL}/certificado-${type}.png`;
+}
 
 async function getEventConfig() {
   try {
@@ -246,25 +278,33 @@ const generateBoletoPDF = async (
   return pdfPath;
 };
 
-const generateCertificatePDF = async (cpf, name, templateHTML) => {
+const generateCertificatePDF = async (cpf, name, templateHTML, eventName) => {
   const tempDir = path.join(__dirname, "../temp");
   const pdfPath = path.join(tempDir, `certificate_${cpf}.pdf`);
 
   await fs.mkdir(tempDir, { recursive: true });
 
   if (!templateHTML) {
-    templateHTML = "default";
+    templateHTML = "participante";
   }
 
-  const templatePath = path.join(
+  const specificTemplate = path.join(
     __dirname,
     `../templates/certificateTemplate-${templateHTML}.html`
   );
+  const defaultTemplate = path.join(
+    __dirname,
+    "../templates/certificateTemplate-default.html"
+  );
+  const templatePath = await fs.access(specificTemplate).then(() => specificTemplate).catch(() => defaultTemplate);
   const htmlTemplate = await fs.readFile(templatePath, "utf8");
 
   const event = await getEventConfig();
+  const resolvedEventName = eventName || event.name;
+  const backgroundUrl = await getCertificateBackgroundUrl(resolvedEventName, templateHTML);
 
   const htmlContent = htmlTemplate
+    .replace(/{{BACKGROUND_IMAGE}}/g, backgroundUrl)
     .replace(/{{PARTICIPANT_NAME}}/g, name.toUpperCase())
     .replace(/{{EVENT_NAME}}/g, event.name)
     .replace(/{{ISSUE_DATE}}/g, formatDate(new Date()));

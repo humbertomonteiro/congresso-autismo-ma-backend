@@ -18,12 +18,12 @@ const generateQRCodesForParticipant = async (req, res) => {
 };
 
 const validateQRCode = async (req, res) => {
-  const { qrData } = req.body;
+  const { qrData, operator } = req.body;
 
   console.log("Dados recebidos no backend:", qrData);
 
   try {
-    const result = await CredentialService.validateQRCode(qrData);
+    const result = await CredentialService.validateQRCode(qrData, operator);
     res.sendResponse(200, true, "Validação concluída", result);
   } catch (error) {
     console.error("Erro ao validar QR Code:", error.message);
