@@ -34,9 +34,15 @@ async function launchBrowser() {
   try {
     const builtinPath = puppeteer.executablePath();
     if (builtinPath) {
-      return puppeteer.launch({ headless: true, executablePath: builtinPath, args });
+      return puppeteer.launch({
+        headless: true,
+        executablePath: builtinPath,
+        args,
+      });
     }
-  } catch (_) { /* ignora se executablePath() não estiver disponível */ }
+  } catch (_) {
+    /* ignora se executablePath() não estiver disponível */
+  }
 
   // 3. Fallback: deixa o puppeteer descobrir sozinho
   return puppeteer.launch({ headless: true, args });
@@ -54,9 +60,9 @@ const FRONTEND_URL = "https://congressoautismoma.com.br";
 
 // Fallback URLs por template type (usados quando o Firestore não tem config)
 const FALLBACK_BACKGROUND_URLS = {
-  default:      `${FRONTEND_URL}/assets/certificate-k6vpepnP.png`,
-  cientifica:   `${FRONTEND_URL}/assets/certificate-cientifica-0WDywksV.png`,
-  monitoria:    `${FRONTEND_URL}/assets/certificate-monitoria-BBuHPPDa.png`,
+  default: `${FRONTEND_URL}/assets/certificate-k6vpepnP.png`,
+  cientifica: `${FRONTEND_URL}/assets/certificate-cientifica-0WDywksV.png`,
+  monitoria: `${FRONTEND_URL}/assets/certificate-monitoria-BBuHPPDa.png`,
   organizadora: `${FRONTEND_URL}/assets/certificate-organizadora-CPpBqw_N.png`,
 };
 
@@ -78,7 +84,11 @@ async function getCertificateBackgroundUrl(eventName, templateType) {
 
   const type = templateType || "participante";
   const url = _certConfigCache?.events?.[eventName]?.[type];
-  return url || FALLBACK_BACKGROUND_URLS[type] || `${FRONTEND_URL}/certificado-${type}.png`;
+  return (
+    url ||
+    FALLBACK_BACKGROUND_URLS[type] ||
+    `${FRONTEND_URL}/certificado-${type}.png`
+  );
 }
 
 async function getEventConfig() {
@@ -87,11 +97,13 @@ async function getEventConfig() {
     if (snap.exists) {
       const data = snap.data();
       return {
-        name:  (data.eventName  || DEFAULT_EVENT.name).toUpperCase(),
-        dates: data.eventDates  || DEFAULT_EVENT.dates,
+        name: (data.eventName || DEFAULT_EVENT.name).toUpperCase(),
+        dates: data.eventDates || DEFAULT_EVENT.dates,
       };
     }
-  } catch (_) { /* use defaults */ }
+  } catch (_) {
+    /* use defaults */
+  }
   return DEFAULT_EVENT;
 }
 
@@ -254,7 +266,10 @@ const generateBoletoPDF = async (
       "APÓS O VENCIMENTO, MULTA DE 3,00% E MORA DIÁRIA DE R$ 1,00<br>CNPJ DO BENEFICIÁRIO: 27.943.639/0001-67"
     )
     .replace(/{{CODIGO_BARRAS_URL}}/g, `data:image/png;base64,${barcodeBase64}`)
-    .replace(/{{QRCODE_URL}}/g, qrCodeBase64 ? `data:image/png;base64,${qrCodeBase64}` : "")
+    .replace(
+      /{{QRCODE_URL}}/g,
+      qrCodeBase64 ? `data:image/png;base64,${qrCodeBase64}` : ""
+    )
     .replace(/{{QRCODE_EMV}}/g, qrCodeEmv || "Não disponível")
     .replace(/{{TICKET_QUANTITY_FULL}}/g, fullTickets.toString())
     .replace(/{{TICKET_QUANTITY_HALF}}/g, halfTickets.toString())
@@ -296,12 +311,18 @@ const generateCertificatePDF = async (cpf, name, templateHTML, eventName) => {
     __dirname,
     "../templates/certificateTemplate-default.html"
   );
-  const templatePath = await fs.access(specificTemplate).then(() => specificTemplate).catch(() => defaultTemplate);
+  const templatePath = await fs
+    .access(specificTemplate)
+    .then(() => specificTemplate)
+    .catch(() => defaultTemplate);
   const htmlTemplate = await fs.readFile(templatePath, "utf8");
 
   const event = await getEventConfig();
   const resolvedEventName = eventName || event.name;
-  const backgroundUrl = await getCertificateBackgroundUrl(resolvedEventName, templateHTML);
+  const backgroundUrl = await getCertificateBackgroundUrl(
+    resolvedEventName,
+    templateHTML
+  );
 
   const htmlContent = htmlTemplate
     .replace(/{{BACKGROUND_IMAGE}}/g, backgroundUrl)
