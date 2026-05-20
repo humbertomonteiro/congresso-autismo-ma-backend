@@ -11,8 +11,10 @@ const { calculateTotal } = require("./calculateTotal");
  * Prioridade:
  *  1. PUPPETEER_EXECUTABLE_PATH  — caminho explícito via variável de ambiente
  *     (ex: /usr/bin/google-chrome-stable no Render após instalar o Chrome)
- *  2. puppeteer padrão (bundled Chromium) — funciona localmente quando o
- *     Chrome foi instalado com `npx puppeteer browsers install chrome`
+ *  2. Chromium bundled pelo puppeteer — só usado se o arquivo realmente existe
+ *     (instalado via `npx puppeteer browsers install chrome`)
+ *  3. Chrome instalado no sistema (Windows / Linux / macOS)
+ *  4. Fallback: deixa o puppeteer tentar descobrir sozinho
  */
 async function launchBrowser() {
   const puppeteer = require("puppeteer");
@@ -23,72 +25,85 @@ async function launchBrowser() {
     "--disable-gpu",
   ];
 
-  // 1. Caminho explícito via env var (opcional no Render)
+  // 1. Caminho explícito via env var (produção no Render ou configuração manual)
   const executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
   if (executablePath) {
     return puppeteer.launch({ headless: true, executablePath, args });
   }
 
-  // 2. Chromium instalado pelo próprio puppeteer (npx puppeteer browsers install chrome)
-  //    puppeteer.executablePath() resolve o caminho correto independente do SO / versão
+  // 2. Chromium bundled — verifica se o arquivo existe antes de tentar usar
   try {
     const builtinPath = puppeteer.executablePath();
     if (builtinPath) {
-      return puppeteer.launch({
-        headless: true,
-        executablePath: builtinPath,
-        args,
-      });
+      await fs.access(builtinPath);
+      return puppeteer.launch({ headless: true, executablePath: builtinPath, args });
     }
   } catch (_) {
-    /* ignora se executablePath() não estiver disponível */
+    /* bundled Chrome não instalado ou executablePath() indisponível */
   }
 
-  // 3. Fallback: deixa o puppeteer descobrir sozinho
+  // 3. Chrome instalado no sistema (desenvolvimento local)
+  const systemChromePaths = [
+    // Windows
+    "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+    "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
+    `C:\\Users\\${process.env.USERNAME || ""}\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe`,
+    // Linux
+    "/usr/bin/google-chrome",
+    "/usr/bin/google-chrome-stable",
+    "/usr/bin/chromium-browser",
+    "/usr/bin/chromium",
+    // macOS
+    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+  ];
+
+  for (const chromePath of systemChromePaths) {
+    try {
+      await fs.access(chromePath);
+      return puppeteer.launch({ headless: true, executablePath: chromePath, args });
+    } catch (_) {
+      /* caminho não encontrado, tenta o próximo */
+    }
+  }
+
+  // 4. Fallback: deixa o puppeteer descobrir sozinho
   return puppeteer.launch({ headless: true, args });
 }
 
 const CONFIG_DOC = config.firebase.db.doc("config/eventConfig");
-const CERT_CONFIG_DOC = config.firebase.db.doc("config/certificateConfig");
 
 const DEFAULT_EVENT = {
   name: "CONGRESSO AUTISMO MA 2026",
   dates: ["2026-05-16", "2026-05-17"],
 };
 
-const FRONTEND_URL = "https://congressoautismoma.com.br";
-
-// Fallback URLs por template type (usados quando o Firestore não tem config)
-const FALLBACK_BACKGROUND_URLS = {
-  default: `${FRONTEND_URL}/assets/certificate-k6vpepnP.png`,
-  cientifica: `${FRONTEND_URL}/assets/certificate-cientifica-0WDywksV.png`,
-  monitoria: `${FRONTEND_URL}/assets/certificate-monitoria-BBuHPPDa.png`,
-  organizadora: `${FRONTEND_URL}/assets/certificate-organizadora-CPpBqw_N.png`,
-};
-
-// Cache em memória do certificateConfig com TTL de 5 min
-let _certConfigCache = null;
-let _certConfigCachedAt = 0;
-
 async function getCertificateBackgroundUrl(eventName, templateType) {
-  const now = Date.now();
-  if (!_certConfigCache || now - _certConfigCachedAt > 5 * 60 * 1000) {
-    try {
-      const snap = await CERT_CONFIG_DOC.get();
-      _certConfigCache = snap.exists ? snap.data() : {};
-      _certConfigCachedAt = now;
-    } catch (_) {
-      _certConfigCache = {};
-    }
-  }
-
+  const frontendUrl = process.env.FRONTEND_URL || "https://congressoautismoma.com.br";
+  const year = /20\d{2}/.exec(eventName || "")?.[0] || "2026";
   const type = templateType || "participante";
-  const url = _certConfigCache?.events?.[eventName]?.[type];
-  return (
-    url ||
-    FALLBACK_BACKGROUND_URLS[type] ||
-    `${FRONTEND_URL}/certificado-${type}.png`
-  );
+
+  const urls = {
+    "2025": {
+      participante: `${frontendUrl}/certificate2025/certificate.png`,
+      cientifica:   `${frontendUrl}/certificate2025/certificate-cientifica.png`,
+      monitoria:    `${frontendUrl}/certificate2025/certificate-monitoria.png`,
+      monitor:      `${frontendUrl}/certificate2025/certificate-monitoria.png`,
+      organizadora: `${frontendUrl}/certificate2025/certificate-organizadora.png`,
+      palestrante:  `${frontendUrl}/certificate2025/certificate-organizadora.png`,
+    },
+    "2026": {
+      participante: `${frontendUrl}/certificate2026/certificado-participante.png`,
+      cientifica:   `${frontendUrl}/certificate2026/certificado-trabalho-cientifico.png`,
+      monitoria:    `${frontendUrl}/certificate2026/certificado-monitor.png`,
+      monitor:      `${frontendUrl}/certificate2026/certificado-monitor.png`,
+      organizadora: `${frontendUrl}/certificate2026/certificado-palestrante.png`,
+      palestrante:  `${frontendUrl}/certificate2026/certificado-palestrante.png`,
+      expositor:    `${frontendUrl}/certificate2026/certificado-expositor.png`,
+    },
+  };
+
+  const yearUrls = urls[year] || urls["2026"];
+  return yearUrls[type] || yearUrls.participante;
 }
 
 async function getEventConfig() {
@@ -303,18 +318,23 @@ const generateCertificatePDF = async (cpf, name, templateHTML, eventName) => {
     templateHTML = "participante";
   }
 
-  const specificTemplate = path.join(
-    __dirname,
-    `../templates/certificateTemplate-${templateHTML}.html`
-  );
-  const defaultTemplate = path.join(
-    __dirname,
-    "../templates/certificateTemplate-default.html"
-  );
-  const templatePath = await fs
-    .access(specificTemplate)
-    .then(() => specificTemplate)
-    .catch(() => defaultTemplate);
+  const year = /20\d{2}/.exec(eventName || "")?.[0] || "";
+
+  const tryPaths = [
+    year && path.join(__dirname, `../templates/certificateTemplate-${templateHTML}-${year}.html`),
+    path.join(__dirname, `../templates/certificateTemplate-${templateHTML}.html`),
+    year && path.join(__dirname, `../templates/certificateTemplate-default-${year}.html`),
+    path.join(__dirname, "../templates/certificateTemplate-default.html"),
+  ].filter(Boolean);
+
+  let templatePath = tryPaths[tryPaths.length - 1];
+  for (const p of tryPaths) {
+    try {
+      await fs.access(p);
+      templatePath = p;
+      break;
+    } catch (_) {}
+  }
   const htmlTemplate = await fs.readFile(templatePath, "utf8");
 
   const event = await getEventConfig();

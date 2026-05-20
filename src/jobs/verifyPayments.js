@@ -3,8 +3,11 @@ const cron = require("node-cron");
 const CheckoutService = require("../services/CheckoutService");
 
 const verifyPendingPayments = () => {
+  if (process.env.NODE_ENV !== "production") {
+    console.log("[VerifyPayments] Sandbox — verificação automática desativada.");
+    return;
+  }
   cron.schedule("0 */6 * * *", () => {
-    // A cada 6 horas
     console.log(
       "[VerifyPayments] Executando verificação automática de pagamentos pendentes..."
     );

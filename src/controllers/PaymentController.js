@@ -231,6 +231,9 @@ const verifyPayment = async (req, res) => {
 };
 
 const verifyAllPayments = async (req, res) => {
+  if (process.env.NODE_ENV !== "production") {
+    return res.sendResponse(200, true, "Sandbox — verificação de boletos ignorada");
+  }
   try {
     await CheckoutService.verifyAllPendingPayments();
     res.sendResponse(

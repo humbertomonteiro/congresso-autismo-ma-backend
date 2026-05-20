@@ -36,6 +36,10 @@ app.use(express.urlencoded({ extended: true }));
 const boletoDir = path.join(__dirname, "temp");
 app.use("/boletos", express.static(boletoDir));
 
+// Serve as imagens dos certificados do frontend (útil em desenvolvimento)
+const frontendPublicDir = path.join(__dirname, "../../frontend/public");
+app.use(express.static(frontendPublicDir));
+
 // Rota de saúde
 app.get("/", (req, res) => {
   res.sendResponse(200, true, "OK");

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * { margin: 0; padding: 0; }
+      .certificate {
+        background-image: url("{{BACKGROUND_IMAGE}}");
+        min-height: 100vh;
+        position: relative;
+        background-color: #fff;
+        background-size: cover;
+        border: 5px solid #1e9d7b;
+        box-sizing: border-box;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: "DM Sans", sans-serif;
+        color: #333333;
+        overflow: hidden;
+      }
+      .name {
+        position: absolute;
+        top: 54%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 24px;
+        font-weight: 700;
+        text-align: center;
+        width: 80%;
+        word-break: break-word;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="certificate">
+      <div class="name">{{PARTICIPANT_NAME}}</div>
+    </div>
+  </body>
+</html>
