@@ -3,7 +3,7 @@ const BancoDoBrasilService = require("./BancoDoBrasilService");
 const EmailService = require("./EmailService");
 const CieloService = require("./CieloService");
 const { toZonedTime } = require("date-fns-tz");
-const { endOfDay, parse } = require("date-fns");
+const { endOfDay, parse, differenceInDays } = require("date-fns");
 const config = require("../config");
 const logger = require("../logger");
 const { calculateTotal } = require("../utils/calculateTotal");
@@ -147,16 +147,28 @@ class CheckoutService {
 
         if (paymentMethod === "pix" && paymentDetails?.pix?.expirationDate) {
           isExpired = new Date(paymentDetails.pix.expirationDate) < now;
-        } else if (
-          paymentMethod === "boleto" &&
-          paymentDetails?.boleto?.dataVencimento
-        ) {
-          const vencimento = parse(
-            paymentDetails.boleto.dataVencimento,
-            "dd.MM.yyyy",
-            new Date()
-          );
-          isExpired = endOfDay(vencimento) < now;
+        } else if (paymentMethod === "boleto") {
+          // 1. Verifica pela data de vencimento explícita
+          if (paymentDetails?.boleto?.dataVencimento) {
+            const vencimento = parse(
+              paymentDetails.boleto.dataVencimento,
+              "dd.MM.yyyy",
+              new Date()
+            );
+            isExpired = endOfDay(vencimento) < now;
+          }
+          // 2. Fallback: boleto pendente há mais de 7 dias → expirado sem chamar a API
+          if (!isExpired) {
+            const createdAt = checkout.createdAt?.toDate?.()
+              ?? (checkout.timestamp?.toDate?.())
+              ?? (checkout.createdAt ? new Date(checkout.createdAt) : null);
+            if (createdAt && differenceInDays(now, createdAt) > 7) {
+              isExpired = true;
+              logger.info(
+                `[CheckoutService] Checkout ${id} — boleto pendente há mais de 7 dias → expirado sem consultar API`
+              );
+            }
+          }
         }
 
         if (isExpired) {

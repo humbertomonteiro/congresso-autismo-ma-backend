@@ -25,10 +25,15 @@ async function launchBrowser() {
     "--disable-gpu",
   ];
 
-  // 1. Caminho explícito via env var (produção no Render ou configuração manual)
+  // 1. Caminho explícito via env var — verifica se o arquivo existe antes de usar
   const executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
   if (executablePath) {
-    return puppeteer.launch({ headless: true, executablePath, args });
+    try {
+      await fs.access(executablePath);
+      return puppeteer.launch({ headless: true, executablePath, args });
+    } catch (_) {
+      console.warn(`[Puppeteer] PUPPETEER_EXECUTABLE_PATH não encontrado em: ${executablePath}. Tentando fallback.`);
+    }
   }
 
   // 2. Chromium bundled — verifica se o arquivo existe antes de tentar usar
